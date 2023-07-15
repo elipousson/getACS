@@ -16,7 +16,8 @@ gt_census_cols(
   column_title = NULL,
   source = "Source: 2017-2021 ACS 5-year Estimates",
   tables = NULL,
-  decimals = 0
+  decimals = 0,
+  ...
 )
 }
 \description{

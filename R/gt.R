@@ -75,7 +75,7 @@ cols_merge_uncert_ext <- function(gt_object,
                                   ...) {
   columns <- columns %||% c(col_val, col_uncert)
 
-  stopifnot(all(is.character(cols)))
+  stopifnot(all(is.character(columns)))
 
   columns <- stringr::str_c(prefix, columns, postfix, sep = sep)
 
@@ -84,6 +84,10 @@ cols_merge_uncert_ext <- function(gt_object,
       "{.fn cols_merge_uncert_ext} requires {.arg columns} be
       a length 2 character vector."
     )
+  }
+
+  if (!all(has_name(gt_object[["_data"]], columns))) {
+    return(gt_object)
   }
 
   gt::cols_merge_uncert(
@@ -107,7 +111,7 @@ fmt_acs_estimate <- function(gt_object,
                              spanner = NULL,
                              decimals = 0,
                              use_seps = TRUE) {
-  if (is.null(cols)) {
+  if (is.null(columns)) {
     return(gt_object)
   }
 
@@ -129,6 +133,7 @@ fmt_acs_estimate <- function(gt_object,
   gt::tab_spanner(gt_object, spanner, columns = columns)
 }
 
+#' @noRd
 acs_cols_label <- function(gt_object, columns, col_labels = NULL) {
   if (is.null(col_labels)) {
     return(gt_object)
@@ -202,14 +207,29 @@ gt_census_cols <- function(gt_object,
                            column_title = NULL,
                            source = "Source: 2017-2021 ACS 5-year Estimates",
                            tables = NULL,
-                           decimals = 0) {
+                           decimals = 0,
+                           ...) {
+  if (is.data.frame(gt_object)) {
+    gt_object <- gt::gt(gt_object, ...)
+  }
+
   stopifnot(
     has_name(gt_object[["_data"]], "column_title")
   )
 
   gt_object <- gt_object |>
-    fmt_acs_estimate(est_cols, est_col_label, decimals = decimals, spanner = est_spanner) |>
-    fmt_acs_percent(perc_cols, perc_col_label, decimals = decimals, spanner = perc_spanner)
+    fmt_acs_estimate(
+      columns = est_cols,
+      col_labels = est_col_label,
+      decimals = decimals,
+      spanner = est_spanner
+      ) |>
+    fmt_acs_percent(
+      columns = perc_cols,
+      col_labels = perc_col_label,
+      decimals = decimals,
+      spanner = perc_spanner
+      )
 
   if (!is_null(combined_spanner)) {
     gt_object <- gt::tab_spanner(
