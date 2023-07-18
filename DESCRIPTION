@@ -1,5 +1,5 @@
 Type: Package
-Package: tidycensusExtras
+Package: getACS
 Title: Help Wrangling Data from tidycensus
 Version: 0.1.0
 Authors@R: 
@@ -20,7 +20,8 @@ Imports:
     rlang (>= 1.1.0),
     stringr,
     tidycensus,
-    tidyselect
+    tidyselect,
+    tigris
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
