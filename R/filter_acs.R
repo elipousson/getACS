@@ -1,0 +1,57 @@
+
+#' Filter American Community Survey data by table, variables, or other attributes
+#'
+#' A data frame of American Community Survey data enriched with table and column
+#' metadata using the [label_acs_metadata()] function.
+#'
+#' @param data A data frame with a "table_id", "variable", and "column_title"
+#'   columns.
+#' @param ... Parameters passed to [dplyr::filter()]
+#' @param table,column Table ID and column title values to return.
+#' @param vars,drop_vars Variables to keep and drop.
+#' @keywords internal
+#' @seealso
+#'  [dplyr::filter()]
+#' @rdname filter_acs
+#' @export
+#' @importFrom dplyr filter
+filter_acs <- function(data,
+                       ...,
+                       table = NULL,
+                       column = NULL,
+                       vars = NULL,
+                       drop_vars = NULL) {
+  stopifnot(
+    all(has_name(data, c("table_id", "variable", "column_title")))
+  )
+
+  if (!is_null(table)) {
+    data <- dplyr::filter(
+      data,
+      table_id %in% table
+    )
+  }
+
+  if (!is_null(drop_vars)) {
+    data <- dplyr::filter(
+      data,
+      !(variable %in% drop_vars)
+    )
+  }
+
+  if (!is_null(vars)) {
+    data <- dplyr::filter(
+      data,
+      variable %in% vars
+    )
+  }
+
+  if (!is_null(column)) {
+    data <- dplyr::filter(
+      data,
+      column_title %in% column
+    )
+  }
+
+  dplyr::filter(data, ...)
+}

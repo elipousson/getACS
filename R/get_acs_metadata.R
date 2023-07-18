@@ -1,83 +1,3 @@
-#' Assorted helpers for ACS survey types and labels
-#'
-#' @rdname acs_survey
-#' @name acs_survey_match
-#' @keywords internal
-#' @export
-#' @importFrom rlang arg_match0
-acs_survey_match <- function(survey = "acs5",
-                             error_call = caller_env()) {
-  arg_match0(survey, c("acs5", "acs3", "acs1"), error_call = error_call)
-}
-
-#' @rdname acs_survey
-#' @name acs_survey_sample
-#' @keywords internal
-#' @export
-#' @importFrom stringr str_extract
-acs_survey_sample <- function(survey = "acs5") {
-  stringr::str_extract(survey, "[0-9]$")
-}
-
-#' @rdname acs_survey
-#' @name acs_survey_label
-#' @keywords internal
-#' @export
-#' @importFrom glue glue
-acs_survey_label <- function(survey = "acs5",
-                             year = 2021,
-                             pattern = "{year_start}-{year} ACS {sample}-year Estimates",
-                             prefix = "") {
-  sample <- acs_survey_sample(survey)
-
-  year_start <- year - (as.integer(sample) - 1)
-
-  glue::glue(prefix, pattern, .envir = current_env())
-}
-
-#' @rdname acs_survey
-#' @name acs_survey_label_tables
-#' @keywords internal
-#' @export
-#' @importFrom glue glue
-#' @importFrom knitr combine_words
-acs_survey_label_tables <- function(survey = "acs5",
-                                    year = 2021,
-                                    prefix = "",
-                                    tables = NULL,
-                                    table_label = "Table",
-                                    sep = ", ",
-                                    and = " and ",
-                                    before = "",
-                                    after = ".",
-                                    oxford_comma = TRUE,
-                                    ...) {
-  label <- acs_survey_label(survey, year, prefix = prefix)
-
-  if (is_null(tables) || tables == "") {
-    return(paste0(label, after))
-  }
-
-
-  if (length(tables) > 1) {
-    table_label <- paste0(table_label, "s")
-  }
-
-  tables <- knitr::combine_words(
-    tables,
-    sep = sep,
-    and = and,
-    before = before,
-    after = after,
-    oxford_comma = oxford_comma
-  )
-
-  glue::glue("{label}, {table_label} {tables}")
-}
-
-
-
-
 #' Get table or column metadata from Census Reporter project
 #'
 #' Read precomputed U.S. Census table or column metadata files from the  [Census
@@ -112,7 +32,7 @@ get_acs_metadata <- function(survey = "acs5",
 
   file <- system.file(
     "extdata", paste0(year, "_", filename),
-    package = "tidycensusExtras"
+    package = "getACS"
   )
 
   if (!file.exists(file)) {
@@ -282,61 +202,4 @@ join_acs_percent <- function(data,
       ),
       .after = all_of("moe")
     )
-}
-
-#' Filter American Community Survey data by table, variables, or other attributes
-#'
-#' A data frame of American Community Survey data enriched with table and column
-#' metadata using the [label_acs_metadata()] function.
-#'
-#' @param data A data frame with a "table_id", "variable", and "column_title"
-#'   columns.
-#' @param ... Parameters passed to [dplyr::filter()]
-#' @param table,column Table ID and column title values to return.
-#' @param vars,drop_vars Variables to keep and drop.
-#' @keywords internal
-#' @seealso
-#'  [dplyr::filter()]
-#' @rdname filter_acs
-#' @export
-#' @importFrom dplyr filter
-filter_acs <- function(data,
-                       ...,
-                       table = NULL,
-                       column = NULL,
-                       vars = NULL,
-                       drop_vars = NULL) {
-  stopifnot(
-    all(has_name(data, c("table_id", "variable", "column_title")))
-  )
-
-  if (!is_null(table)) {
-    data <- dplyr::filter(
-      data,
-      table_id %in% table
-    )
-  }
-
-  if (!is_null(drop_vars)) {
-    data <- dplyr::filter(
-      data,
-      !(variable %in% drop_vars)
-    )
-  }
-
-  if (!is_null(vars)) {
-    data <- dplyr::filter(
-      data,
-      variable %in% vars
-    )
-  }
-
-  if (!is_null(column)) {
-    data <- dplyr::filter(
-      data,
-      column_title %in% column
-    )
-  }
-
-  dplyr::filter(data, ...)
 }
