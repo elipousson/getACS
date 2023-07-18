@@ -13,6 +13,10 @@ labs_acs_survey(
   tables = NULL
 )
 }
+\arguments{
+\item{year}{Based on the year and survey, \code{\link[=acs_survey_ts]{acs_survey_ts()}} returns a vector
+of years for non-overlapping ACS samples to allow comparison.}
+}
 \description{
 Label a ggplot2 plot and add a caption based on an ACS survey year
 }

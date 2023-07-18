@@ -23,6 +23,9 @@ tab_acs_source(
 the \code{\link[gt:md]{md()}} and \code{\link[gt:html]{html()}} functions to style the text as Markdown or to
 retain HTML elements in the text.}
 
+\item{year}{Based on the year and survey, \code{\link[=acs_survey_ts]{acs_survey_ts()}} returns a vector
+of years for non-overlapping ACS samples to allow comparison.}
+
 \item{append_note}{If \code{TRUE}, add source_note to the end of the generated ACS
 data label. If \code{FALSE}, any supplied source_note will be used instead of an
 ACS label.}
