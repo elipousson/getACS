@@ -205,7 +205,11 @@ gt_census_cols <- function(gt_object,
                            perc_spanner = NULL,
                            combined_spanner = NULL,
                            column_title = NULL,
-                           source = "Source: 2017-2021 ACS 5-year Estimates",
+                           source_note = NULL,
+                           survey = "acs5",
+                           year = 2021,
+                           prefix = "Source: ",
+                           after = ".",
                            tables = NULL,
                            decimals = 0,
                            ...) {
@@ -223,13 +227,13 @@ gt_census_cols <- function(gt_object,
       col_labels = est_col_label,
       decimals = decimals,
       spanner = est_spanner
-      ) |>
+    ) |>
     fmt_acs_percent(
       columns = perc_cols,
       col_labels = perc_col_label,
       decimals = decimals,
       spanner = perc_spanner
-      )
+    )
 
   if (!is_null(combined_spanner)) {
     gt_object <- gt::tab_spanner(
@@ -239,9 +243,13 @@ gt_census_cols <- function(gt_object,
     )
   }
 
-  gt_object |>
-    # gt::cols_label(
-    #   "column_title" = column_title %||% ""
-    # ) |>
-    tab_acs_source(source, tables)
+  tab_acs_source(
+    gt_object = gt_object,
+    source_note = source_note,
+    survey = survey,
+    year = year,
+    prefix = prefix,
+    after = after,
+    tables = tables
+  )
 }

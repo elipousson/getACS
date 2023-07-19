@@ -14,7 +14,11 @@ gt_census_cols(
   perc_spanner = NULL,
   combined_spanner = NULL,
   column_title = NULL,
-  source = "Source: 2017-2021 ACS 5-year Estimates",
+  source_note = NULL,
+  survey = "acs5",
+  year = 2021,
+  prefix = "Source: ",
+  after = ".",
   tables = NULL,
   decimals = 0,
   ...
