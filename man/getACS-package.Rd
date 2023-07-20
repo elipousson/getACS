@@ -8,6 +8,13 @@
 \description{
 A package with helper functions for working with Census data downloaded with the {tidycensus} package.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://elipousson.github.io/getACS/}
+}
+
+}
 \author{
 \strong{Maintainer}: Eli Pousson \email{eli.pousson@gmail.com} (\href{https://orcid.org/0000-0001-8280-1706}{ORCID}) [copyright holder]
 
