@@ -10,8 +10,6 @@
 #' @inheritDotParams readr::read_csv
 #' @keywords internal
 #' @export
-#' @importFrom glue glue
-#' @importFrom readr read_csv
 get_acs_metadata <- function(survey = "acs5",
                              year = 2021,
                              metadata = "table",
@@ -28,7 +26,7 @@ get_acs_metadata <- function(survey = "acs5",
   sample <- acs_survey_sample(survey)
 
   metadata <- arg_match0(metadata, c("table", "column"))
-  filename <- glue::glue("census_{metadata}_metadata.csv")
+  filename <- glue("census_{metadata}_metadata.csv")
 
   file <- system.file(
     "extdata", paste0(year, "_", filename),
@@ -36,10 +34,12 @@ get_acs_metadata <- function(survey = "acs5",
   )
 
   if (!file.exists(file)) {
-    folder <- glue::glue("acs{year}_{sample}yr")
+    folder <- glue("acs{year}_{sample}yr")
     base_url <- "https://raw.githubusercontent.com/censusreporter/census-table-metadata/master/precomputed"
     file <- paste0(c(base_url, folder, filename), collapse = "/")
   }
+
+  check_installed("readr", call = error_call)
 
   readr::read_csv(
     file = file,
@@ -53,6 +53,11 @@ get_acs_metadata <- function(survey = "acs5",
 #' Census Reporter
 #'
 #' @param data A data frame downloaded with [tidycensus::get_acs()].
+#' @param perc If `TRUE` (default), use the denominator column ID to calculate
+#'   each estimate as a percent share of the denominator value and use
+#'   [tidycensus::moe_prop()] to calculate a new margin of error for the percent
+#'   estimate.
+#' @inheritParams join_acs_percent
 #' @inheritParams get_acs_metadata
 #' @seealso [join_acs_percent()]
 #' @keywords internal
@@ -76,7 +81,7 @@ label_acs_metadata <- function(data,
 
 #' @rdname label_acs_metadata
 #' @name label_acs_table_metadata
-#' @keywords internal
+#' @inheritParams get_acs_metadata
 #' @export
 #' @importFrom dplyr mutate left_join join_by
 #' @importFrom stringr str_extract str_remove
@@ -113,7 +118,6 @@ label_acs_table_metadata <- function(data,
 
 #' @rdname label_acs_metadata
 #' @name label_acs_column_metadata
-#' @keywords internal
 #' @export
 #' @importFrom dplyr mutate left_join rename
 #' @importFrom stringr str_remove
@@ -146,14 +150,18 @@ label_acs_column_metadata <- function(data,
 #' Use the denominator_column_id value from the column metadata added with
 #' [label_acs_metadata()] to calculate the estimate as a percent share of the
 #' denominator value. [tidycensus::moe_prop()] is used to calculate the margin
-#' of error for the percentage.
+#' of error for the percentage. Typically, this function should only be used as
+#' an internal function.
 #'
-#' @keywords internal
+#' @param data A data frame with column names including "column_id", "column_title",
+#' "denominator_column_id", "estimate", and "moe".
+#' @param geoid A GeoID column name to use if perc is `TRUE`, Defaults to
+#'   'GEOID'.
 #' @inheritParams base::round
 #' @inheritParams dplyr::left_join
 #' @seealso [tidycensus::moe_prop()]
+#' @keywords internal
 #' @export
-#' @importFrom cli cli_alert_warning
 #' @importFrom dplyr filter select left_join mutate
 #' @importFrom tidycensus moe_prop
 join_acs_percent <- function(data,
@@ -168,7 +176,7 @@ join_acs_percent <- function(data,
   )
 
   if (!all(data[["denominator_column_id"]] %in% data[["column_id"]])) {
-    cli::cli_alert_warning(
+    cli_alert_warning(
       "{.arg data} does not contain all of the denominator values needed
       to calculate the percent estimates for each variables.",
       wrap = TRUE

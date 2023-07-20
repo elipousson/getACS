@@ -25,6 +25,14 @@ label_acs_column_metadata(data, survey = "acs5", year = 2021)
 \item{survey}{Survey, "acs5", "acs3", or "acs1".}
 
 \item{year}{Sample year (between 2006 and 2021).}
+
+\item{perc}{If \code{TRUE} (default), use the denominator column ID to calculate
+each estimate as a percent share of the denominator value and use
+\code{\link[tidycensus:moe_prop]{tidycensus::moe_prop()}} to calculate a new margin of error for the percent
+estimate.}
+
+\item{geoid}{A GeoID column name to use if perc is \code{TRUE}, Defaults to
+'GEOID'.}
 }
 \description{
 Label American Community Survey data using table and column metadata from

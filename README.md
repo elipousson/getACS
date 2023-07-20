@@ -24,6 +24,9 @@ includes:
 - Helpers that extend the existing `tidycensus::get_acs()` function to
   work with multiple years or geographies
 
+Note that I don’t love the current name for this package and expect to
+rename it as soon as I think of a better one.
+
 ## Installation
 
 You can install the development version of getACS from

@@ -2,7 +2,6 @@
 #'
 #' @rdname acs_survey_match
 #' @name acs_survey_match
-#' @keywords internal
 #' @export
 #' @importFrom rlang arg_match0
 acs_survey_match <- function(survey = "acs5",
@@ -12,7 +11,6 @@ acs_survey_match <- function(survey = "acs5",
 
 #' @rdname acs_survey_match
 #' @name acs_survey_sample
-#' @keywords internal
 #' @export
 #' @importFrom stringr str_extract
 acs_survey_sample <- function(survey = "acs5") {
@@ -20,38 +18,46 @@ acs_survey_sample <- function(survey = "acs5") {
 }
 
 #' @rdname acs_survey_match
-#' @name acs_survey_ts
 #' @param year Based on the year and survey, [acs_survey_ts()] returns a vector
 #'   of years for non-overlapping ACS samples to allow comparison.
 #' @keywords internal
 #' @export
 #' @importFrom glue glue
-acs_survey_ts <- function(survey,
-                          year) {
-  stopifnot(
-    year > 2005
+acs_survey_ts <- function(survey = "acs5",
+                          year = 2021,
+                          call = caller_env()) {
+  sample <- acs_survey_sample(survey)
+
+  min_year <- switch(sample,
+    "1" = 2005,
+    "3" = 2007,
+    "5" = 2009
   )
 
-  sample <- acs_survey_sample(survey)
+  if (year < min_year) {
+    cli_abort(
+      "{.arg year} must be equal to or greater than the minimum release year
+      {min_year} for {.arg survey} {survey}",
+      call = call
+    )
+  }
+
+  if (year == 2005) {
+    return(year)
+  }
 
   comparison_url <- paste0(
     "https://www.census.gov/programs-surveys/acs/guidance/comparing-acs-data/",
     year, ".html"
   )
 
-  cli::cli_inform(
-    "Learn more about comparing {year} American Community Survey Data:
-    {.url {comparison_url}}"
+  cli_bullets(
+    c("i" = "Learn more about comparing {year} American Community Survey Data:
+    {.url {comparison_url}}")
   )
 
-  min_year <- switch (sample,
-                      "1" = 2005,
-                      "3" = 2007,
-                      "5" = 2009
-  )
-
-  sample <- as.integer(sample)
   years <- year
+  sample <- as.integer(sample)
 
   while (min(years) %% min_year >= sample) {
     years <- c(years, min(years) - sample)
@@ -64,7 +70,6 @@ acs_survey_ts <- function(survey,
 #' @name acs_survey_label
 #' @keywords internal
 #' @export
-#' @importFrom glue glue
 acs_survey_label <- function(survey = "acs5",
                              year = 2021,
                              pattern = "{year_start}-{year} ACS {sample}-year Estimates",
@@ -73,14 +78,13 @@ acs_survey_label <- function(survey = "acs5",
 
   year_start <- year - (as.integer(sample) - 1)
 
-  glue::glue(prefix, pattern, .envir = current_env())
+  glue(prefix, pattern, .envir = current_env())
 }
 
 #' @rdname acs_survey_match
 #' @name acs_survey_label_tables
 #' @keywords internal
 #' @export
-#' @importFrom glue glue
 #' @importFrom knitr combine_words
 acs_survey_label_tables <- function(survey = "acs5",
                                     year = 2021,
@@ -113,5 +117,5 @@ acs_survey_label_tables <- function(survey = "acs5",
     oxford_comma = oxford_comma
   )
 
-  glue::glue("{label}, {table_label} {tables}")
+  glue("{label}, {table_label} {tables}")
 }

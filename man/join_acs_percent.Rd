@@ -7,6 +7,12 @@
 join_acs_percent(data, geoid = "GEOID", na_matches = "never", digits = 2)
 }
 \arguments{
+\item{data}{A data frame with column names including "column_id", "column_title",
+"denominator_column_id", "estimate", and "moe".}
+
+\item{geoid}{A GeoID column name to use if perc is \code{TRUE}, Defaults to
+'GEOID'.}
+
 \item{na_matches}{Should two \code{NA} or two \code{NaN} values match?
 \itemize{
 \item \code{"na"}, the default, treats two \code{NA} or two \code{NaN} values as equal, like
@@ -24,7 +30,8 @@ for database sources and to \code{base::merge(incomparables = NA)}.
 Use the denominator_column_id value from the column metadata added with
 \code{\link[=label_acs_metadata]{label_acs_metadata()}} to calculate the estimate as a percent share of the
 denominator value. \code{\link[tidycensus:moe_prop]{tidycensus::moe_prop()}} is used to calculate the margin
-of error for the percentage.
+of error for the percentage. Typically, this function should only be used as
+an internal function.
 }
 \seealso{
 \code{\link[tidycensus:moe_prop]{tidycensus::moe_prop()}}

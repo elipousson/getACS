@@ -7,15 +7,12 @@
 #' @importFrom purrr map list_cbind list_rbind
 #' @importFrom rlang try_fetch
 #' @importFrom tidycensus get_acs
-#' @importFrom cli cli_warn
 get_acs_ts <- function(geography,
                        state = NULL,
                        survey = "acs5",
                        year = 2021,
                        cache_table = TRUE,
                        ...) {
-
-
   years <- acs_survey_ts(survey, year)
 
   print(years)
@@ -38,7 +35,7 @@ get_acs_ts <- function(geography,
           )
         ),
         error = function(cnd) {
-          cli::cli_warn(
+          cli_warn(
             "Data unavailable for year {yr}."
           )
         }

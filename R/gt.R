@@ -10,7 +10,6 @@
 #' @param use_md If `TRUE`, pass source_note to gt::md() first.
 #' @keywords internal
 #' @export
-#' @importFrom gt tab_source_note md
 #' @importFrom glue glue
 tab_acs_source <- function(gt_object,
                            source_note = NULL,
@@ -23,6 +22,8 @@ tab_acs_source <- function(gt_object,
                            append_note = FALSE,
                            use_md = FALSE,
                            ...) {
+  check_installed("gt")
+
   if (append_note) {
     after <- after %||% ""
     after <- paste(after, source_note)
@@ -73,6 +74,8 @@ cols_merge_uncert_ext <- function(gt_object,
                                   postfix = "",
                                   sep = "",
                                   ...) {
+  check_installed("gt")
+
   columns <- columns %||% c(col_val, col_uncert)
 
   stopifnot(all(is.character(columns)))
@@ -80,7 +83,7 @@ cols_merge_uncert_ext <- function(gt_object,
   columns <- stringr::str_c(prefix, columns, postfix, sep = sep)
 
   if (!has_length(columns, 2)) {
-    cli::cli_abort(
+    cli_abort(
       "{.fn cols_merge_uncert_ext} requires {.arg columns} be
       a length 2 character vector."
     )
@@ -111,6 +114,8 @@ fmt_acs_estimate <- function(gt_object,
                              spanner = NULL,
                              decimals = 0,
                              use_seps = TRUE) {
+  check_installed("gt")
+
   if (is.null(columns)) {
     return(gt_object)
   }
@@ -135,6 +140,8 @@ fmt_acs_estimate <- function(gt_object,
 
 #' @noRd
 acs_cols_label <- function(gt_object, columns, col_labels = NULL) {
+  check_installed("gt")
+
   if (is.null(col_labels)) {
     return(gt_object)
   }
@@ -168,6 +175,8 @@ fmt_acs_percent <- function(gt_object,
                             decimals = 0,
                             use_seps = TRUE,
                             ...) {
+  check_installed("gt")
+
   columns <- columns %||% c(col_est, col_moe)
 
   gt_object <- acs_cols_label(gt_object, columns, col_labels)
@@ -195,7 +204,6 @@ fmt_acs_percent <- function(gt_object,
 #'
 #' @keywords internal
 #' @export
-#' @importFrom gt tab_spanner
 gt_census_cols <- function(gt_object,
                            est_cols = c("estimate", "moe"),
                            est_col_label = "Est.",
@@ -213,6 +221,8 @@ gt_census_cols <- function(gt_object,
                            tables = NULL,
                            decimals = 0,
                            ...) {
+  check_installed("gt")
+
   if (is.data.frame(gt_object)) {
     gt_object <- gt::gt(gt_object, ...)
   }

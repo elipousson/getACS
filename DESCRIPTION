@@ -1,6 +1,6 @@
 Type: Package
 Package: getACS
-Title: Help Wrangling Data from tidycensus
+Title: Help Wrangling American Community Survey Data from tidycensus
 Version: 0.1.0
 Authors@R: 
     person("Eli", "Pousson", , "eli.pousson@gmail.com", role = c("aut", "cre", "cph"),
@@ -13,19 +13,22 @@ Imports:
     cli,
     dplyr,
     glue,
-    gt,
     knitr,
+    lifecycle,
     purrr,
-    readr,
     rlang (>= 1.1.0),
+    sf,
     stringr,
     tidycensus,
     tidyselect,
-    tigris
+    tigris,
+    vctrs
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Suggests: 
     forcats,
-    ggplot2
+    ggplot2,
+    gt,
+    readr

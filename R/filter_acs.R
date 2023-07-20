@@ -1,4 +1,3 @@
-
 #' Filter American Community Survey data by table, variables, or other attributes
 #'
 #' A data frame of American Community Survey data enriched with table and column

@@ -12,7 +12,7 @@ acs_survey_match(survey = "acs5", error_call = caller_env())
 
 acs_survey_sample(survey = "acs5")
 
-acs_survey_ts(survey, year)
+acs_survey_ts(survey = "acs5", year = 2021, call = caller_env())
 
 acs_survey_label(
   survey = "acs5",

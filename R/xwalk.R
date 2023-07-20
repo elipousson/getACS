@@ -5,6 +5,10 @@
 #' @inheritDotParams tigris::blocks
 #' @keywords internal
 #' @export
+#' @importFrom cli cli_progress_message
+#' @importFrom tigris blocks tracts
+#' @importFrom dplyr left_join
+#' @importFrom sf st_drop_geometry
 make_block_xwalk <- function(state,
                              county = NULL,
                              year = 2020,
@@ -52,6 +56,8 @@ make_block_xwalk <- function(state,
 #' @param weight Column name to use for weighting
 #' @keywords internal
 #' @export
+#' @importFrom sf st_join st_transform st_crs st_drop_geometry
+#' @importFrom dplyr filter summarise mutate
 make_area_xwalk <- function(area,
                             block_xwalk = NULL,
                             state = NULL,
@@ -88,8 +94,6 @@ make_area_xwalk <- function(area,
 
   area_xwalk <- sf::st_drop_geometry(area_xwalk)
 
-  print(names(area_xwalk))
-
   area_xwalk <- dplyr::filter(
     area_xwalk,
     {{ weight }} > 0
@@ -97,12 +101,12 @@ make_area_xwalk <- function(area,
 
   area_xwalk <- dplyr::summarise(
     area_xwalk,
-    "{{ weight }}" := sum({{ weight }}, na.rm = TRUE),
+    "{{ weight }}" := sum(.data[[weight]], na.rm = TRUE),
     .by = .group_by
   )
 
   dplyr::mutate(
     area_xwalk,
-    "weight" = round({{ weight }} / sum({{ weight }}, na.rm = TRUE), digits = digits)
+    "weight" = round(.data[[weight]] / sum(.data[[weight]], na.rm = TRUE), digits = digits)
   )
 }
