@@ -33,3 +33,5 @@ Suggests:
     gt,
     readr
 URL: https://elipousson.github.io/getACS/
+Depends: 
+    R (>= 2.10)
