@@ -244,7 +244,7 @@ get_geography_params <- function(geography,
   }
 
   if ((year < 2021) &&
-    (geography == "metropolitan/micropolitan statistical area")) {
+    (identical(geography, "metropolitan/micropolitan statistical area"))) {
     # "metropolitan statistical area/micropolitan statistical area"
     cli_warn(
       c("{geography} us not a supported {.arg geography} for {year} data.",

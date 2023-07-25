@@ -2,7 +2,8 @@
 % Please edit documentation in R/gt.R
 \name{gt_census_cols}
 \alias{gt_census_cols}
-\title{Format Census estimate and percent estimate columns}
+\title{Format American Community Survey estimate and percent estimate columns for a
+gt table}
 \usage{
 gt_census_cols(
   gt_object,
@@ -13,18 +14,76 @@ gt_census_cols(
   est_spanner = NULL,
   perc_spanner = NULL,
   combined_spanner = NULL,
-  column_title = NULL,
   source_note = NULL,
   survey = "acs5",
   year = 2021,
   prefix = "Source: ",
+  before = "",
   after = ".",
   tables = NULL,
   decimals = 0,
+  column_title_col = "column_title",
   ...
 )
 }
-\description{
-Format Census estimate and percent estimate columns
+\arguments{
+\item{gt_object}{If gt_object is a data frame, it is converted to a gt table
+with \code{\link[gt:gt]{gt::gt()}}.}
+
+\item{est_cols, est_col_label, est_spanner}{Passed to columns, col_labels, and
+spanner parameter for \code{\link[=fmt_acs_estimate]{fmt_acs_estimate()}}}
+
+\item{perc_cols, perc_col_label, perc_spanner}{Passed to columns, col_labels,
+and spanner parameter for \code{\link[=fmt_acs_percent]{fmt_acs_percent()}}}
+
+\item{combined_spanner}{If not \code{NULL}, combined_spanner is passed to label
+parameter of \code{\link[gt:tab_spanner]{gt::tab_spanner()}} using both est_cols and perc_cols as the
+columns parameter.}
+
+\item{source_note}{\emph{Source note text}
+
+\verb{scalar<character>} // \strong{required}
+
+Text to be used in the source note. We can optionally use the \code{\link[gt:md]{md()}} and
+\code{\link[gt:html]{html()}} functions to style the text as Markdown or to retain HTML elements
+in the text.}
+
+\item{survey}{ACS survey, "acs5", "acs3", or "acs1".}
+
+\item{year}{Based on the year and survey, \code{\link[=acs_survey_ts]{acs_survey_ts()}} returns a vector
+of years for non-overlapping ACS samples to allow comparison.}
+
+\item{prefix}{Text to insert before ACS survey label.}
+
+\item{before, after}{A character string to be added before/after each word.}
+
+\item{tables}{One or more table IDs to include in label or source note.}
+
+\item{decimals}{\emph{Number of decimal places}
+
+\code{scalar<numeric|integer>(val>=0)} // \emph{default:} \code{2}
+
+This corresponds to the exact number of decimal places to use. A value
+such as \code{2.34} can, for example, be formatted with \code{0} decimal places and
+it would result in \code{"2"}. With \code{4} decimal places, the formatted value
+becomes \code{"2.3400"}. The trailing zeros can be removed with
+\code{drop_trailing_zeros = TRUE}. If you always need \code{decimals = 0}, the
+\code{\link[gt:fmt_integer]{fmt_integer()}} function should be considered.}
+
+\item{column_title_col}{Column name to check for in the input gt table. This
+parameter may not be needed so may be removed.}
+
+\item{...}{Additional parameters passed to \code{\link[gt:fmt_number]{gt::fmt_number()}} by
+\code{\link[=fmt_acs_estimate]{fmt_acs_estimate()}} or to \code{\link[gt:fmt_percent]{gt::fmt_percent()}} by \code{\link[=fmt_acs_percent]{fmt_acs_percent()}}.}
 }
-\keyword{internal}
+\description{
+Create or format a gt table with an estimate and margin of error and
+(optionally) percent estimate and margin of error value.
+}
+\seealso{
+Other gt table: 
+\code{\link{cols_merge_uncert_ext}()},
+\code{\link{fmt_acs_estimate}()},
+\code{\link{tab_acs_source}()}
+}
+\concept{gt table}

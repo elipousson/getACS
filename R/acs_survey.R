@@ -2,6 +2,20 @@
 #'
 #' @rdname acs_survey_match
 #' @name acs_survey_match
+#' @param survey ACS survey, "acs5", "acs3", or "acs1".
+#' @inheritParams rlang::args_error_context
+#' @examples
+#'
+#' acs_survey_match("acs1")
+#'
+#' acs_survey_sample("acs3")
+#'
+#' acs_survey_ts("acs5", 2020)
+#'
+#' acs_survey_label()
+#'
+#' acs_survey_label_tables(tables = c("B19013", "B01003"))
+#'
 #' @export
 #' @importFrom rlang arg_match0
 acs_survey_match <- function(survey = "acs5",
@@ -20,13 +34,13 @@ acs_survey_sample <- function(survey = "acs5") {
 #' @rdname acs_survey_match
 #' @param year Based on the year and survey, [acs_survey_ts()] returns a vector
 #'   of years for non-overlapping ACS samples to allow comparison.
-#' @keywords internal
 #' @export
 #' @importFrom glue glue
 acs_survey_ts <- function(survey = "acs5",
                           year = 2021,
                           call = caller_env()) {
   sample <- acs_survey_sample(survey)
+  check_number_whole(year, call = call)
 
   min_year <- switch(sample,
     "1" = 2005,
@@ -42,7 +56,7 @@ acs_survey_ts <- function(survey = "acs5",
     )
   }
 
-  if (year == 2005) {
+  if (identical(year, 2005)) {
     return(year)
   }
 
@@ -68,7 +82,10 @@ acs_survey_ts <- function(survey = "acs5",
 
 #' @rdname acs_survey_match
 #' @name acs_survey_label
-#' @keywords internal
+#' @param prefix Text to insert before ACS survey label.
+#' @param pattern Pattern passed to [glue::glue()]. Allows use of the
+#'   `year_start` variable which is the earliest year for a survey sample
+#'   specified by the survey parameter.
 #' @export
 acs_survey_label <- function(survey = "acs5",
                              year = 2021,
@@ -83,7 +100,11 @@ acs_survey_label <- function(survey = "acs5",
 
 #' @rdname acs_survey_match
 #' @name acs_survey_label_tables
-#' @keywords internal
+#' @param tables One or more table IDs to include in label or source note.
+#' @param table_label Label to use when referring to table or tables. A "s" is
+#'   appended to the end of the table_label if tables is more than length 1.
+#' @param before,after A character string to be added before/after each word.
+#' @inheritParams knitr::combine_words
 #' @export
 #' @importFrom knitr combine_words
 acs_survey_label_tables <- function(survey = "acs5",
@@ -95,14 +116,12 @@ acs_survey_label_tables <- function(survey = "acs5",
                                     and = " and ",
                                     before = "",
                                     after = ".",
-                                    oxford_comma = TRUE,
-                                    ...) {
+                                    oxford_comma = TRUE) {
   label <- acs_survey_label(survey, year, prefix = prefix)
 
-  if (is_null(tables) || tables == "") {
+  if (is_null(tables) || identical(tables, "")) {
     return(paste0(label, after))
   }
-
 
   if (length(tables) > 1) {
     table_label <- paste0(table_label, "s")

@@ -31,7 +31,9 @@ Suggests:
     forcats,
     ggplot2,
     gt,
-    readr
+    readr,
+    testthat (>= 3.0.0)
 URL: https://elipousson.github.io/getACS/
 Depends: 
     R (>= 2.10)
+Config/testthat/edition: 3

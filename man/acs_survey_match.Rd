@@ -31,15 +31,58 @@ acs_survey_label_tables(
   and = " and ",
   before = "",
   after = ".",
-  oxford_comma = TRUE,
-  ...
+  oxford_comma = TRUE
 )
 }
 \arguments{
+\item{survey}{ACS survey, "acs5", "acs3", or "acs1".}
+
+\item{error_call}{The execution environment of a currently
+running function, e.g. \code{caller_env()}. The function will be
+mentioned in error messages as the source of the error. See the
+\code{call} argument of \code{\link[rlang:abort]{abort()}} for more information.}
+
 \item{year}{Based on the year and survey, \code{\link[=acs_survey_ts]{acs_survey_ts()}} returns a vector
 of years for non-overlapping ACS samples to allow comparison.}
+
+\item{call}{The execution environment of a currently
+running function, e.g. \code{caller_env()}. The function will be
+mentioned in error messages as the source of the error. See the
+\code{call} argument of \code{\link[rlang:abort]{abort()}} for more information.}
+
+\item{pattern}{Pattern passed to \code{\link[glue:glue]{glue::glue()}}. Allows use of the
+\code{year_start} variable which is the earliest year for a survey sample
+specified by the survey parameter.}
+
+\item{prefix}{Text to insert before ACS survey label.}
+
+\item{tables}{One or more table IDs to include in label or source note.}
+
+\item{table_label}{Label to use when referring to table or tables. A "s" is
+appended to the end of the table_label if tables is more than length 1.}
+
+\item{sep}{Separator to be inserted between words.}
+
+\item{and}{Character string to be prepended to the last word.}
+
+\item{before, after}{A character string to be added before/after each word.}
+
+\item{oxford_comma}{Whether to insert the separator between the last two
+elements in the list.}
 }
 \description{
 Assorted helpers for ACS survey types and labels
 }
-\keyword{internal}
+\examples{
+
+acs_survey_match("acs1")
+
+acs_survey_sample("acs3")
+
+acs_survey_ts("acs5", 2020)
+
+acs_survey_label()
+
+acs_survey_label_tables(tables = c("B19013", "B01003"))
+
+}

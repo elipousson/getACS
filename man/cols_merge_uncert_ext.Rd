@@ -2,7 +2,7 @@
 % Please edit documentation in R/gt.R
 \name{cols_merge_uncert_ext}
 \alias{cols_merge_uncert_ext}
-\title{A wrapper for \code{\link[gt:cols_merge_uncert]{gt::cols_merge_uncert()}} with extra features}
+\title{Merge columns to a value-with-uncertainty column}
 \usage{
 cols_merge_uncert_ext(
   gt_object,
@@ -16,25 +16,41 @@ cols_merge_uncert_ext(
 )
 }
 \arguments{
+\item{gt_object}{A gt object.}
+
 \item{columns}{description}
 
-\item{col_val}{A single column name that contains the base values. This is
-the column where values will be mutated.}
+\item{col_val}{\emph{Column to target for base values}
 
-\item{col_uncert}{Either one or two column names that contain the uncertainty
-values. The most common case involves supplying a single column with
-uncertainties; these values will be combined with those in \code{col_val}. Less
-commonly, lower and upper uncertainty bounds may be different. For that
-case two columns (representing lower and upper uncertainty values away from
-\code{col_val}, respectively) should be provided. Since we often don't want the
-uncertainty value columns in the output table, we can automatically hide
-any \code{col_uncert} columns through the \code{autohide} option.}
+\verb{<column-targeting expression>} // \strong{required}
+
+The column that contains values for the start of the range. While select
+helper functions such as \code{\link[gt:starts_with]{starts_with()}} and \code{\link[gt:ends_with]{ends_with()}} can be used for
+column targeting, it's recommended that a single column name be used. This
+is to ensure that exactly one column is provided here.}
+
+\item{col_uncert}{\emph{Column or columns to target for uncertainty values}
+
+\verb{<column-targeting expression>} // \strong{required}
+
+The most common case involves supplying a single column with uncertainties;
+these values will be combined with those in \code{col_val}. Less commonly, the
+lower and upper uncertainty bounds may be different. For that case, two
+columns representing the lower and upper uncertainty values away from
+\code{col_val}, respectively, should be provided. While select helper functions
+such as \code{\link[gt:starts_with]{starts_with()}} and \code{\link[gt:ends_with]{ends_with()}} can be used for column targeting,
+it's recommended that one or two column names be explicitly provided in a
+vector.}
 
 \item{prefix, postfix}{Optional strings to insert before and/or after both
 col_val and col_uncert. Use a length 2 string \code{c("", "uncert_prefix")} if
 you want to apply a prefix to only one or the other column specification.}
 
-\item{sep}{The separator text that contains the uncertainty mark for a single
+\item{sep}{\emph{Separator text for uncertainties}
+
+\verb{scalar<character>} // \emph{default:} \code{" +/- "}
+
+The separator text that contains the uncertainty mark for a single
 uncertainty value. The default value of \code{" +/- "} indicates that an
 appropriate plus/minus mark will be used depending on the output context.
 Should you want this special symbol to be taken literally, it can be
@@ -51,8 +67,16 @@ be missing. Use \code{\link[dplyr:coalesce]{dplyr::coalesce()}} or \code{\link[s
 the desired value.}
 }
 \description{
-Wrap \code{\link[gt:cols_merge_uncert]{gt::cols_merge_uncert()}} but allow col_val and col_uncert to be set
-based on a length 2 cols parameter and optionally apply a prefix or postfix
-value.
+\code{\link[=cols_merge_uncert_ext]{cols_merge_uncert_ext()}} is a variant of \code{\link[gt:cols_merge_uncert]{gt::cols_merge_uncert()}} to
+support col_val and col_uncert to be set based on a length 2 cols parameter
+and optionally apply a prefix or postfix value. These options are primarily
+for internal use by \code{\link[=gt_census_cols]{gt_census_cols()}}, \code{\link[=fmt_acs_estimate]{fmt_acs_estimate()}}, and
+\code{\link[=fmt_acs_percent]{fmt_acs_percent()}}.
 }
-\keyword{internal}
+\seealso{
+Other gt table: 
+\code{\link{fmt_acs_estimate}()},
+\code{\link{gt_census_cols}()},
+\code{\link{tab_acs_source}()}
+}
+\concept{gt table}

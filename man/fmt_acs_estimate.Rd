@@ -2,7 +2,10 @@
 % Please edit documentation in R/gt.R
 \name{fmt_acs_estimate}
 \alias{fmt_acs_estimate}
-\title{Format estimate and MOE columns in a gt table}
+\alias{fmt_acs_percent}
+\alias{cols_label_ext}
+\title{Format estimate and margin of error columns (or \% estimate and \% margin of
+error columns) in a gt table}
 \usage{
 fmt_acs_estimate(
   gt_object,
@@ -12,10 +15,75 @@ fmt_acs_estimate(
   col_labels = "Est.",
   spanner = NULL,
   decimals = 0,
-  use_seps = TRUE
+  use_seps = TRUE,
+  ...
 )
+
+fmt_acs_percent(
+  gt_object,
+  col_est = "perc_estimate",
+  col_moe = "perc_moe",
+  columns = NULL,
+  col_labels = "\% share",
+  spanner = NULL,
+  decimals = 0,
+  use_seps = TRUE,
+  ...
+)
+
+cols_label_ext(gt_object, columns, col_labels = NULL)
+}
+\arguments{
+\item{gt_object}{A gt object.}
+
+\item{col_est, col_moe}{Column names for the estimate and margin of error
+values in the table data.}
+
+\item{columns}{If \code{NULL} (default), columns is set to \code{c(col_est, col_moe)}.
+If spanner is \code{NULL}, columns is passed to \code{\link[=cols_merge_uncert_ext]{cols_merge_uncert_ext()}} and
+must be a length 2 character vector.}
+
+\item{col_labels}{Column name used for one or more columns passed to
+\code{\link[=cols_label_ext]{cols_label_ext()}}}
+
+\item{spanner}{If \code{NULL}, gt table is passed to \code{\link[=cols_merge_uncert_ext]{cols_merge_uncert_ext()}}. If
+not \code{NULL}, spanner is passed to the label parameter of \code{\link[gt:tab_spanner]{gt::tab_spanner()}}.}
+
+\item{decimals}{\emph{Number of decimal places}
+
+\code{scalar<numeric|integer>(val>=0)} // \emph{default:} \code{2}
+
+This corresponds to the exact number of decimal places to use. A value
+such as \code{2.34} can, for example, be formatted with \code{0} decimal places and
+it would result in \code{"2"}. With \code{4} decimal places, the formatted value
+becomes \code{"2.3400"}. The trailing zeros can be removed with
+\code{drop_trailing_zeros = TRUE}. If you always need \code{decimals = 0}, the
+\code{\link[gt:fmt_integer]{fmt_integer()}} function should be considered.}
+
+\item{use_seps}{\emph{Use digit group separators}
+
+\verb{scalar<logical>} // \emph{default:} \code{TRUE}
+
+An option to use digit group separators. The type of digit group separator
+is set by \code{sep_mark} and overridden if a locale ID is provided to \code{locale}.
+This setting is \code{TRUE} by default.}
+
+\item{...}{Additional parameters passed to \code{\link[gt:fmt_number]{gt::fmt_number()}} by
+\code{\link[=fmt_acs_estimate]{fmt_acs_estimate()}} or to \code{\link[gt:fmt_percent]{gt::fmt_percent()}} by \code{\link[=fmt_acs_percent]{fmt_acs_percent()}}.}
 }
 \description{
-Format estimate and MOE columns in a gt table
+\code{\link[=fmt_acs_estimate]{fmt_acs_estimate()}} formats estimate and margin of error columns for a gt
+table. Used by \code{\link[=gt_census_cols]{gt_census_cols()}}
 }
-\keyword{internal}
+\details{
+Using cols_label_ext
+\code{\link[=cols_label_ext]{cols_label_ext()}} is a variant on \code{\link[gt:cols_label]{gt::cols_label()}} used by
+\code{\link[=fmt_acs_estimate]{fmt_acs_estimate()}} and \code{\link[=fmt_acs_percent]{fmt_acs_percent()}}.
+}
+\seealso{
+Other gt table: 
+\code{\link{cols_merge_uncert_ext}()},
+\code{\link{gt_census_cols}()},
+\code{\link{tab_acs_source}()}
+}
+\concept{gt table}

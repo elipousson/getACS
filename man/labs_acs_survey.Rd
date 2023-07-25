@@ -14,8 +14,14 @@ labs_acs_survey(
 )
 }
 \arguments{
+\item{survey}{ACS survey, "acs5", "acs3", or "acs1".}
+
 \item{year}{Based on the year and survey, \code{\link[=acs_survey_ts]{acs_survey_ts()}} returns a vector
 of years for non-overlapping ACS samples to allow comparison.}
+
+\item{prefix}{Text to insert before ACS survey label.}
+
+\item{tables}{One or more table IDs to include in label or source note.}
 }
 \description{
 Label a ggplot2 plot and add a caption based on an ACS survey year

@@ -1,5 +1,8 @@
 # getACS (development version)
 
+* Add tests.
+* Fix issue with `tab_acs_source()` handling of multiple tables.
+
 # getACS (development)
 
 * Added `tigerweb_geo_index` data (2023-07-20).

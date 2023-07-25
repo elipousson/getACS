@@ -2,7 +2,7 @@
 % Please edit documentation in R/gt.R
 \name{tab_acs_source}
 \alias{tab_acs_source}
-\title{Add a source note to a table}
+\title{Add a Census data source note to a gt table}
 \usage{
 tab_acs_source(
   gt_object,
@@ -10,6 +10,7 @@ tab_acs_source(
   survey = "acs5",
   year = 2021,
   prefix = "Source: ",
+  before = "",
   after = ".",
   tables = NULL,
   table_label = "Table",
@@ -19,20 +20,49 @@ tab_acs_source(
 )
 }
 \arguments{
-\item{source_note}{Text to be used in the source note. We can optionally use
-the \code{\link[gt:md]{md()}} and \code{\link[gt:html]{html()}} functions to style the text as Markdown or to
-retain HTML elements in the text.}
+\item{gt_object}{A gt object.}
+
+\item{source_note}{\emph{Source note text}
+
+\verb{scalar<character>} // \strong{required}
+
+Text to be used in the source note. We can optionally use the \code{\link[gt:md]{md()}} and
+\code{\link[gt:html]{html()}} functions to style the text as Markdown or to retain HTML elements
+in the text.}
+
+\item{survey}{ACS survey, "acs5", "acs3", or "acs1".}
 
 \item{year}{Based on the year and survey, \code{\link[=acs_survey_ts]{acs_survey_ts()}} returns a vector
 of years for non-overlapping ACS samples to allow comparison.}
+
+\item{prefix}{Text to insert before ACS survey label.}
+
+\item{before, after}{A character string to be added before/after each word.}
+
+\item{tables}{One or more table IDs to include in label or source note.}
+
+\item{table_label}{Label to use when referring to table or tables. A "s" is
+appended to the end of the table_label if tables is more than length 1.}
 
 \item{append_note}{If \code{TRUE}, add source_note to the end of the generated ACS
 data label. If \code{FALSE}, any supplied source_note will be used instead of an
 ACS label.}
 
-\item{use_md}{If \code{TRUE}, pass source_note to gt::md() first.}
+\item{use_md}{If \code{TRUE}, pass source_note to \code{\link[gt:md]{gt::md()}} first.}
+
+\item{...}{For \code{\link[=tab_acs_source]{tab_acs_source()}}, additional parameters passed to
+\code{\link[=acs_survey_label_tables]{acs_survey_label_tables()}}. For \code{\link[=cols_merge_uncert_ext]{cols_merge_uncert_ext()}}, additional
+parameters passed to \code{\link[gt:cols_merge_uncert]{gt::cols_merge_uncert()}}. For \code{\link[=fmt_acs_percent]{fmt_acs_percent()}},
+additional parameters passed to \code{\link[gt:fmt_percent]{gt::fmt_percent()}}.}
 }
 \description{
-A wrapper for \code{\link[gt:tab_source_note]{gt::tab_source_note()}} and \code{\link[=acs_survey_label_tables]{acs_survey_label_tables()}}
+\code{\link[=tab_acs_source]{tab_acs_source()}} adds a source note to a gt table using
+\code{\link[=acs_survey_label_tables]{acs_survey_label_tables()}} and \code{\link[gt:tab_source_note]{gt::tab_source_note()}}.
 }
-\keyword{internal}
+\seealso{
+Other gt table: 
+\code{\link{cols_merge_uncert_ext}()},
+\code{\link{fmt_acs_estimate}()},
+\code{\link{gt_census_cols}()}
+}
+\concept{gt table}
