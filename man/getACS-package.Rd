@@ -12,6 +12,7 @@ A package with helper functions for working with Census data downloaded with the
 Useful links:
 \itemize{
   \item \url{https://elipousson.github.io/getACS/}
+  \item Report bugs at \url{https://github.com/elipousson/getACS/issues}
 }
 
 }

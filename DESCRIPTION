@@ -9,6 +9,10 @@ Maintainer: Eli Pousson <eli.pousson@gmail.com>
 Description: A package with helper functions for working with Census data
     downloaded with the {tidycensus} package.
 License: MIT + file LICENSE
+URL: https://elipousson.github.io/getACS/
+BugReports: https://github.com/elipousson/getACS/issues
+Depends: 
+    R (>= 2.10)
 Imports: 
     cli,
     dplyr,
@@ -23,17 +27,14 @@ Imports:
     tidyselect,
     tigris,
     vctrs
-Encoding: UTF-8
-LazyData: true
-Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
 Suggests: 
     forcats,
     ggplot2,
     gt,
     readr,
     testthat (>= 3.0.0)
-URL: https://elipousson.github.io/getACS/
-Depends: 
-    R (>= 2.10)
 Config/testthat/edition: 3
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
