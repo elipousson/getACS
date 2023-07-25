@@ -38,7 +38,7 @@
 #' }
 #' @export
 #' @importFrom purrr map list_rbind
-#' @importFrom cli cli_progress_along
+#' @importFrom cli cli_progress_along col_blue symbol pb_bar pb_percent
 #' @importFrom tidycensus get_acs
 get_acs_tables <- function(geography,
                            tables = NULL,
