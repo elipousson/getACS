@@ -8,33 +8,36 @@ utils::globalVariables(
 #' Helper function to select columns typically used in an ACS table
 #'
 #' @inheritParams gt_acs
+#' @param ... Additional parameters passed to [dplyr::select()]
 #' @param name_col,column_title_col,est_cols,perc_est_cols ACS data column names
 #'   to select using [tidyselect::any_of()]. Set any parameter to `NULL` to
 #'   avoid selecting columns.
-#' @param ... Additional parameters passed to [dplyr::select()]
-#' @param .drop_denominator If `TRUE` (default), drop all columns that start
-#'   with the text "denominator".
+#' @param denominator_start Passed to [starts_with()] to drop denominator
+#'   columns. Defaults to "denominator"
+#' @param keep_denominator If `FALSE` (default), drop all columns that start
+#'   with the text from denominator_start
 #' @export
 #' @importFrom dplyr select
 #' @importFrom tidyselect any_of starts_with
 select_acs_cols <- function(data,
-                           name_col = "name",
-                           column_title_col = "column_title",
-                           est_cols = c("estimate", "moe"),
-                           perc_est_cols = c("perc_estimate", "perc_moe"),
-                           .drop_denominator = TRUE,
-                           ...) {
+                            ...,
+                            name_col = "name",
+                            column_title_col = "column_title",
+                            est_cols = c("estimate", "moe"),
+                            perc_est_cols = c("perc_estimate", "perc_moe"),
+                            denominator_start = "denominator",
+                            keep_denominator = FALSE) {
   data <- dplyr::select(
     data,
     any_of(c(name_col, column_title_col, est_cols, perc_est_cols)),
     ...
   )
 
-  if (.drop_denominator) {
-    dplyr::select(data, -starts_with("denominator"))
-  } else {
-    data
+  if (keep_denominator) {
+    return(data)
   }
+
+  dplyr::select(data, -starts_with(denominator_start))
 }
 
 #' Helper for recoding based on a named list

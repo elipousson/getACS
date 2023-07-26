@@ -6,12 +6,13 @@
 \usage{
 select_acs_cols(
   data,
+  ...,
   name_col = "name",
   column_title_col = "column_title",
   est_cols = c("estimate", "moe"),
   perc_est_cols = c("perc_estimate", "perc_moe"),
-  .drop_denominator = TRUE,
-  ...
+  denominator_start = "denominator",
+  keep_denominator = FALSE
 )
 }
 \arguments{
@@ -21,14 +22,17 @@ select_acs_cols(
 
 A \code{data.frame} object or a tibble (\code{tbl_df}).}
 
+\item{...}{Additional parameters passed to \code{\link[dplyr:select]{dplyr::select()}}}
+
 \item{name_col, column_title_col, est_cols, perc_est_cols}{ACS data column names
 to select using \code{\link[tidyselect:all_of]{tidyselect::any_of()}}. Set any parameter to \code{NULL} to
 avoid selecting columns.}
 
-\item{.drop_denominator}{If \code{TRUE} (default), drop all columns that start
-with the text "denominator".}
+\item{denominator_start}{Passed to \code{\link[=starts_with]{starts_with()}} to drop denominator
+columns. Defaults to "denominator"}
 
-\item{...}{Additional parameters passed to \code{\link[dplyr:select]{dplyr::select()}}}
+\item{keep_denominator}{If \code{FALSE} (default), drop all columns that start
+with the text from denominator_start}
 }
 \description{
 Helper function to select columns typically used in an ACS table
