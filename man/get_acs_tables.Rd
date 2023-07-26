@@ -8,7 +8,7 @@
 \usage{
 get_acs_tables(
   geography,
-  tables = NULL,
+  table,
   cache_table = TRUE,
   year = 2021,
   survey = "acs5",
@@ -23,7 +23,7 @@ get_acs_geographies(
   state = NULL,
   county = NULL,
   msa = NULL,
-  tables = NULL,
+  table = NULL,
   cache_table = TRUE,
   year = 2021,
   label = TRUE,
@@ -38,7 +38,7 @@ get_acs_geography(
   state = NULL,
   county = NULL,
   msa = NULL,
-  tables = NULL,
+  table = NULL,
   cache_table = TRUE,
   year = 2021,
   label = TRUE,
@@ -52,7 +52,7 @@ get_acs_geography(
 \arguments{
 \item{geography}{The geography of your data.}
 
-\item{tables}{A character vector of tables.}
+\item{table}{A character vector of tables.}
 
 \item{cache_table}{Whether or not to cache table names for faster future
 access. Defaults to FALSE; if TRUE, only needs to be called once per
