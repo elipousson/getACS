@@ -9,6 +9,8 @@ get_acs_metadata(
   year = 2021,
   metadata = "table",
   ...,
+  table = NULL,
+  cache_data = TRUE,
   progress = FALSE,
   show_col_types = FALSE,
   error_call = caller_env()

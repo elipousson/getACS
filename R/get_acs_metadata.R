@@ -14,6 +14,8 @@ get_acs_metadata <- function(survey = "acs5",
                              year = 2021,
                              metadata = "table",
                              ...,
+                             table = NULL,
+                             cache_data = TRUE,
                              progress = FALSE,
                              show_col_types = FALSE,
                              error_call = caller_env()) {
@@ -27,25 +29,57 @@ get_acs_metadata <- function(survey = "acs5",
 
   metadata <- arg_match0(metadata, c("table", "column"))
   filename <- glue("census_{metadata}_metadata.csv")
+  folder <- glue("acs{year}_{sample}yr")
+  cache_dir <- rappdirs::user_cache_dir("getACS")
 
-  file <- system.file(
-    "extdata", paste0(year, "_", filename),
-    package = "getACS"
-  )
+  if (!dir.exists(cache_dir)) {
+    dir.create(cache_dir)
+  }
 
-  if (!file.exists(file)) {
-    folder <- glue("acs{year}_{sample}yr")
+  cache_path <- file.path(cache_dir, glue("{folder}_{filename}"))
+
+  if (file.exists(cache_path)) {
+    msg <- "Reading cached {metadata} metadata for {acs_survey_label(survey, year)}"
+    file <- cache_path
+  } else {
+    msg <- "Downloading {metadata} metadata for {acs_survey_label(survey, year)}"
     base_url <- "https://raw.githubusercontent.com/censusreporter/census-table-metadata/master/precomputed"
     file <- paste0(c(base_url, folder, filename), collapse = "/")
   }
 
   check_installed("readr", call = error_call)
 
-  readr::read_csv(
+  data <- readr::read_csv(
     file = file,
     ...,
     progress = progress,
     show_col_types = show_col_types
+  )
+
+  if (cache_data) {
+    cli::cli_alert_success("Caching {metadata} metadata")
+
+    readr::write_csv(
+      x = data,
+      file = cache_path,
+      progress = progress
+    )
+  }
+
+  if (is.null(table)) {
+    return(data)
+  }
+
+  cli::cli_alert_success(
+    "Filtering {metadata} metadata to table ID {.val {table}}"
+  )
+
+  vctrs::vec_slice(
+    data,
+    vctrs::vec_in(
+      data[["table_id"]],
+      table
+    )
   )
 }
 
