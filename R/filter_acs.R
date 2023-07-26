@@ -20,11 +20,10 @@ filter_acs <- function(data,
                        column = NULL,
                        vars = NULL,
                        drop_vars = NULL) {
-  stopifnot(
-    all(has_name(data, c("table_id", "variable", "column_title")))
-  )
-
   if (!is_null(table)) {
+    stopifnot(
+      has_name(data, "table_id")
+    )
     data <- dplyr::filter(
       data,
       table_id %in% table
@@ -32,6 +31,9 @@ filter_acs <- function(data,
   }
 
   if (!is_null(drop_vars)) {
+    stopifnot(
+      has_name(data, "variable")
+    )
     data <- dplyr::filter(
       data,
       !(variable %in% drop_vars)
@@ -39,6 +41,10 @@ filter_acs <- function(data,
   }
 
   if (!is_null(vars)) {
+    stopifnot(
+      has_name(data, "variable")
+    )
+
     data <- dplyr::filter(
       data,
       variable %in% vars
@@ -46,6 +52,10 @@ filter_acs <- function(data,
   }
 
   if (!is_null(column)) {
+    stopifnot(
+      has_name(data, "column_title")
+    )
+
     data <- dplyr::filter(
       data,
       column_title %in% column
