@@ -59,6 +59,10 @@ tab_acs_source <- function(gt_object,
     source_note <- gt::md(source_note)
   }
 
+  if (identical(source_note, "")) {
+    return(gt_object)
+  }
+
   gt::tab_source_note(
     gt_object,
     source_note = source_note
