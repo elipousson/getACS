@@ -70,13 +70,13 @@ the desired value.}
 \code{\link[=cols_merge_uncert_ext]{cols_merge_uncert_ext()}} is a variant of \code{\link[gt:cols_merge_uncert]{gt::cols_merge_uncert()}} to
 support col_val and col_uncert to be set based on a length 2 cols parameter
 and optionally apply a prefix or postfix value. These options are primarily
-for internal use by \code{\link[=gt_census_cols]{gt_census_cols()}}, \code{\link[=fmt_acs_estimate]{fmt_acs_estimate()}}, and
+for internal use by \code{\link[=gt_acs]{gt_acs()}}, \code{\link[=fmt_acs_estimate]{fmt_acs_estimate()}}, and
 \code{\link[=fmt_acs_percent]{fmt_acs_percent()}}.
 }
 \seealso{
 Other gt table: 
 \code{\link{fmt_acs_estimate}()},
-\code{\link{gt_census_cols}()},
+\code{\link{gt_acs}()},
 \code{\link{tab_acs_source}()}
 }
 \concept{gt table}

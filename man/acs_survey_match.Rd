@@ -5,7 +5,7 @@
 \alias{acs_survey_sample}
 \alias{acs_survey_ts}
 \alias{acs_survey_label}
-\alias{acs_survey_label_tables}
+\alias{acs_survey_label_table}
 \title{Assorted helpers for ACS survey types and labels}
 \usage{
 acs_survey_match(survey = "acs5", error_call = caller_env())
@@ -21,11 +21,11 @@ acs_survey_label(
   prefix = ""
 )
 
-acs_survey_label_tables(
+acs_survey_label_table(
   survey = "acs5",
   year = 2021,
   prefix = "",
-  tables = NULL,
+  table = NULL,
   table_label = "Table",
   sep = ", ",
   and = " and ",
@@ -56,7 +56,7 @@ specified by the survey parameter.}
 
 \item{prefix}{Text to insert before ACS survey label.}
 
-\item{tables}{One or more table IDs to include in label or source note.}
+\item{table}{One or more table IDs to include in label or source note.}
 
 \item{table_label}{Label to use when referring to table or tables. A "s" is
 appended to the end of the table_label if tables is more than length 1.}
@@ -83,6 +83,6 @@ acs_survey_ts("acs5", 2020)
 
 acs_survey_label()
 
-acs_survey_label_tables(tables = c("B19013", "B01003"))
+acs_survey_label_table(table = c("B19013", "B01003"))
 
 }

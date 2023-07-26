@@ -14,7 +14,7 @@
 #'
 #' acs_survey_label()
 #'
-#' acs_survey_label_tables(tables = c("B19013", "B01003"))
+#' acs_survey_label_table(table = c("B19013", "B01003"))
 #'
 #' @export
 #' @importFrom rlang arg_match0
@@ -99,18 +99,18 @@ acs_survey_label <- function(survey = "acs5",
 }
 
 #' @rdname acs_survey_match
-#' @name acs_survey_label_tables
-#' @param tables One or more table IDs to include in label or source note.
+#' @name acs_survey_label_table
+#' @param table One or more table IDs to include in label or source note.
 #' @param table_label Label to use when referring to table or tables. A "s" is
 #'   appended to the end of the table_label if tables is more than length 1.
 #' @param before,after A character string to be added before/after each word.
 #' @inheritParams knitr::combine_words
 #' @export
 #' @importFrom knitr combine_words
-acs_survey_label_tables <- function(survey = "acs5",
+acs_survey_label_table <- function(survey = "acs5",
                                     year = 2021,
                                     prefix = "",
-                                    tables = NULL,
+                                    table = NULL,
                                     table_label = "Table",
                                     sep = ", ",
                                     and = " and ",
@@ -119,16 +119,16 @@ acs_survey_label_tables <- function(survey = "acs5",
                                     oxford_comma = TRUE) {
   label <- acs_survey_label(survey, year, prefix = prefix)
 
-  if (is_null(tables) || identical(tables, "")) {
+  if (is_null(table) || identical(table, "")) {
     return(paste0(label, after))
   }
 
-  if (length(tables) > 1) {
+  if (length(table) > 1) {
     table_label <- paste0(table_label, "s")
   }
 
-  tables <- knitr::combine_words(
-    tables,
+  table <- knitr::combine_words(
+    table,
     sep = sep,
     and = and,
     before = before,
@@ -136,5 +136,5 @@ acs_survey_label_tables <- function(survey = "acs5",
     oxford_comma = oxford_comma
   )
 
-  glue("{label}, {table_label} {tables}")
+  glue("{label}, {table_label} {table}")
 }

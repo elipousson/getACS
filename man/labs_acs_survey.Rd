@@ -10,7 +10,7 @@ labs_acs_survey(
   survey = "acs5",
   year = 2021,
   prefix = "Source: ",
-  tables = NULL
+  table = NULL
 )
 }
 \arguments{
@@ -21,7 +21,7 @@ of years for non-overlapping ACS samples to allow comparison.}
 
 \item{prefix}{Text to insert before ACS survey label.}
 
-\item{tables}{One or more table IDs to include in label or source note.}
+\item{table}{One or more table IDs to include in label or source note.}
 }
 \description{
 Label a ggplot2 plot and add a caption based on an ACS survey year

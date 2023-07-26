@@ -30,7 +30,7 @@ Vectorized variant of \link[tidycensus:get_acs]{tidycensus::get_acs}
 \examples{
 \dontrun{
 if (interactive()) {
-  # EXAMPLE1
+  # TODO: Add examples
 }
 }
 }

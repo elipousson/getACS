@@ -8,22 +8,23 @@ NULL
 #' Add a Census data source note to a gt table
 #'
 #' [tab_acs_source()] adds a source note to a gt table using
-#' [acs_survey_label_tables()] and [gt::tab_source_note()].
+#' [acs_survey_label_table()] and [gt::tab_source_note()].
 #'
 #' @inheritParams gt_params
 #' @inheritParams gt::tab_source_note
-#' @inheritParams acs_survey_label_tables
+#' @inheritParams acs_survey_label_table
 #' @param append_note If `TRUE`, add source_note to the end of the generated ACS
 #'   data label. If `FALSE`, any supplied source_note will be used instead of an
 #'   ACS label.
 #' @param use_md If `TRUE`, pass source_note to [gt::md()] first.
 #' @param ... For [tab_acs_source()], additional parameters passed to
-#'   [acs_survey_label_tables()]. For [cols_merge_uncert_ext()], additional
+#'   [acs_survey_label_table()]. For [cols_merge_uncert_ext()], additional
 #'   parameters passed to [gt::cols_merge_uncert()]. For [fmt_acs_percent()],
 #'   additional parameters passed to [gt::fmt_percent()].
 #' @family gt table
 #' @export
 #' @importFrom glue glue
+#' @importFrom gt md tab_source_note
 tab_acs_source <- function(gt_object,
                            source_note = NULL,
                            survey = "acs5",
@@ -31,24 +32,22 @@ tab_acs_source <- function(gt_object,
                            prefix = "Source: ",
                            before = "",
                            after = ".",
-                           tables = NULL,
+                           table = NULL,
                            table_label = "Table",
                            append_note = FALSE,
                            use_md = FALSE,
                            ...) {
-  check_installed("gt")
-
   if (append_note) {
     after <- after %||% ""
     after <- paste(after, source_note)
     source_note <- NULL
   }
 
-  source_note <- source_note %||% acs_survey_label_tables(
+  source_note <- source_note %||% acs_survey_label_table(
     survey = survey,
     year = year,
     prefix = prefix,
-    tables = tables,
+    table = table,
     table_label = table_label,
     before = before,
     after = after,
@@ -74,7 +73,7 @@ tab_acs_source <- function(gt_object,
 #' [cols_merge_uncert_ext()] is a variant of [gt::cols_merge_uncert()] to
 #' support col_val and col_uncert to be set based on a length 2 cols parameter
 #' and optionally apply a prefix or postfix value. These options are primarily
-#' for internal use by [gt_census_cols()], [fmt_acs_estimate()], and
+#' for internal use by [gt_acs()], [fmt_acs_estimate()], and
 #' [fmt_acs_percent()].
 #'
 #' @name cols_merge_uncert_ext
@@ -88,6 +87,8 @@ tab_acs_source <- function(gt_object,
 #' @family gt table
 #' @export
 #' @importFrom stringr str_c
+#' @importFrom gt cols_merge_uncert
+#' @importFrom cli cli_alert_warning
 cols_merge_uncert_ext <- function(gt_object,
                                   columns = NULL,
                                   col_val = NULL,
@@ -96,8 +97,6 @@ cols_merge_uncert_ext <- function(gt_object,
                                   postfix = "",
                                   sep = "",
                                   ...) {
-  check_installed("gt")
-
   columns <- columns %||% c(col_val, col_uncert)
 
   stopifnot(all(is.character(columns)))
@@ -112,6 +111,10 @@ cols_merge_uncert_ext <- function(gt_object,
   }
 
   if (!all(has_name(gt_object[["_data"]], columns))) {
+    cli::cli_alert_warning(
+      "Missing one or more {.arg columns}: {.val {columns}}"
+    )
+
     return(gt_object)
   }
 
@@ -127,7 +130,7 @@ cols_merge_uncert_ext <- function(gt_object,
 #' error columns) in a gt table
 #'
 #' [fmt_acs_estimate()] formats estimate and margin of error columns for a gt
-#' table. Used by [gt_census_cols()]
+#' table. Used by [gt_acs()]
 #'
 #' @inheritParams gt_params
 #' @param col_est,col_moe Column names for the estimate and margin of error
@@ -144,6 +147,7 @@ cols_merge_uncert_ext <- function(gt_object,
 #'   [fmt_acs_estimate()] or to [gt::fmt_percent()] by [fmt_acs_percent()].
 #' @family gt table
 #' @export
+#' @importFrom gt fmt_number tab_spanner
 fmt_acs_estimate <- function(gt_object,
                              col_est = "estimate",
                              col_moe = "moe",
@@ -153,8 +157,6 @@ fmt_acs_estimate <- function(gt_object,
                              decimals = 0,
                              use_seps = TRUE,
                              ...) {
-  check_installed("gt")
-
   columns <- columns %||% c(col_est, col_moe)
 
   gt_object <- cols_label_ext(
@@ -181,6 +183,7 @@ fmt_acs_estimate <- function(gt_object,
 #' @rdname fmt_acs_estimate
 #' @name fmt_acs_percent
 #' @export
+#' @importFrom gt fmt_percent tab_spanner
 fmt_acs_percent <- function(gt_object,
                             col_est = "perc_estimate",
                             col_moe = "perc_moe",
@@ -214,7 +217,7 @@ fmt_acs_percent <- function(gt_object,
     gt_object,
     label = spanner,
     columns = columns
-    )
+  )
 }
 
 #' @rdname fmt_acs_estimate
@@ -223,6 +226,7 @@ fmt_acs_percent <- function(gt_object,
 #' [cols_label_ext()] is a variant on [gt::cols_label()] used by
 #' [fmt_acs_estimate()] and [fmt_acs_percent()].
 #' @export
+#' @importFrom gt cols_label
 cols_label_ext <- function(gt_object, columns, col_labels = NULL) {
   check_installed("gt")
 
@@ -250,50 +254,69 @@ cols_label_ext <- function(gt_object, columns, col_labels = NULL) {
 #' gt table
 #'
 #' Create or format a gt table with an estimate and margin of error and
-#' (optionally) percent estimate and margin of error value.
+#' (optionally) percent estimate and margin of error value. Use in combination
+#' with the [select_acs_cols()] helper function to prep data before creating a
+#' table.
 #'
-#' @param gt_object If gt_object is a data frame, it is converted to a gt table
-#'   with [gt::gt()].
+#' @inheritParams gt::gt
 #' @param est_cols,est_col_label,est_spanner Passed to columns, col_labels, and
 #'   spanner parameter for [fmt_acs_estimate()]
 #' @param perc_cols,perc_col_label,perc_spanner Passed to columns, col_labels,
 #'   and spanner parameter for [fmt_acs_percent()]
 #' @inheritParams fmt_acs_estimate
-#' @param column_title_col Column name to check for in the input gt table. This
-#'   parameter may not be needed so may be removed.
+#' @param column_title_col Column name to check for in the input gt table. Only
+#'   required if column_title_label is supplied.
+#' @param column_title_label Optional label applied to column named in
+#'   column_title_col.
 #' @param combined_spanner If not `NULL`, combined_spanner is passed to label
 #'   parameter of [gt::tab_spanner()] using both est_cols and perc_cols as the
 #'   columns parameter.
 #' @inheritParams tab_acs_source
 #' @family gt table
+#' @examples
+#' data <- get_acs_tables(
+#'   geography = "county",
+#'   county = "Baltimore city",
+#'   state = "MD",
+#'   table = "B08134"
+#' )
+#'
+#' tbl_data <- filter_acs(data, indent == 1, line_number <= 10)
+#' tbl_data <- select_acs_cols(tbl_data)
+#'
+#' gt_acs(
+#'   tbl_data,
+#'   column_title_label = "Commute time",
+#'   table = "B08134"
+#' )
+#'
 #' @export
-gt_census_cols <- function(gt_object,
-                           est_cols = c("estimate", "moe"),
-                           est_col_label = "Est.",
-                           perc_cols = c("perc_estimate", "perc_moe"),
-                           perc_col_label = "% share",
-                           est_spanner = NULL,
-                           perc_spanner = NULL,
-                           combined_spanner = NULL,
-                           source_note = NULL,
-                           survey = "acs5",
-                           year = 2021,
-                           prefix = "Source: ",
-                           before = "",
-                           after = ".",
-                           tables = NULL,
-                           decimals = 0,
-                           column_title_col = "column_title",
-                           ...) {
-  check_installed("gt")
-
-  if (is.data.frame(gt_object)) {
-    gt_object <- gt::gt(gt_object, ...)
+#' @importFrom gt gt tab_spanner cols_label
+gt_acs <- function(data,
+                   est_cols = c("estimate", "moe"),
+                   est_col_label = "Est.",
+                   perc_cols = c("perc_estimate", "perc_moe"),
+                   perc_col_label = "% share",
+                   est_spanner = NULL,
+                   perc_spanner = NULL,
+                   combined_spanner = NULL,
+                   source_note = NULL,
+                   survey = "acs5",
+                   year = 2021,
+                   prefix = "Source: ",
+                   before = "",
+                   after = ".",
+                   table = NULL,
+                   decimals = 0,
+                   column_title_col = "column_title",
+                   column_title_label = NULL,
+                   append_note = FALSE,
+                   ...) {
+  if (!inherits(data, "gt_tbl")) {
+    gt_object <- gt::gt(data, ...)
+  } else {
+    gt_object <- data
   }
-
-  stopifnot(
-    has_name(gt_object[["_data"]], column_title_col)
-  )
 
   if (!is.null(est_cols)) {
     gt_object <- fmt_acs_estimate(
@@ -323,14 +346,26 @@ gt_census_cols <- function(gt_object,
     )
   }
 
+  if (!is_null(column_title_label)) {
+    stopifnot(
+      has_name(gt_object[["_data"]], column_title_col)
+    )
+
+    gt_object <- gt::cols_label(
+      gt_object,
+      .list = set_names(column_title_label, column_title_col)
+    )
+  }
+
   tab_acs_source(
     gt_object = gt_object,
     source_note = source_note,
+    append_note = append_note,
     survey = survey,
     year = year,
     prefix = prefix,
     before = before,
     after = after,
-    tables = tables
+    table = table
   )
 }

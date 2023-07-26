@@ -12,7 +12,7 @@ tab_acs_source(
   prefix = "Source: ",
   before = "",
   after = ".",
-  tables = NULL,
+  table = NULL,
   table_label = "Table",
   append_note = FALSE,
   use_md = FALSE,
@@ -39,7 +39,7 @@ of years for non-overlapping ACS samples to allow comparison.}
 
 \item{before, after}{A character string to be added before/after each word.}
 
-\item{tables}{One or more table IDs to include in label or source note.}
+\item{table}{One or more table IDs to include in label or source note.}
 
 \item{table_label}{Label to use when referring to table or tables. A "s" is
 appended to the end of the table_label if tables is more than length 1.}
@@ -51,18 +51,18 @@ ACS label.}
 \item{use_md}{If \code{TRUE}, pass source_note to \code{\link[gt:md]{gt::md()}} first.}
 
 \item{...}{For \code{\link[=tab_acs_source]{tab_acs_source()}}, additional parameters passed to
-\code{\link[=acs_survey_label_tables]{acs_survey_label_tables()}}. For \code{\link[=cols_merge_uncert_ext]{cols_merge_uncert_ext()}}, additional
+\code{\link[=acs_survey_label_table]{acs_survey_label_table()}}. For \code{\link[=cols_merge_uncert_ext]{cols_merge_uncert_ext()}}, additional
 parameters passed to \code{\link[gt:cols_merge_uncert]{gt::cols_merge_uncert()}}. For \code{\link[=fmt_acs_percent]{fmt_acs_percent()}},
 additional parameters passed to \code{\link[gt:fmt_percent]{gt::fmt_percent()}}.}
 }
 \description{
 \code{\link[=tab_acs_source]{tab_acs_source()}} adds a source note to a gt table using
-\code{\link[=acs_survey_label_tables]{acs_survey_label_tables()}} and \code{\link[gt:tab_source_note]{gt::tab_source_note()}}.
+\code{\link[=acs_survey_label_table]{acs_survey_label_table()}} and \code{\link[gt:tab_source_note]{gt::tab_source_note()}}.
 }
 \seealso{
 Other gt table: 
 \code{\link{cols_merge_uncert_ext}()},
 \code{\link{fmt_acs_estimate}()},
-\code{\link{gt_census_cols}()}
+\code{\link{gt_acs}()}
 }
 \concept{gt table}

@@ -7,18 +7,18 @@ labs_acs_survey <- function(...,
                             survey = "acs5",
                             year = 2021,
                             prefix = "Source: ",
-                            tables = NULL) {
+                            table = NULL) {
   check_installed("ggplot2")
 
   ggplot2::labs(
     ...,
     caption = c(
       caption,
-      acs_survey_label_tables(
+      acs_survey_label_table(
         survey = survey,
         year = year,
         prefix = prefix,
-        tables = tables
+        table = table
       )
     )
   )

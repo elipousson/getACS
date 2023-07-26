@@ -123,13 +123,13 @@ if (interactive()) {
     geography = "county",
     county = "Baltimore city",
     state = "MD",
-    tables = c("B01003", "B19013")
+    table = c("B01003", "B19013")
   )
 
   get_acs_geographies(
     geographies = c("county", "state"),
     state = "MD",
-    tables = c("B01003", "B19013")
+    table = c("B01003", "B19013")
   )
 }
 }

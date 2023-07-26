@@ -10,6 +10,7 @@
 #' @inheritDotParams readr::read_csv
 #' @keywords internal
 #' @export
+#' @importFrom rappdirs user_cache_dir
 get_acs_metadata <- function(survey = "acs5",
                              year = 2021,
                              metadata = "table",

@@ -17,9 +17,11 @@ Imports:
     cli,
     dplyr,
     glue,
+    gt,
     knitr,
     lifecycle,
     purrr,
+    rappdirs,
     rlang (>= 1.1.0),
     sf,
     stringr,
@@ -30,7 +32,6 @@ Imports:
 Suggests: 
     forcats,
     ggplot2,
-    gt,
     readr,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3

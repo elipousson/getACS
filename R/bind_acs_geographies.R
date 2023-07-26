@@ -29,14 +29,13 @@
 #
 #     data_combined |>
 #       select(-name) |>
-#       gt::gt() |>
-#       gt_census_cols(
+#       gt_acs(
 #         est_col_label = "Households",
 #         perc_col_label = "% of total",
 #         combined_spanner = "INSPIRE Area",
-#         tables = tables
+#         table = table
 #       ) |>
-#       gt_census_cols(
+#       gt_acs(
 #         est_cols = NULL,
 #         perc_cols = paste0(c("perc_estimate", "perc_moe"), county_name_suffix),
 #         perc_col_label = "% of total",

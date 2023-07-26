@@ -11,7 +11,7 @@
 #' @examples
 #' \dontrun{
 #' if (interactive()) {
-#'   # EXAMPLE1
+#'   # TODO: Add examples
 #' }
 #' }
 #' @rdname vec_get_acs
@@ -93,13 +93,13 @@ get_acs_table_alert <- function(...) {
 #'     geography = "county",
 #'     county = "Baltimore city",
 #'     state = "MD",
-#'     tables = c("B01003", "B19013")
+#'     table = c("B01003", "B19013")
 #'   )
 #'
 #'   get_acs_geographies(
 #'     geographies = c("county", "state"),
 #'     state = "MD",
-#'     tables = c("B01003", "B19013")
+#'     table = c("B01003", "B19013")
 #'   )
 #' }
 #' }

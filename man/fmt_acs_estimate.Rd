@@ -73,7 +73,7 @@ This setting is \code{TRUE} by default.}
 }
 \description{
 \code{\link[=fmt_acs_estimate]{fmt_acs_estimate()}} formats estimate and margin of error columns for a gt
-table. Used by \code{\link[=gt_census_cols]{gt_census_cols()}}
+table. Used by \code{\link[=gt_acs]{gt_acs()}}
 }
 \details{
 Using cols_label_ext
@@ -83,7 +83,7 @@ Using cols_label_ext
 \seealso{
 Other gt table: 
 \code{\link{cols_merge_uncert_ext}()},
-\code{\link{gt_census_cols}()},
+\code{\link{gt_acs}()},
 \code{\link{tab_acs_source}()}
 }
 \concept{gt table}
