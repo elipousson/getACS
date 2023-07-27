@@ -78,10 +78,16 @@ table. Used by <code><a href="gt_acs.html">gt_acs()</a></code></p>
 <span>  spanner <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  decimals <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  use_seps <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  <span class="va">...</span></span>
+<span>  <span class="va">...</span>,</span>
+<span>  call <span class="op">=</span> <span class="fu">caller_env</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">cols_label_ext</span><span class="op">(</span><span class="va">gt_object</span>, <span class="va">columns</span>, col_labels <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">cols_label_ext</span><span class="op">(</span></span>
+<span>  <span class="va">gt_object</span>,</span>
+<span>  columns <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  col_labels <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  call <span class="op">=</span> <span class="fu">caller_env</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -146,7 +152,7 @@ This setting is <code>TRUE</code> by default.</p></dd>
     <div class="dont-index"><p>Other gt table: 
 <code><a href="cols_merge_uncert_ext.html">cols_merge_uncert_ext</a>()</code>,
 <code><a href="gt_acs.html">gt_acs</a>()</code>,
-<code><a href="tab_acs_source.html">tab_acs_source</a>()</code></p></div>
+<code><a href="tab_acs_source_note.html">tab_acs_source_note</a>()</code></p></div>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

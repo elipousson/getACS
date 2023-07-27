@@ -64,6 +64,9 @@
     <loc>https://elipousson.github.io/getACS/reference/index.html</loc>
   </url>
   <url>
+    <loc>https://elipousson.github.io/getACS/reference/join_acs_parent_column.html</loc>
+  </url>
+  <url>
     <loc>https://elipousson.github.io/getACS/reference/join_acs_percent.html</loc>
   </url>
   <url>
@@ -82,7 +85,7 @@
     <loc>https://elipousson.github.io/getACS/reference/select_acs_cols.html</loc>
   </url>
   <url>
-    <loc>https://elipousson.github.io/getACS/reference/tab_acs_source.html</loc>
+    <loc>https://elipousson.github.io/getACS/reference/tab_acs_source_note.html</loc>
   </url>
   <url>
     <loc>https://elipousson.github.io/getACS/reference/tigerweb_geo_index.html</loc>
