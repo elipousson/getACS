@@ -108,15 +108,15 @@ acs_survey_label <- function(survey = "acs5",
 #' @export
 #' @importFrom knitr combine_words
 acs_survey_label_table <- function(survey = "acs5",
-                                    year = 2021,
-                                    prefix = "",
-                                    table = NULL,
-                                    table_label = "Table",
-                                    sep = ", ",
-                                    and = " and ",
-                                    before = "",
-                                    after = ".",
-                                    oxford_comma = TRUE) {
+                                   year = 2021,
+                                   prefix = "",
+                                   table = NULL,
+                                   table_label = "Table",
+                                   sep = ", ",
+                                   and = " and ",
+                                   before = "",
+                                   after = ".",
+                                   oxford_comma = TRUE) {
   label <- acs_survey_label(survey, year, prefix = prefix)
 
   if (is_null(table) || identical(table, "")) {

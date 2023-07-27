@@ -14,7 +14,7 @@ get_acs_tables(
   survey = "acs5",
   label = TRUE,
   perc = TRUE,
-  geoid = "GEOID",
+  geoid_col = "GEOID",
   ...
 )
 
@@ -29,7 +29,7 @@ get_acs_geographies(
   label = TRUE,
   survey = "acs5",
   perc = TRUE,
-  geoid = "GEOID",
+  geoid_col = "GEOID",
   ...
 )
 
@@ -44,7 +44,7 @@ get_acs_geography(
   label = TRUE,
   survey = "acs5",
   perc = TRUE,
-  geoid = "GEOID",
+  geoid_col = "GEOID",
   ...,
   call = caller_env()
 )
@@ -74,7 +74,7 @@ each estimate as a percent share of the denominator value and use
 \code{\link[tidycensus:moe_prop]{tidycensus::moe_prop()}} to calculate a new margin of error for the percent
 estimate.}
 
-\item{geoid}{A GeoID column name to use if perc is \code{TRUE}, Defaults to
+\item{geoid_col}{A GeoID column name to use if perc is \code{TRUE}, Defaults to
 'GEOID'.}
 
 \item{...}{Other keyword arguments}

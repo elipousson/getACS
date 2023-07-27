@@ -42,7 +42,6 @@ fmt_acs_jam_values <- function(data) {
 #' @export
 fmt_acs_minutes <- function(data,
                             column_title = "column_title") {
-
   data[[column_title]] <- stringr::str_remove(data[[column_title]], "[:space:]minutes$")
 
   data

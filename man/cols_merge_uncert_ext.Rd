@@ -12,7 +12,8 @@ cols_merge_uncert_ext(
   prefix = "",
   postfix = "",
   sep = "",
-  ...
+  ...,
+  call = caller_env()
 )
 }
 \arguments{
@@ -77,6 +78,6 @@ for internal use by \code{\link[=gt_acs]{gt_acs()}}, \code{\link[=fmt_acs_estima
 Other gt table: 
 \code{\link{fmt_acs_estimate}()},
 \code{\link{gt_acs}()},
-\code{\link{tab_acs_source}()}
+\code{\link{tab_acs_source_note}()}
 }
 \concept{gt table}

@@ -12,7 +12,7 @@ label_acs_metadata(
   survey = "acs5",
   year = 2021,
   perc = TRUE,
-  geoid = "GEOID"
+  geoid_col = "GEOID"
 )
 
 label_acs_table_metadata(data, survey = "acs5", year = 2021)
@@ -31,7 +31,7 @@ each estimate as a percent share of the denominator value and use
 \code{\link[tidycensus:moe_prop]{tidycensus::moe_prop()}} to calculate a new margin of error for the percent
 estimate.}
 
-\item{geoid}{A GeoID column name to use if perc is \code{TRUE}, Defaults to
+\item{geoid_col}{A GeoID column name to use if perc is \code{TRUE}, Defaults to
 'GEOID'.}
 }
 \description{

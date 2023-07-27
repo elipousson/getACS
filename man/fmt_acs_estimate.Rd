@@ -28,10 +28,16 @@ fmt_acs_percent(
   spanner = NULL,
   decimals = 0,
   use_seps = TRUE,
-  ...
+  ...,
+  call = caller_env()
 )
 
-cols_label_ext(gt_object, columns, col_labels = NULL)
+cols_label_ext(
+  gt_object,
+  columns = NULL,
+  col_labels = NULL,
+  call = caller_env()
+)
 }
 \arguments{
 \item{gt_object}{A gt object.}
@@ -84,6 +90,6 @@ Using cols_label_ext
 Other gt table: 
 \code{\link{cols_merge_uncert_ext}()},
 \code{\link{gt_acs}()},
-\code{\link{tab_acs_source}()}
+\code{\link{tab_acs_source_note}()}
 }
 \concept{gt table}

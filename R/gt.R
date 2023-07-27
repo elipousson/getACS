@@ -7,7 +7,7 @@ NULL
 
 #' Add a Census data source note to a gt table
 #'
-#' [tab_acs_source()] adds a source note to a gt table using
+#' [tab_acs_source_note()] adds a source note to a gt table using
 #' [acs_survey_label_table()] and [gt::tab_source_note()].
 #'
 #' @inheritParams gt_params
@@ -17,7 +17,7 @@ NULL
 #'   data label. If `FALSE`, any supplied source_note will be used instead of an
 #'   ACS label.
 #' @param use_md If `TRUE`, pass source_note to [gt::md()] first.
-#' @param ... For [tab_acs_source()], additional parameters passed to
+#' @param ... For [tab_acs_source_note()], additional parameters passed to
 #'   [acs_survey_label_table()]. For [cols_merge_uncert_ext()], additional
 #'   parameters passed to [gt::cols_merge_uncert()]. For [fmt_acs_percent()],
 #'   additional parameters passed to [gt::fmt_percent()].
@@ -25,18 +25,18 @@ NULL
 #' @export
 #' @importFrom glue glue
 #' @importFrom gt md tab_source_note
-tab_acs_source <- function(gt_object,
-                           source_note = NULL,
-                           survey = "acs5",
-                           year = 2021,
-                           prefix = "Source: ",
-                           before = "",
-                           after = ".",
-                           table = NULL,
-                           table_label = "Table",
-                           append_note = FALSE,
-                           use_md = FALSE,
-                           ...) {
+tab_acs_source_note <- function(gt_object,
+                                source_note = NULL,
+                                survey = "acs5",
+                                year = 2021,
+                                prefix = "Source: ",
+                                before = "",
+                                after = ".",
+                                table = NULL,
+                                table_label = "Table",
+                                append_note = FALSE,
+                                use_md = FALSE,
+                                ...) {
   if (append_note) {
     after <- after %||% ""
     after <- paste(after, source_note)
@@ -96,17 +96,19 @@ cols_merge_uncert_ext <- function(gt_object,
                                   prefix = "",
                                   postfix = "",
                                   sep = "",
-                                  ...) {
+                                  ...,
+                                  call = caller_env()) {
   columns <- columns %||% c(col_val, col_uncert)
 
-  stopifnot(all(is.character(columns)))
+  check_character(columns, call = call)
 
   columns <- stringr::str_c(prefix, columns, postfix, sep = sep)
 
   if (!has_length(columns, 2)) {
     cli_abort(
       "{.fn cols_merge_uncert_ext} requires {.arg columns} be
-      a length 2 character vector."
+      a length 2 character vector.",
+      call = call
     )
   }
 
@@ -173,7 +175,7 @@ fmt_acs_estimate <- function(gt_object,
     ...
   )
 
-  if (is.null(spanner)) {
+  if (is_null(spanner)) {
     return(cols_merge_uncert_ext(gt_object, columns = columns))
   }
 
@@ -192,12 +194,11 @@ fmt_acs_percent <- function(gt_object,
                             spanner = NULL,
                             decimals = 0,
                             use_seps = TRUE,
-                            ...) {
-  check_installed("gt")
-
+                            ...,
+                            call = caller_env()) {
   columns <- columns %||% c(col_est, col_moe)
 
-  gt_object <- cols_label_ext(gt_object, columns, col_labels)
+  gt_object <- cols_label_ext(gt_object, columns, col_labels, call = call)
 
   gt_object <- gt::fmt_percent(
     gt_object,
@@ -207,11 +208,11 @@ fmt_acs_percent <- function(gt_object,
     ...
   )
 
-  if (is.null(spanner)) {
+  if (is_null(spanner)) {
     return(cols_merge_uncert_ext(gt_object, columns))
   }
 
-  check_character(spanner)
+  check_character(spanner, call = call)
 
   gt::tab_spanner(
     gt_object,
@@ -227,16 +228,15 @@ fmt_acs_percent <- function(gt_object,
 #' [fmt_acs_estimate()] and [fmt_acs_percent()].
 #' @export
 #' @importFrom gt cols_label
-cols_label_ext <- function(gt_object, columns, col_labels = NULL) {
-  check_installed("gt")
-
-  if (is.null(col_labels)) {
+cols_label_ext <- function(gt_object,
+                           columns = NULL,
+                           col_labels = NULL,
+                           call = caller_env()) {
+  if (is_null(col_labels)) {
     return(gt_object)
   }
 
-  stopifnot(
-    all(is.character(columns))
-  )
+  check_character(columns, call = call)
 
   if (has_length(col_labels, 1)) {
     col_labels <- set_names(col_labels, columns[[1]])
@@ -271,25 +271,28 @@ cols_label_ext <- function(gt_object, columns, col_labels = NULL) {
 #' @param combined_spanner If not `NULL`, combined_spanner is passed to label
 #'   parameter of [gt::tab_spanner()] using both est_cols and perc_cols as the
 #'   columns parameter.
-#' @inheritParams tab_acs_source
+#' @inheritParams tab_acs_source_note
 #' @family gt table
 #' @examples
-#' data <- get_acs_tables(
-#'   geography = "county",
-#'   county = "Baltimore city",
-#'   state = "MD",
-#'   table = "B08134"
-#' )
+#' \dontrun{
+#' if (interactive()) {
+#'   data <- get_acs_tables(
+#'     geography = "county",
+#'     county = "Baltimore city",
+#'     state = "MD",
+#'     table = "B08134"
+#'   )
 #'
-#' tbl_data <- filter_acs(data, indent == 1, line_number <= 10)
-#' tbl_data <- select_acs_cols(tbl_data)
+#'   tbl_data <- filter_acs(data, indent == 1, line_number <= 10)
+#'   tbl_data <- select_acs_cols(tbl_data)
 #'
-#' gt_acs(
-#'   tbl_data,
-#'   column_title_label = "Commute time",
-#'   table = "B08134"
-#' )
-#'
+#'   gt_acs(
+#'     tbl_data,
+#'     column_title_label = "Commute time",
+#'     table = "B08134"
+#'   )
+#' }
+#' }
 #' @export
 #' @importFrom gt gt tab_spanner cols_label
 gt_acs <- function(data,
@@ -312,13 +315,13 @@ gt_acs <- function(data,
                    column_title_label = NULL,
                    append_note = FALSE,
                    ...) {
+  gt_object <- data
+
   if (!inherits(data, "gt_tbl")) {
     gt_object <- gt::gt(data, ...)
-  } else {
-    gt_object <- data
   }
 
-  if (!is.null(est_cols)) {
+  if (!is_null(est_cols)) {
     gt_object <- fmt_acs_estimate(
       gt_object,
       columns = est_cols,
@@ -328,7 +331,7 @@ gt_acs <- function(data,
     )
   }
 
-  if (!is.null(perc_cols)) {
+  if (!is_null(perc_cols)) {
     gt_object <- fmt_acs_percent(
       gt_object,
       columns = perc_cols,
@@ -357,7 +360,7 @@ gt_acs <- function(data,
     )
   }
 
-  tab_acs_source(
+  tab_acs_source_note(
     gt_object = gt_object,
     source_note = source_note,
     append_note = append_note,
@@ -368,4 +371,75 @@ gt_acs <- function(data,
     after = after,
     table = table
   )
+}
+
+
+#' @noRd
+gt_acs_bind_geographies <- function(data,
+                                    names = NULL,
+                                    name_labels = NULL,
+                                    table = NULL,
+                                    name_col = "name",
+                                    column_title_col = "column_title",
+                                    column_title_label = NULL,
+                                    est_col_label = "Households",
+                                    perc_col_label = "% of total",
+                                    source_note = NULL) {
+  stopifnot(
+    has_name(data, name_col)
+  )
+
+  names <- names %||% unique(data[[name_col]])
+
+  stopifnot(
+    length(names) > 1
+  )
+
+  names_df <- data.frame()
+  col_names <- list()
+
+  for (i in seq_along(names)) {
+    bind_names_df <- filter_acs(
+      data,
+      table = table,
+      .data[[name_col]] == names[[i]]
+    )
+
+    if (i > 1) {
+      column_title_col <- NULL
+    }
+
+    bind_names_df <- select_acs_cols(
+      data = data,
+      name_col = NULL,
+      column_title_col = column_title_col
+    )
+
+    col_names[[i]] <- paste0(names[[i]], "_", names(bind_names_df))
+
+    names_df <- purrr::list_rbind(
+      list(
+        names_df,
+        set_names(bind_names_df, col_names[[i]])
+      )
+    )
+  }
+
+  # for (i in seq_along(names)) {
+  #
+  #   paste0(names[[i]], names(bind_names_df))))
+  #
+  #   tbls[[i]] <- getACS::gt_acs(
+  #     nm_data,
+  #     est_col_label = est_col_label,
+  #     perc_col_label = perc_col_label,
+  #     combined_spanner = nm,
+  #     table = table,
+  #     source_note = source_note,
+  #     column_title_label = column_title_label
+  #   )
+  # }
+  #
+
+  names_df
 }

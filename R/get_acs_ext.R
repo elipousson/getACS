@@ -114,7 +114,7 @@ get_acs_tables <- function(geography,
                            survey = "acs5",
                            label = TRUE,
                            perc = TRUE,
-                           geoid = "GEOID",
+                           geoid_col = "GEOID",
                            ...) {
   survey_label <- acs_survey_label(
     survey = survey,
@@ -153,7 +153,7 @@ get_acs_tables <- function(geography,
     survey = survey,
     year = year,
     perc = perc,
-    geoid = geoid
+    geoid_col = geoid_col
   )
 }
 
@@ -183,7 +183,7 @@ get_acs_geographies <- function(geographies = c("county", "state"),
                                 label = TRUE,
                                 survey = "acs5",
                                 perc = TRUE,
-                                geoid = "GEOID",
+                                geoid_col = "GEOID",
                                 ...) {
   survey_label <- acs_survey_label(
     survey = survey,
@@ -208,7 +208,7 @@ get_acs_geographies <- function(geographies = c("county", "state"),
         label = label,
         survey = survey,
         perc = perc,
-        geoid = geoid,
+        geoid_col = geoid_col,
         ...
       )
     }
@@ -232,7 +232,7 @@ get_acs_geography <- function(geography,
                               label = TRUE,
                               survey = "acs5",
                               perc = TRUE,
-                              geoid = "GEOID",
+                              geoid_col = "GEOID",
                               ...,
                               call = caller_env()) {
   params <- get_geography_params(
@@ -252,7 +252,7 @@ get_acs_geography <- function(geography,
     cache_table = cache_table,
     label = label,
     perc = perc,
-    geoid = geoid,
+    geoid_col = geoid_col,
     ...
   )
 

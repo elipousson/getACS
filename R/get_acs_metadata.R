@@ -67,7 +67,7 @@ get_acs_metadata <- function(survey = "acs5",
     )
   }
 
-  if (is.null(table)) {
+  if (is_null(table)) {
     return(data)
   }
 
@@ -102,13 +102,13 @@ label_acs_metadata <- function(data,
                                survey = "acs5",
                                year = 2021,
                                perc = TRUE,
-                               geoid = "GEOID") {
+                               geoid_col = "GEOID") {
   data <- label_acs_table_metadata(data, survey, year)
 
   data <- label_acs_column_metadata(data, survey, year)
 
-  if (perc && all(has_name(data, geoid))) {
-    data <- join_acs_percent(data, geoid = geoid)
+  if (perc && all(has_name(data, geoid_col))) {
+    data <- join_acs_percent(data, geoid_col = geoid_col)
   }
 
   data
@@ -177,72 +177,4 @@ label_acs_column_metadata <- function(data,
     column_metadata,
     by = join_by(table_id, column_id)
   )
-}
-
-
-#' Calculate estimates as a percent of the denominator estimates
-#'
-#' Use the denominator_column_id value from the column metadata added with
-#' [label_acs_metadata()] to calculate the estimate as a percent share of the
-#' denominator value. [tidycensus::moe_prop()] is used to calculate the margin
-#' of error for the percentage. Typically, this function should only be used as
-#' an internal function.
-#'
-#' @param data A data frame with column names including "column_id", "column_title",
-#' "denominator_column_id", "estimate", and "moe".
-#' @param geoid A GeoID column name to use if perc is `TRUE`, Defaults to
-#'   'GEOID'.
-#' @inheritParams base::round
-#' @inheritParams dplyr::left_join
-#' @seealso [tidycensus::moe_prop()]
-#' @keywords internal
-#' @export
-#' @importFrom dplyr filter select left_join mutate
-#' @importFrom tidycensus moe_prop
-join_acs_percent <- function(data,
-                             geoid = "GEOID",
-                             na_matches = "never",
-                             digits = 2) {
-  stopifnot(
-    all(has_name(data, c(
-      geoid, "column_id", "column_title",
-      "denominator_column_id", "estimate", "moe"
-    )))
-  )
-
-  if (!all(data[["denominator_column_id"]] %in% data[["column_id"]])) {
-    cli_alert_warning(
-      "{.arg data} does not contain all of the denominator values needed
-      to calculate the percent estimates for each variables.",
-      wrap = TRUE
-    )
-  }
-
-  denominator_data <- data |>
-    dplyr::filter(column_id %in% data[["denominator_column_id"]]) |>
-    dplyr::select(
-      {{ geoid }},
-      denominator_estimate = estimate,
-      denominator_moe = moe,
-      denominator_column_title = column_title,
-      denominator_column_id = column_id
-    )
-
-  data |>
-    dplyr::left_join(
-      denominator_data,
-      by = dplyr::join_by({{ geoid }}, "denominator_column_id"),
-      na_matches = na_matches
-    ) |>
-    dplyr::mutate(
-      perc_estimate = round(estimate / denominator_estimate, digits = digits),
-      perc_moe = round(
-        tidycensus::moe_prop(
-          estimate, denominator_estimate,
-          moe, denominator_moe
-        ),
-        digits = digits
-      ),
-      .after = all_of("moe")
-    )
 }

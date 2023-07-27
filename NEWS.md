@@ -1,7 +1,7 @@
 # getACS (development version)
 
 * Add tests.
-* Fix issue with `tab_acs_source()` handling of multiple tables.
+* Fix issue with `tab_acs_source_note()` handling of multiple tables.
 
 # getACS (development)
 

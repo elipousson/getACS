@@ -95,27 +95,30 @@ with the \code{\link[=select_acs_cols]{select_acs_cols()}} helper function to pr
 table.
 }
 \examples{
-data <- get_acs_tables(
-  geography = "county",
-  county = "Baltimore city",
-  state = "MD",
-  table = "B08134"
-)
+\dontrun{
+if (interactive()) {
+  data <- get_acs_tables(
+    geography = "county",
+    county = "Baltimore city",
+    state = "MD",
+    table = "B08134"
+  )
 
-tbl_data <- filter_acs(data, indent == 1, line_number <= 10)
-tbl_data <- select_acs_cols(tbl_data)
+  tbl_data <- filter_acs(data, indent == 1, line_number <= 10)
+  tbl_data <- select_acs_cols(tbl_data)
 
-gt_acs(
-  tbl_data,
-  column_title_label = "Commute time",
-  table = "B08134"
-)
-
+  gt_acs(
+    tbl_data,
+    column_title_label = "Commute time",
+    table = "B08134"
+  )
+}
+}
 }
 \seealso{
 Other gt table: 
 \code{\link{cols_merge_uncert_ext}()},
 \code{\link{fmt_acs_estimate}()},
-\code{\link{tab_acs_source}()}
+\code{\link{tab_acs_source_note}()}
 }
 \concept{gt table}
