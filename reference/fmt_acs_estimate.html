@@ -66,7 +66,8 @@ table. Used by <code><a href="gt_acs.html">gt_acs()</a></code></p>
 <span>  spanner <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  decimals <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  use_seps <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  <span class="va">...</span></span>
+<span>  <span class="va">...</span>,</span>
+<span>  call <span class="op">=</span> <span class="fu">caller_env</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">fmt_acs_percent</span><span class="op">(</span></span>
@@ -139,6 +140,13 @@ This setting is <code>TRUE</code> by default.</p></dd>
 <dt>...</dt>
 <dd><p>Additional parameters passed to <code><a href="https://gt.rstudio.com/reference/fmt_number.html" class="external-link">gt::fmt_number()</a></code> by
 <code>fmt_acs_estimate()</code> or to <code><a href="https://gt.rstudio.com/reference/fmt_percent.html" class="external-link">gt::fmt_percent()</a></code> by <code>fmt_acs_percent()</code>.</p></dd>
+
+
+<dt>call</dt>
+<dd><p>The execution environment of a currently
+running function, e.g. <code>caller_env()</code>. The function will be
+mentioned in error messages as the source of the error. See the
+<code>call</code> argument of <code><a href="https://rlang.r-lib.org/reference/abort.html" class="external-link">abort()</a></code> for more information.</p></dd>
 
 </dl></div>
     <div class="section level2">
