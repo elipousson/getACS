@@ -5,6 +5,20 @@ utils::globalVariables(
   )
 )
 
+#' @noRd
+check_sf <- function(x, allow_null = FALSE, arg = caller_arg(x), call = caller_env()) {
+  if (inherits(x, "sf")) {
+    return(invisible(NULL))
+  }
+
+  stop_input_type(
+    x,
+    what = "sf",
+    allow_null = allow_null,
+    call = call
+  )
+}
+
 #' Helper function to select columns typically used in an ACS table
 #'
 #' @inheritParams gt_acs

@@ -2,23 +2,29 @@
 % Please edit documentation in R/xwalk.R
 \name{make_area_xwalk}
 \alias{make_area_xwalk}
-\title{Make a crosswalk for an arbitrary geography}
+\title{Make a crosswalk data frame for U.S. Census tracts and arbitrary areas based
+on block-level attributes}
 \usage{
 make_area_xwalk(
   area,
   block_xwalk = NULL,
   state = NULL,
   county = NULL,
-  year = 2021,
+  year = 2020,
+  name_col = "name",
+  weight_col = "HOUSING20",
+  tract_col = "TRACTCE20",
   by = c(TRACTCE20 = "TRACTCE"),
   suffix = c("_block", "_tract"),
-  weight = "HOUSING20",
-  .group_by = c("name", "TRACTCE20"),
   digits = 2,
+  add_coverage = TRUE,
   ...
 )
 }
 \arguments{
+\item{block_xwalk}{Block-tract crosswalk sf object. If \code{NULL}, state is
+required to create a crosswalk using \code{\link[=make_block_xwalk]{make_block_xwalk()}}}
+
 \item{state}{The two-digit FIPS code (string) of the state you want. Can also
 be state name or state abbreviation.}
 
@@ -27,6 +33,12 @@ subset for, or a vector of FIPS codes if you desire multiple counties.
 Can also be a county name or vector of names.}
 
 \item{year}{the data year; defaults to 2021}
+
+\item{name_col}{Name column in area.}
+
+\item{weight_col}{Column name to use for weighting}
+
+\item{tract_col}{Tract ID column in block_xwalk}
 
 \item{by}{A join specification created with \code{\link[dplyr:join_by]{join_by()}}, or a character
 vector of variables to join by.
@@ -61,11 +73,24 @@ To perform a cross-join, generating all combinations of \code{x} and \code{y}, s
 \code{y}, these suffixes will be added to the output to disambiguate them.
 Should be a character vector of length 2.}
 
-\item{weight}{Column name to use for weighting}
+\item{digits}{Digits to use for percent share of weight value.}
+
+\item{add_coverage}{If \code{TRUE} (default), it is assumed that area does not
+cover the full extent of the block_xwalk and an additional feature is added
+with the difference between the unioned area geometry and unioned
+block_xwalk geometry. This additional coverage ensures that blocks are
+accurately assigned to this alternate geography but it is excluded from the
+returned data frame.}
 
 \item{...}{arguments to be passed to internal function \code{load_tiger}, which is not exported. See Additional Arguments.}
 }
 \description{
-This function is not yet working.
+\code{make_area_xwalk()} creates a crosswalk data frame based on the \code{weight_col}
+parameter (if \code{year = 2020}, use "POP20" for population, "HOUSING20" for
+households, or "ALAND20" for land area). Using this function with other
+years, requires users to add population data to the block_xwalk as the
+\code{\link[tigris:blocks]{tigris::blocks()}} function only includes population and household count data
+for the 2020 year. This function has also not been tested when areas include
+overlapping geometry and the results may be invalid for those overlapping
+areas if that is the case.
 }
-\keyword{internal}

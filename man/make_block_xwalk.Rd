@@ -2,15 +2,15 @@
 % Please edit documentation in R/xwalk.R
 \name{make_block_xwalk}
 \alias{make_block_xwalk}
-\title{Make a block-tract xwalk}
+\title{Make a crosswalk data frame for U.S. Census blocks and tracts}
 \usage{
 make_block_xwalk(
   state,
   county = NULL,
   year = 2020,
   by = c(TRACTCE20 = "TRACTCE"),
-  suffix = c("_block", "_tract"),
   keep_zipped_shapefile = TRUE,
+  suffix = c("_block", "_tract"),
   ...
 )
 }
@@ -53,6 +53,9 @@ use a named character vector like \code{by = c("x_a" = "y_a", "x_b" = "y_b")}.
 To perform a cross-join, generating all combinations of \code{x} and \code{y}, see
 \code{\link[dplyr:cross_join]{cross_join()}}.}
 
+\item{keep_zipped_shapefile}{Passed to \code{\link[tigris:blocks]{tigris::blocks()}} and
+\code{\link[tigris:tracts]{tigris::tracts()}} to keep and re-use the zipped shapefile.}
+
 \item{suffix}{If there are non-joined duplicate variables in \code{x} and
 \code{y}, these suffixes will be added to the output to disambiguate them.
 Should be a character vector of length 2.}
@@ -64,6 +67,11 @@ Should be a character vector of length 2.}
   }}
 }
 \description{
-Make a block-tract xwalk
+\code{make_block_xwalk()} joined U.S. Census blocks data from \code{\link[tigris:blocks]{tigris::blocks()}}
+to a data frame from \code{\link[tigris:tracts]{tigris::tracts()}} to provide a crosswalk between both
+geographies. If \code{year = 2020}, the suffix parameter is not used. If year is
+any other year than 2020, the by parameter must be changed from the default
+value of \code{c("TRACTCE20" = "TRACTCE")}. 2020 is also the only year where
+\code{\link[tigris:blocks]{tigris::blocks()}} includes the population and household count data required
+to use this crosswalk data frame with \code{\link[=make_area_xwalk]{make_area_xwalk()}}.
 }
-\keyword{internal}
