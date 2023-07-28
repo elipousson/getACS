@@ -22,6 +22,10 @@ make_area_xwalk(
 )
 }
 \arguments{
+\item{area}{A sf object with an arbitrary geography overlapping with the
+block_xwalk. Required. If area only partly overlaps with block_xwalk,
+add_coverage should be set to \code{TRUE} (default).}
+
 \item{block_xwalk}{Block-tract crosswalk sf object. If \code{NULL}, state is
 required to create a crosswalk using \code{\link[=make_block_xwalk]{make_block_xwalk()}}}
 

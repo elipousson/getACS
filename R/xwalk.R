@@ -74,6 +74,9 @@ make_block_xwalk <- function(state,
 #' areas if that is the case.
 #'
 #' @inheritParams make_block_xwalk
+#' @param area A sf object with an arbitrary geography overlapping with the
+#'   block_xwalk. Required. If area only partly overlaps with block_xwalk,
+#'   add_coverage should be set to `TRUE` (default).
 #' @param block_xwalk Block-tract crosswalk sf object. If `NULL`, state is
 #'   required to create a crosswalk using [make_block_xwalk()]
 #' @param weight_col Column name to use for weighting
@@ -89,6 +92,7 @@ make_block_xwalk <- function(state,
 #' @export
 #' @importFrom cli cli_progress_step
 #' @importFrom vctrs vec_rbind
+#' @importFrom sf st_join
 #' @importFrom dplyr filter group_by summarise across all_of mutate
 make_area_xwalk <- function(area,
                             block_xwalk = NULL,
@@ -178,7 +182,7 @@ make_area_xwalk <- function(area,
     "perc_{weight_col}" := round(
       .data[[weight_col]] / sum(.data[[weight_col]], na.rm = TRUE),
       digits = digits
-      )
+    )
   )
 
   if (add_coverage) {

@@ -84,6 +84,7 @@ tab_acs_source_note <- function(gt_object,
 #'   col_val and col_uncert. Use a length 2 string `c("", "uncert_prefix")` if
 #'   you want to apply a prefix to only one or the other column specification.
 #' @inheritParams stringr::str_c
+#' @inheritParams rlang::args_error_context
 #' @family gt table
 #' @export
 #' @importFrom stringr str_c
@@ -147,6 +148,7 @@ cols_merge_uncert_ext <- function(gt_object,
 #' @inheritParams gt::fmt_number
 #' @param ... Additional parameters passed to [gt::fmt_number()] by
 #'   [fmt_acs_estimate()] or to [gt::fmt_percent()] by [fmt_acs_percent()].
+#' @inheritParams rlang::args_error_context
 #' @family gt table
 #' @export
 #' @importFrom gt fmt_number tab_spanner
@@ -158,7 +160,8 @@ fmt_acs_estimate <- function(gt_object,
                              spanner = NULL,
                              decimals = 0,
                              use_seps = TRUE,
-                             ...) {
+                             ...,
+                             call = caller_env()) {
   columns <- columns %||% c(col_est, col_moe)
 
   gt_object <- cols_label_ext(

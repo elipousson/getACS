@@ -16,7 +16,8 @@ fmt_acs_estimate(
   spanner = NULL,
   decimals = 0,
   use_seps = TRUE,
-  ...
+  ...,
+  call = caller_env()
 )
 
 fmt_acs_percent(
@@ -76,6 +77,11 @@ This setting is \code{TRUE} by default.}
 
 \item{...}{Additional parameters passed to \code{\link[gt:fmt_number]{gt::fmt_number()}} by
 \code{\link[=fmt_acs_estimate]{fmt_acs_estimate()}} or to \code{\link[gt:fmt_percent]{gt::fmt_percent()}} by \code{\link[=fmt_acs_percent]{fmt_acs_percent()}}.}
+
+\item{call}{The execution environment of a currently
+running function, e.g. \code{caller_env()}. The function will be
+mentioned in error messages as the source of the error. See the
+\code{call} argument of \code{\link[rlang:abort]{abort()}} for more information.}
 }
 \description{
 \code{\link[=fmt_acs_estimate]{fmt_acs_estimate()}} formats estimate and margin of error columns for a gt

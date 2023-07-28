@@ -24,7 +24,7 @@ join_acs_percent <- function(data,
                              digits = 2) {
   stopifnot(
     all(has_name(data, c(
-      geoid, "column_id", "column_title",
+      geoid_col, "column_id", "column_title",
       denominator_col, "estimate", "moe"
     )))
   )
@@ -32,7 +32,7 @@ join_acs_percent <- function(data,
   if (nrow(dplyr::filter(
     data,
     .data[[denominator_col]] %in% data[["column_id"]],
-    indent > 0
+    .data[["indent"]] > 0
   )) > 1) {
     cli_alert_warning(
       "{.arg data} may not contain all of the denominator values needed
@@ -44,7 +44,7 @@ join_acs_percent <- function(data,
   denominator_data <- data |>
     dplyr::filter(column_id %in% data[[denominator_col]]) |>
     dplyr::select(
-      {{ geoid }},
+      {{ geoid_col }},
       denominator_estimate = estimate,
       denominator_moe = moe,
       denominator_column_title = column_title,
@@ -54,7 +54,7 @@ join_acs_percent <- function(data,
   data |>
     dplyr::left_join(
       denominator_data,
-      by = dplyr::join_by({{ geoid }}, denominator_col),
+      by = dplyr::join_by({{ geoid_col }}, denominator_col),
       na_matches = na_matches
     ) |>
     dplyr::mutate(

@@ -222,6 +222,7 @@ get_acs_geographies <- function(geographies = c("county", "state"),
 #' @inheritParams get_geography_params
 #' @export
 #' @importFrom dplyr filter
+#' @importFrom vctrs vec_cbind
 get_acs_geography <- function(geography,
                               state = NULL,
                               county = NULL,
@@ -267,11 +268,11 @@ get_acs_geography <- function(geography,
 
     acs_data <- dplyr::filter(
       acs_data,
-      .data[[geoid]] %in% msa | .data[["NAME"]] %in% msa
+      .data[[geoid_col]] %in% msa | .data[["NAME"]] %in% msa
     )
   }
 
-  cbind(
+  vctrs::vec_cbind(
     acs_data,
     as.data.frame(do.call(cbind, params))
   )

@@ -66,6 +66,11 @@ Like most other R functions, missing values are "infectious": whenever
 a missing value is combined with another string the result will always
 be missing. Use \code{\link[dplyr:coalesce]{dplyr::coalesce()}} or \code{\link[stringr:str_replace_na]{str_replace_na()}} to convert to
 the desired value.}
+
+\item{call}{The execution environment of a currently
+running function, e.g. \code{caller_env()}. The function will be
+mentioned in error messages as the source of the error. See the
+\code{call} argument of \code{\link[rlang:abort]{abort()}} for more information.}
 }
 \description{
 \code{\link[=cols_merge_uncert_ext]{cols_merge_uncert_ext()}} is a variant of \code{\link[gt:cols_merge_uncert]{gt::cols_merge_uncert()}} to
