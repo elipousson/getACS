@@ -65,6 +65,7 @@ table.</p>
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">gt_acs</span><span class="op">(</span></span>
 <span>  <span class="va">data</span>,</span>
+<span>  <span class="va">...</span>,</span>
 <span>  est_cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"estimate"</span>, <span class="st">"moe"</span><span class="op">)</span>,</span>
 <span>  est_col_label <span class="op">=</span> <span class="st">"Est."</span>,</span>
 <span>  perc_cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"perc_estimate"</span>, <span class="st">"perc_moe"</span><span class="op">)</span>,</span>
@@ -72,18 +73,18 @@ table.</p>
 <span>  est_spanner <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  perc_spanner <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  combined_spanner <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  source_note <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  survey <span class="op">=</span> <span class="st">"acs5"</span>,</span>
-<span>  year <span class="op">=</span> <span class="fl">2021</span>,</span>
-<span>  prefix <span class="op">=</span> <span class="st">"Source: "</span>,</span>
-<span>  before <span class="op">=</span> <span class="st">""</span>,</span>
-<span>  after <span class="op">=</span> <span class="st">"."</span>,</span>
-<span>  table <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  decimals <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  column_title_col <span class="op">=</span> <span class="st">"column_title"</span>,</span>
 <span>  column_title_label <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  name_col <span class="op">=</span> <span class="st">"NAME"</span>,</span>
+<span>  name_col_label <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  source_note <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  append_note <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  <span class="va">...</span></span>
+<span>  survey <span class="op">=</span> <span class="st">"acs5"</span>,</span>
+<span>  year <span class="op">=</span> <span class="fl">2021</span>,</span>
+<span>  table <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  prefix <span class="op">=</span> <span class="st">"Source: "</span>,</span>
+<span>  end <span class="op">=</span> <span class="st">"."</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -93,6 +94,11 @@ table.</p>
 <dd><p><em>Input data table</em></p>
 <p><code>obj:&lt;data.frame&gt;|obj:&lt;tbl_df&gt;</code> // <strong>required</strong></p>
 <p>A <code>data.frame</code> object or a tibble (<code>tbl_df</code>).</p></dd>
+
+
+<dt>...</dt>
+<dd><p>Additional parameters passed to <code><a href="https://gt.rstudio.com/reference/fmt_number.html" class="external-link">gt::fmt_number()</a></code> by
+<code><a href="fmt_acs_estimate.html">fmt_acs_estimate()</a></code> or to <code><a href="https://gt.rstudio.com/reference/fmt_percent.html" class="external-link">gt::fmt_percent()</a></code> by <code><a href="fmt_acs_estimate.html">fmt_acs_percent()</a></code>.</p></dd>
 
 
 <dt>est_cols, est_col_label, est_spanner</dt>
@@ -109,35 +115,6 @@ and spanner parameter for <code><a href="fmt_acs_estimate.html">fmt_acs_percent(
 <dd><p>If not <code>NULL</code>, combined_spanner is passed to label
 parameter of <code><a href="https://gt.rstudio.com/reference/tab_spanner.html" class="external-link">gt::tab_spanner()</a></code> using both est_cols and perc_cols as the
 columns parameter.</p></dd>
-
-
-<dt>source_note</dt>
-<dd><p><em>Source note text</em></p>
-<p><code>scalar&lt;character&gt;</code> // <strong>required</strong></p>
-<p>Text to be used in the source note. We can optionally use the <code><a href="https://gt.rstudio.com/reference/md.html" class="external-link">md()</a></code> and
-<code><a href="https://gt.rstudio.com/reference/html.html" class="external-link">html()</a></code> functions to style the text as Markdown or to retain HTML elements
-in the text.</p></dd>
-
-
-<dt>survey</dt>
-<dd><p>ACS survey, "acs5", "acs3", or "acs1".</p></dd>
-
-
-<dt>year</dt>
-<dd><p>Based on the year and survey, <code><a href="acs_survey_match.html">acs_survey_ts()</a></code> returns a vector
-of years for non-overlapping ACS samples to allow comparison.</p></dd>
-
-
-<dt>prefix</dt>
-<dd><p>Text to insert before ACS survey label.</p></dd>
-
-
-<dt>before, after</dt>
-<dd><p>A character string to be added before/after each word.</p></dd>
-
-
-<dt>table</dt>
-<dd><p>One or more table IDs to include in label or source note.</p></dd>
 
 
 <dt>decimals</dt>
@@ -161,15 +138,40 @@ required if column_title_label is supplied.</p></dd>
 column_title_col.</p></dd>
 
 
+<dt>source_note</dt>
+<dd><p><em>Source note text</em></p>
+<p><code>scalar&lt;character&gt;</code> // <strong>required</strong></p>
+<p>Text to be used in the source note. We can optionally use the <code><a href="https://gt.rstudio.com/reference/md.html" class="external-link">md()</a></code> and
+<code><a href="https://gt.rstudio.com/reference/html.html" class="external-link">html()</a></code> functions to style the text as Markdown or to retain HTML elements
+in the text.</p></dd>
+
+
 <dt>append_note</dt>
 <dd><p>If <code>TRUE</code>, add source_note to the end of the generated ACS
 data label. If <code>FALSE</code>, any supplied source_note will be used instead of an
 ACS label.</p></dd>
 
 
-<dt>...</dt>
-<dd><p>Additional parameters passed to <code><a href="https://gt.rstudio.com/reference/fmt_number.html" class="external-link">gt::fmt_number()</a></code> by
-<code><a href="fmt_acs_estimate.html">fmt_acs_estimate()</a></code> or to <code><a href="https://gt.rstudio.com/reference/fmt_percent.html" class="external-link">gt::fmt_percent()</a></code> by <code><a href="fmt_acs_estimate.html">fmt_acs_percent()</a></code>.</p></dd>
+<dt>survey</dt>
+<dd><p>ACS survey, "acs5", "acs3", or "acs1".</p></dd>
+
+
+<dt>year</dt>
+<dd><p>Based on the year and survey, <code><a href="acs_survey.html">acs_survey_ts()</a></code> returns a vector
+of years for non-overlapping ACS samples to allow comparison.</p></dd>
+
+
+<dt>table</dt>
+<dd><p>One or more table IDs to include in label or source note.</p></dd>
+
+
+<dt>prefix</dt>
+<dd><p>Text to insert before ACS survey label.</p></dd>
+
+
+<dt>end</dt>
+<dd><p>A character string appended to the end of the full label. Defaults
+to ".".</p></dd>
 
 </dl></div>
     <div class="section level2">

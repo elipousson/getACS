@@ -80,7 +80,7 @@ Census API.</p>
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">get_acs_tables</span><span class="op">(</span></span>
 <span>  <span class="va">geography</span>,</span>
-<span>  <span class="va">table</span>,</span>
+<span>  table <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  cache_table <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  year <span class="op">=</span> <span class="fl">2021</span>,</span>
 <span>  survey <span class="op">=</span> <span class="st">"acs5"</span>,</span>
@@ -91,15 +91,16 @@ Census API.</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">get_acs_geographies</span><span class="op">(</span></span>
-<span>  geographies <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"county"</span>, <span class="st">"state"</span><span class="op">)</span>,</span>
-<span>  state <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  county <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  msa <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  geography <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"county"</span>, <span class="st">"state"</span><span class="op">)</span>,</span>
+<span>  variables <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  table <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  cache_table <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  year <span class="op">=</span> <span class="fl">2021</span>,</span>
-<span>  label <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  state <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  county <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  msa <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  survey <span class="op">=</span> <span class="st">"acs5"</span>,</span>
+<span>  label <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  perc <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  geoid_col <span class="op">=</span> <span class="st">"GEOID"</span>,</span>
 <span>  <span class="va">...</span></span>
@@ -107,14 +108,15 @@ Census API.</p>
 <span></span>
 <span><span class="fu">get_acs_geography</span><span class="op">(</span></span>
 <span>  <span class="va">geography</span>,</span>
-<span>  state <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  county <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  msa <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  variables <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  table <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  cache_table <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  year <span class="op">=</span> <span class="fl">2021</span>,</span>
-<span>  label <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  state <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  county <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  msa <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  survey <span class="op">=</span> <span class="st">"acs5"</span>,</span>
+<span>  label <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  perc <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  geoid_col <span class="op">=</span> <span class="st">"GEOID"</span>,</span>
 <span>  <span class="va">...</span>,</span>
@@ -168,16 +170,60 @@ estimate.</p></dd>
 
 
 <dt>...</dt>
-<dd><p>Other keyword arguments</p></dd>
+<dd><p>Arguments passed on to <code><a href="https://walker-data.com/tidycensus/reference/get_acs.html" class="external-link">tidycensus::get_acs</a></code></p><dl><dt><code>output</code></dt>
+<dd><p>One of "tidy" (the default) in which each row represents an
+enumeration unit-variable combination, or "wide" in which each row
+represents an enumeration unit and the variables are in the columns.</p></dd>
+
+    <dt><code>zcta</code></dt>
+<dd><p>The zip code tabulation area(s) for which you are requesting
+data. Specify a single value or a vector of values to get data for more
+than one ZCTA. Numeric or character ZCTA GEOIDs are accepted. When
+specifying ZCTAs, geography must be set to `"zcta"` and `state` must be specified with
+`county` left as `NULL`. Defaults to NULL.</p></dd>
+
+    <dt><code>geometry</code></dt>
+<dd><p>if FALSE (the default), return a regular tibble of ACS data.
+if TRUE, uses the tigris package to return an sf tibble with simple feature
+geometry in the `geometry` column.</p></dd>
+
+    <dt><code>keep_geo_vars</code></dt>
+<dd><p>if TRUE, keeps all the variables from the Census
+shapefile obtained by tigris.  Defaults to FALSE.</p></dd>
+
+    <dt><code>shift_geo</code></dt>
+<dd><p>(deprecated) if TRUE, returns geometry with Alaska and Hawaii shifted for
+thematic mapping of the entire US. Geometry was originally obtained from
+the albersusa R package. As of May 2021, we recommend using <code><a href="https://rdrr.io/pkg/tigris/man/shift_geometry.html" class="external-link">tigris::shift_geometry()</a></code>
+instead.</p></dd>
+
+    <dt><code>summary_var</code></dt>
+<dd><p>Character string of a "summary variable" from the ACS to
+be included in your output. Usually a variable (e.g. total population) that
+you'll want to use as a denominator or comparison.</p></dd>
+
+    <dt><code>key</code></dt>
+<dd><p>Your Census API key. Obtain one at
+<a href="https://api.census.gov/data/key_signup.html" class="external-link">https://api.census.gov/data/key_signup.html</a></p></dd>
+
+    <dt><code>moe_level</code></dt>
+<dd><p>The confidence level of the returned margin of error.  One
+of 90 (the default), 95, or 99.</p></dd>
+
+    <dt><code>show_call</code></dt>
+<dd><p>if TRUE, display call made to Census API. This can be very
+useful in debugging and determining if error messages returned are due to
+tidycensus or the Census API. Copy to the API call into a browser and see
+what is returned by the API directly. Defaults to FALSE.</p></dd>
+
+  
+</dl></dd>
 
 
-<dt>geographies</dt>
-<dd><p>A character vector of geographies. See
-<a href="https://walker-data.com/tidycensus/articles/basic-usage.html#geography-in-tidycensus" class="external-link">https://walker-data.com/tidycensus/articles/basic-usage.html#geography-in-tidycensus</a>
-for supported options. Defaults to <code>c("county", "state")</code>. If a supplied
-geography does not support county and state parameters, these options are
-dropped before calling <code><a href="https://walker-data.com/tidycensus/reference/get_acs.html" class="external-link">tidycensus::get_acs()</a></code>. Any required parameters are
-also bound to the returned data frame as new columns.</p></dd>
+<dt>variables</dt>
+<dd><p>Character string or vector of character strings of variable
+IDs. tidycensus automatically returns the estimate and the margin of error
+associated with the variable.</p></dd>
 
 
 <dt>state</dt>
@@ -204,6 +250,15 @@ running function, e.g. <code>caller_env()</code>. The function will be
 mentioned in error messages as the source of the error. See the
 <code>call</code> argument of <code><a href="https://rlang.r-lib.org/reference/abort.html" class="external-link">abort()</a></code> for more information.</p></dd>
 
+
+<dt>geographies</dt>
+<dd><p>A character vector of geographies. See
+<a href="https://walker-data.com/tidycensus/articles/basic-usage.html#geography-in-tidycensus" class="external-link">https://walker-data.com/tidycensus/articles/basic-usage.html#geography-in-tidycensus</a>
+for supported options. Defaults to <code>c("county", "state")</code>. If a supplied
+geography does not support county and state parameters, these options are
+dropped before calling <code><a href="https://walker-data.com/tidycensus/reference/get_acs.html" class="external-link">tidycensus::get_acs()</a></code>. Any required parameters are
+also bound to the returned data frame as new columns.</p></dd>
+
 </dl></div>
 
     <div class="section level2">
@@ -218,7 +273,7 @@ mentioned in error messages as the source of the error. See the
 <span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="fu">get_acs_geographies</span><span class="op">(</span></span></span>
-<span class="r-in"><span>    geographies <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"county"</span>, <span class="st">"state"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    geography <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"county"</span>, <span class="st">"state"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    state <span class="op">=</span> <span class="st">"MD"</span>,</span></span>
 <span class="r-in"><span>    table <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"B01003"</span>, <span class="st">"B19013"</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>

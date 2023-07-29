@@ -59,9 +59,9 @@ required to download data at the specified geography using the Census API.</p>
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">get_geography_params</span><span class="op">(</span></span>
 <span>  <span class="va">geography</span>,</span>
+<span>  year <span class="op">=</span> <span class="fl">2021</span>,</span>
 <span>  state <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  county <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  year <span class="op">=</span> <span class="fl">2021</span>,</span>
 <span>  allow_decennial <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  call <span class="op">=</span> <span class="fu">caller_env</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -73,12 +73,12 @@ required to download data at the specified geography using the Census API.</p>
 <dd><p>The geography of your data.</p></dd>
 
 
-<dt>state, county</dt>
-<dd><p>State and county. Defaults to <code>NULL</code>.</p></dd>
-
-
 <dt>year</dt>
 <dd><p>Survey year.</p></dd>
+
+
+<dt>state, county</dt>
+<dd><p>State and county. Defaults to <code>NULL</code>.</p></dd>
 
 
 <dt>allow_decennial</dt>

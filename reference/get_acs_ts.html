@@ -53,10 +53,13 @@
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">get_acs_ts</span><span class="op">(</span></span>
 <span>  <span class="va">geography</span>,</span>
-<span>  state <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  survey <span class="op">=</span> <span class="st">"acs5"</span>,</span>
-<span>  year <span class="op">=</span> <span class="fl">2021</span>,</span>
+<span>  variables <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  table <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  cache_table <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  year <span class="op">=</span> <span class="fl">2021</span>,</span>
+<span>  state <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  county <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  survey <span class="op">=</span> <span class="st">"acs5"</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -67,18 +70,14 @@
 <dd><p>The geography of your data.</p></dd>
 
 
-<dt>state</dt>
-<dd><p>An optional vector of states for which you are requesting data.
-State names, postal codes, and FIPS codes are accepted. Defaults to NULL.</p></dd>
+<dt>variables</dt>
+<dd><p>Character string or vector of character strings of variable
+IDs. tidycensus automatically returns the estimate and the margin of error
+associated with the variable.</p></dd>
 
 
-<dt>survey</dt>
-<dd><p>The ACS contains one-year, three-year, and five-year surveys
-expressed as "acs1", "acs3", and "acs5". The default selection is "acs5."</p></dd>
-
-
-<dt>year</dt>
-<dd><p>description</p></dd>
+<dt>table</dt>
+<dd><p>A character vector of tables.</p></dd>
 
 
 <dt>cache_table</dt>
@@ -88,71 +87,31 @@ dataset.  If variables dataset is already cached via the
 <code>load_variables</code> function, this can be bypassed.</p></dd>
 
 
-<dt>...</dt>
-<dd><p>Arguments passed on to <code><a href="https://walker-data.com/tidycensus/reference/get_acs.html" class="external-link">tidycensus::get_acs</a></code></p><dl><dt><code>variables</code></dt>
-<dd><p>Character string or vector of character strings of variable
-IDs. tidycensus automatically returns the estimate and the margin of error
-associated with the variable.</p></dd>
+<dt>year</dt>
+<dd><p>If length 1, the function uses <code><a href="acs_survey.html">acs_survey_ts()</a></code> to get data for
+all comparable survey years back to the start of the ACS. If length is
+greater than 1, return the selected years even if those years may not be
+valid to compare.</p></dd>
 
-    <dt><code>table</code></dt>
-<dd><p>The ACS table for which you would like to request all
-variables. Uses lookup tables to identify the variables; performs faster
-when variable table already exists through <code>load_variables(cache =
-TRUE)</code>. Only one table may be requested per call.</p></dd>
 
-    <dt><code>output</code></dt>
-<dd><p>One of "tidy" (the default) in which each row represents an
-enumeration unit-variable combination, or "wide" in which each row
-represents an enumeration unit and the variables are in the columns.</p></dd>
+<dt>state</dt>
+<dd><p>An optional vector of states for which you are requesting data.
+State names, postal codes, and FIPS codes are accepted. Defaults to NULL.</p></dd>
 
-    <dt><code>county</code></dt>
+
+<dt>county</dt>
 <dd><p>The county for which you are requesting data. County names and
 FIPS codes are accepted. Must be combined with a value supplied to `state`.
 Defaults to NULL.</p></dd>
 
-    <dt><code>zcta</code></dt>
-<dd><p>The zip code tabulation area(s) for which you are requesting
-data. Specify a single value or a vector of values to get data for more
-than one ZCTA. Numeric or character ZCTA GEOIDs are accepted. When
-specifying ZCTAs, geography must be set to `"zcta"` and `state` must be specified with
-`county` left as `NULL`. Defaults to NULL.</p></dd>
 
-    <dt><code>geometry</code></dt>
-<dd><p>if FALSE (the default), return a regular tibble of ACS data.
-if TRUE, uses the tigris package to return an sf tibble with simple feature
-geometry in the `geometry` column.</p></dd>
+<dt>survey</dt>
+<dd><p>The ACS contains one-year, three-year, and five-year surveys
+expressed as "acs1", "acs3", and "acs5". The default selection is "acs5."</p></dd>
 
-    <dt><code>keep_geo_vars</code></dt>
-<dd><p>if TRUE, keeps all the variables from the Census
-shapefile obtained by tigris.  Defaults to FALSE.</p></dd>
 
-    <dt><code>shift_geo</code></dt>
-<dd><p>(deprecated) if TRUE, returns geometry with Alaska and Hawaii shifted for
-thematic mapping of the entire US. Geometry was originally obtained from
-the albersusa R package. As of May 2021, we recommend using <code><a href="https://rdrr.io/pkg/tigris/man/shift_geometry.html" class="external-link">tigris::shift_geometry()</a></code>
-instead.</p></dd>
-
-    <dt><code>summary_var</code></dt>
-<dd><p>Character string of a "summary variable" from the ACS to
-be included in your output. Usually a variable (e.g. total population) that
-you'll want to use as a denominator or comparison.</p></dd>
-
-    <dt><code>key</code></dt>
-<dd><p>Your Census API key. Obtain one at
-<a href="https://api.census.gov/data/key_signup.html" class="external-link">https://api.census.gov/data/key_signup.html</a></p></dd>
-
-    <dt><code>moe_level</code></dt>
-<dd><p>The confidence level of the returned margin of error.  One
-of 90 (the default), 95, or 99.</p></dd>
-
-    <dt><code>show_call</code></dt>
-<dd><p>if TRUE, display call made to Census API. This can be very
-useful in debugging and determining if error messages returned are due to
-tidycensus or the Census API. Copy to the API call into a browser and see
-what is returned by the API directly. Defaults to FALSE.</p></dd>
-
-  
-</dl></dd>
+<dt>...</dt>
+<dd><p>Other keyword arguments</p></dd>
 
 </dl></div>
 

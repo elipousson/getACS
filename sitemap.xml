@@ -19,7 +19,10 @@
     <loc>https://elipousson.github.io/getACS/news/index.html</loc>
   </url>
   <url>
-    <loc>https://elipousson.github.io/getACS/reference/acs_survey_match.html</loc>
+    <loc>https://elipousson.github.io/getACS/reference/acs_survey.html</loc>
+  </url>
+  <url>
+    <loc>https://elipousson.github.io/getACS/reference/acs_tables_race_iteration.html</loc>
   </url>
   <url>
     <loc>https://elipousson.github.io/getACS/reference/cols_merge_uncert_ext.html</loc>
@@ -29,6 +32,9 @@
   </url>
   <url>
     <loc>https://elipousson.github.io/getACS/reference/filter_acs.html</loc>
+  </url>
+  <url>
+    <loc>https://elipousson.github.io/getACS/reference/fmt_acs.html</loc>
   </url>
   <url>
     <loc>https://elipousson.github.io/getACS/reference/fmt_acs_estimate.html</loc>
@@ -83,6 +89,9 @@
   </url>
   <url>
     <loc>https://elipousson.github.io/getACS/reference/race_iteration.html</loc>
+  </url>
+  <url>
+    <loc>https://elipousson.github.io/getACS/reference/scale_acs.html</loc>
   </url>
   <url>
     <loc>https://elipousson.github.io/getACS/reference/select_acs_cols.html</loc>
