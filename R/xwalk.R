@@ -49,10 +49,6 @@ make_block_xwalk <- function(state,
     ...
   )
 
-  print(names(block_sf))
-
-  print(names(tract_sf))
-
   dplyr::left_join(
     x = block_sf,
     y = sf::st_drop_geometry(tract_sf),
@@ -81,7 +77,8 @@ make_block_xwalk <- function(state,
 #'   required to create a crosswalk using [make_block_xwalk()]
 #' @param weight_col Column name to use for weighting
 #' @param name_col Name column in area.
-#' @param tract_col Tract ID column in block_xwalk
+#' @param geoid_col,tract_col GeoID for Census tract and Census tract ID column
+#'   in block_xwalk
 #' @param digits Digits to use for percent share of weight value.
 #' @param add_coverage If `TRUE` (default), it is assumed that area does not
 #'   cover the full extent of the block_xwalk and an additional feature is added
@@ -101,6 +98,7 @@ make_area_xwalk <- function(area,
                             year = 2020,
                             name_col = "name",
                             weight_col = "HOUSING20",
+                            geoid_col = "GEOID",
                             tract_col = "TRACTCE20",
                             by = c("TRACTCE20" = "TRACTCE"),
                             suffix = c("_block", "_tract"),
@@ -164,7 +162,10 @@ make_area_xwalk <- function(area,
     .data[[weight_col]] > 0
   )
 
-  area_xwalk <- dplyr::group_by(area_xwalk, .data[[tract_col]], .data[[name_col]])
+  area_xwalk <- dplyr::group_by(
+    area_xwalk,
+    .data[[geoid_col]], .data[[tract_col]], .data[[name_col]]
+  )
 
   area_xwalk <- dplyr::summarise(
     area_xwalk,
@@ -184,6 +185,8 @@ make_area_xwalk <- function(area,
       digits = digits
     )
   )
+
+  area_xwalk <- dplyr::ungroup(area_xwalk)
 
   if (add_coverage) {
     area_xwalk <- dplyr::filter(area_xwalk, .data[[name_col]] != coverage_name)
@@ -207,4 +210,71 @@ st_make_valid_coverage <- function(x, y, is_coverage = TRUE) {
 #' @importFrom sf st_make_valid st_union
 st_make_valid_union <- function(x, is_coverage = TRUE) {
   sf::st_make_valid(sf::st_union(x, is_coverage = is_coverage))
+}
+
+
+#' @details Using an area crosswalk
+#'
+#' After creating an area crosswalk with [make_area_xwalk()], you can pass the
+#' crosswalk to [use_area_xwalk()] along with a data frame from
+#' [tidycensus::get_acs()] or [get_acs_tables()]. At a minimum, the data must
+#' have a column with the same name as geoid_col along with columns named
+#' "variable", "estimate", and "moe". Please note that this approach to
+#' aggregation does *not* work well if your data contains "jam" values, e.g. the
+#' substitution of 0 for "1939 or older" for the Median Year Built variable.
+#' Ideally, the weight used for aggregation should be based on household counts
+#' when aggregating a household-level variable and population counts when
+#' aggregating a individual-level variable.
+#'
+#' @rdname make_area_xwalk
+#' @export
+use_area_xwalk <- function(data,
+                           area_xwalk,
+                           name_col = "name",
+                           geoid_col = "GEOID",
+                           suffix = c("_area", ""),
+                           weight_col = "HOUSING20",
+                           geography = "area",
+                           digits = 0,
+                           perc = TRUE,
+                           ...) {
+  stopifnot(
+    is.data.frame(area_xwalk),
+    is.data.frame(data),
+    all(has_name(area_xwalk, c(geoid_col, paste0("perc_", weight_col)))),
+    all(has_name(data, c(geoid_col, "variable", "estimate", "moe")))
+  )
+
+  cli::cli_progress_step("Joining {.arg data} to {.arg area_xwalk}")
+
+  data <- dplyr::select(data, dplyr::all_of(c(geoid_col, "variable", "estimate", "moe")))
+
+  area_data <- dplyr::left_join(
+    area_xwalk,
+    data,
+    by = geoid_col,
+    suffix = suffix,
+    relationship = "many-to-many"
+  )
+
+  cli::cli_progress_step("Summarizing {.arg data} by {geography}")
+
+  area_data <- dplyr::summarise(
+    area_data,
+    estimate = round(
+      sum(estimate * .data[[paste0("perc_", weight_col)]], na.rm = TRUE),
+      digits = digits
+    ),
+    moe = round(
+      tidycensus::moe_sum(moe, estimate * .data[[paste0("perc_", weight_col)]]),
+      digits = digits
+    ),
+    .by = dplyr::all_of(c(name_col, "variable"))
+  )
+
+  area_data[["geography"]] <- geography
+
+  suppressMessages(
+    label_acs_metadata(area_data, perc = perc, geoid_col = name_col)
+  )
 }
