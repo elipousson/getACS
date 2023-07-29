@@ -1,9 +1,94 @@
-#' Replace placeholder jam values in an ACS data frame
+#' Format place names or column titles in a gt table or data frame with ACS data
+#'
+#' [fmt_acs_county()] is helpful for stripping the state name from county-level
+#' ACS data and [fmt_acs_minutes()] does the same for a column with a duration
+#' (e.g. commute times). If data is not a `gt_tbl` object, both function can use
+#' [dplyr::mutate()] to transform a standard data frame.
+#'
+#' @rdname fmt_acs
+#' @param name_col Name for column with place name values. Defaults to "NAME"
+#' @param state State name. Required if state is included in pattern.
+#' @param pattern Passed to [glue::glue()] and [stringr::str_replace()] for
+#'   [fmt_acs_county()] or just to [stringr::str_replace()] by
+#'   [fmt_acs_minutes()]. Defaults to `", {state}"` which strips the state name
+#'   from a column of county-level name values or `"[:space:]minutes$"` which
+#'   strips the trailing text for minutes.
+#' @param replacement Passed to [stringr::str_replace()]. Defaults to `""`.
+#' @inheritParams gt::fmt
+#' @inheritDotParams gt::fmt
+#' @name fmt_acs_county
+#' @export
+#' @importFrom dplyr all_of
+#' @importFrom gt fmt
+#' @importFrom stringr str_remove
+fmt_acs_county <- function(data,
+                           state = NULL,
+                           pattern = ", {state}",
+                           replacement = "",
+                           name_col = "NAME",
+                           columns = dplyr::all_of(name_col),
+                           ...) {
+  if (inherits(data, "gt_tbl")) {
+    gt::fmt(
+      data,
+      columns = columns,
+      ...,
+      fns = function(x) {
+        stringr::str_replace(x, glue(pattern), replacement)
+      }
+    )
+  } else if (is.data.frame(data)) {
+    dplyr::mutate(
+      data,
+      "{name_col}" := stringr::str_replace(
+        .data[[name_col]],
+        glue(pattern), replacement
+      )
+    )
+  }
+}
+
+
+#' @rdname fmt_acs
+#' @name fmt_acs_minutes
+#' @param column_title_col Column title column.
+#' @export
+fmt_acs_minutes <- function(data,
+                            pattern = "[:space:]minutes$",
+                            replacement = "",
+                            column_title_col = "column_title",
+                            columns = dplyr::all_of(column_title_col),
+                            ...) {
+  if (inherits(data, "gt_tbl")) {
+    gt::fmt(
+      data,
+      columns = columns,
+      ...,
+      fns = function(x) {
+        stringr::str_replace(x, pattern, replacement)
+      }
+    )
+  } else if (is.data.frame(data)) {
+    dplyr::mutate(
+      data,
+      "{column_title_col}" := stringr::str_replace(
+        .data[[column_title_col]],
+        pattern, replacement
+      )
+    )
+  }
+}
+
+#' Format jam values in an estimate column of a gt table or ACS data frame
 #'
 #' Currently only supports variable B25035_001 from the Median Year Structure
 #' Built table.
 #'
 #' @param data Data frame with ACS data
+#' @name fmt_acs_jam_values
+#' @seealso
+#' - [fmt_acs_county()]
+#' - [fmt_acs_minutes()]
 #' @export
 #' @importFrom dplyr filter mutate if_else
 #' @importFrom cli cli_bullets
@@ -34,15 +119,4 @@ fmt_acs_jam_values <- function(data) {
       .default = estimate
     )
   )
-}
-
-#' Format ACS columns using different units
-#'
-#' @keywords internal
-#' @export
-fmt_acs_minutes <- function(data,
-                            column_title = "column_title") {
-  data[[column_title]] <- stringr::str_remove(data[[column_title]], "[:space:]minutes$")
-
-  data
 }
