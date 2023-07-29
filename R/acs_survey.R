@@ -1,9 +1,9 @@
 #' Assorted helpers for ACS survey types and labels
 #'
-#' @rdname acs_survey_match
-#' @name acs_survey_match
-#' @param survey ACS survey, "acs5", "acs3", or "acs1".
-#' @inheritParams rlang::args_error_context
+#' These simple functions allow validating ACS survey options, getting
+#' comparable years for time series analysis, and creating standard labels.
+#'
+#' @name acs_survey
 #' @examples
 #'
 #' acs_survey_match("acs1")
@@ -15,7 +15,15 @@
 #' acs_survey_label()
 #'
 #' acs_survey_label_table(table = c("B19013", "B01003"))
-#'
+#' @export
+NULL
+
+
+
+#' @rdname acs_survey
+#' @name acs_survey_match
+#' @param survey ACS survey, "acs5", "acs3", or "acs1".
+#' @inheritParams rlang::args_error_context
 #' @export
 #' @importFrom rlang arg_match0
 acs_survey_match <- function(survey = "acs5",
@@ -23,7 +31,7 @@ acs_survey_match <- function(survey = "acs5",
   arg_match0(survey, c("acs5", "acs3", "acs1"), error_call = error_call)
 }
 
-#' @rdname acs_survey_match
+#' @rdname acs_survey
 #' @name acs_survey_sample
 #' @export
 #' @importFrom stringr str_extract
@@ -31,7 +39,7 @@ acs_survey_sample <- function(survey = "acs5") {
   stringr::str_extract(survey, "[0-9]$")
 }
 
-#' @rdname acs_survey_match
+#' @rdname acs_survey
 #' @param year Based on the year and survey, [acs_survey_ts()] returns a vector
 #'   of years for non-overlapping ACS samples to allow comparison.
 #' @export
@@ -80,7 +88,7 @@ acs_survey_ts <- function(survey = "acs5",
   years
 }
 
-#' @rdname acs_survey_match
+#' @rdname acs_survey
 #' @name acs_survey_label
 #' @param prefix Text to insert before ACS survey label.
 #' @param pattern Pattern passed to [glue::glue()]. Allows use of the
@@ -98,12 +106,14 @@ acs_survey_label <- function(survey = "acs5",
   glue(prefix, pattern, .envir = current_env())
 }
 
-#' @rdname acs_survey_match
+#' @rdname acs_survey
 #' @name acs_survey_label_table
 #' @param table One or more table IDs to include in label or source note.
 #' @param table_label Label to use when referring to table or tables. A "s" is
 #'   appended to the end of the table_label if tables is more than length 1.
 #' @param before,after A character string to be added before/after each word.
+#' @param end A character string appended to the end of the full label. Defaults
+#'   to ".".
 #' @inheritParams knitr::combine_words
 #' @export
 #' @importFrom knitr combine_words
@@ -120,8 +130,8 @@ acs_survey_label_table <- function(survey = "acs5",
                                    oxford_comma = TRUE) {
   label <- acs_survey_label(survey, year, prefix = prefix)
 
-  if (is_null(table) || identical(table, "")) {
-    return(paste0(label, after))
+  if (is_empty(table) || identical(table, "")) {
+    return(paste0(label, end))
   }
 
   if (length(table) > 1) {
