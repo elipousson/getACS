@@ -15,7 +15,7 @@
 #' @seealso [tidycensus::moe_prop()]
 #' @keywords internal
 #' @export
-#' @importFrom dplyr filter select left_join mutate
+#' @importFrom dplyr filter select left_join mutate join_by
 #' @importFrom tidycensus moe_prop
 join_acs_percent <- function(data,
                              geoid_col = "GEOID",
