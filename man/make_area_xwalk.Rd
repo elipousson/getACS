@@ -2,6 +2,7 @@
 % Please edit documentation in R/xwalk.R
 \name{make_area_xwalk}
 \alias{make_area_xwalk}
+\alias{use_area_xwalk}
 \title{Make a crosswalk data frame for U.S. Census tracts and arbitrary areas based
 on block-level attributes}
 \usage{
@@ -13,11 +14,25 @@ make_area_xwalk(
   year = 2020,
   name_col = "name",
   weight_col = "HOUSING20",
+  geoid_col = "GEOID",
   tract_col = "TRACTCE20",
   by = c(TRACTCE20 = "TRACTCE"),
   suffix = c("_block", "_tract"),
   digits = 2,
   add_coverage = TRUE,
+  ...
+)
+
+use_area_xwalk(
+  data,
+  area_xwalk,
+  name_col = "name",
+  geoid_col = "GEOID",
+  suffix = c("_area", ""),
+  weight_col = "HOUSING20",
+  geography = "area",
+  digits = 0,
+  perc = TRUE,
   ...
 )
 }
@@ -42,7 +57,8 @@ Can also be a county name or vector of names.}
 
 \item{weight_col}{Column name to use for weighting}
 
-\item{tract_col}{Tract ID column in block_xwalk}
+\item{geoid_col, tract_col}{GeoID for Census tract and Census tract ID column
+in block_xwalk}
 
 \item{by}{A join specification created with \code{\link[dplyr:join_by]{join_by()}}, or a character
 vector of variables to join by.
@@ -97,4 +113,18 @@ years, requires users to add population data to the block_xwalk as the
 for the 2020 year. This function has also not been tested when areas include
 overlapping geometry and the results may be invalid for those overlapping
 areas if that is the case.
+}
+\details{
+Using an area crosswalk
+
+After creating an area crosswalk with \code{\link[=make_area_xwalk]{make_area_xwalk()}}, you can pass the
+crosswalk to \code{\link[=use_area_xwalk]{use_area_xwalk()}} along with a data frame from
+\code{\link[tidycensus:get_acs]{tidycensus::get_acs()}} or \code{\link[=get_acs_tables]{get_acs_tables()}}. At a minimum, the data must
+have a column with the same name as geoid_col along with columns named
+"variable", "estimate", and "moe". Please note that this approach to
+aggregation does \emph{not} work well if your data contains "jam" values, e.g. the
+substitution of 0 for "1939 or older" for the Median Year Built variable.
+Ideally, the weight used for aggregation should be based on household counts
+when aggregating a household-level variable and population counts when
+aggregating a individual-level variable.
 }
