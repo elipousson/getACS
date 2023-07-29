@@ -86,6 +86,9 @@ of years for non-overlapping ACS samples to allow comparison.}
 \item{table}{One or more table IDs to include in label or source note.}
 
 \item{prefix}{Text to insert before ACS survey label.}
+
+\item{end}{A character string appended to the end of the full label. Defaults
+to ".".}
 }
 \description{
 Create or format a gt table with an estimate and margin of error and

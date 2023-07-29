@@ -45,6 +45,9 @@ appended to the end of the table_label if tables is more than length 1.}
 
 \item{prefix}{Text to insert before ACS survey label.}
 
+\item{end}{A character string appended to the end of the full label. Defaults
+to ".".}
+
 \item{use_md}{If \code{TRUE}, pass source_note to \code{\link[gt:md]{gt::md()}} first.}
 
 \item{...}{For \code{\link[=tab_acs_source_note]{tab_acs_source_note()}}, additional parameters passed to
