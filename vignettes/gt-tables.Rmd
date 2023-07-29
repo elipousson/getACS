@@ -85,13 +85,13 @@ Similarly, `gt_acs()` returns a `gt_tbl` object so it can be combined with other
 
 ```{r}
 edu_tbl_data |>
-  select_acs_cols(name_col = NULL) |> 
+  select_acs_cols(name_col = NULL) |>
   gt_acs(
     table = edu_tbl_data$table_id[[1]],
     column_title_label = "Education",
     est_col_label = "Estimate",
     perc_col_label = "% of total"
-  ) |> 
+  ) |>
   tab_header(
     edu_tbl_data$table_title[[1]],
     edu_tbl_data$NAME[[1]]
@@ -107,13 +107,13 @@ tenure_tbl_data <- acs_data |>
     NAME == "Baltimore city, Maryland"
   )
 
-tenure_tbl_data |> 
-  select_acs_cols(name_col = NULL) |> 
+tenure_tbl_data |>
+  select_acs_cols(name_col = NULL) |>
   gt_acs(
     rowname_col = "column_title",
     est_col_label = "Units",
     table = tenure_tbl_data$table_id[[1]]
-  ) |> 
+  ) |>
   tab_header(
     tenure_tbl_data$table_title[[1]],
     "Baltimore City, Maryland"

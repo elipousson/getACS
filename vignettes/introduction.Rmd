@@ -45,9 +45,9 @@ tenure_data <- get_acs_tables(
 
 
 ```{r}
-tenure_data |> 
-  filter_acs(indent > 0, !is.na(race_iteration_group)) |> 
-  select_acs_cols("race_iteration_group") |> 
+tenure_data |>
+  filter_acs(indent > 0, !is.na(race_iteration_group)) |>
+  select_acs_cols("race_iteration_group") |>
   ggplot(aes(x = column_title, y = perc_estimate, fill = race_iteration_group)) +
   geom_col(alpha = 0.8, position = "dodge") +
   scale_y_acs_percent("% of households") +
@@ -67,12 +67,12 @@ multigeo_acs_data <- get_acs_geographies(
 ```
 
 ```{r}
-multigeo_acs_data |> 
-  select_acs_cols(column_title_col = NULL) |> 
+multigeo_acs_data |>
+  select_acs_cols(column_title_col = NULL) |>
   gt_acs(
     rowname_col = "NAME",
     est_col_label = "Population"
-    ) |> 
+  ) |>
   fmt_acs_county(state = "Maryland")
 ```
 
@@ -103,13 +103,13 @@ glimpse(acs_ts_data)
 Helper functions for `{ggplot2}` include `scale_x_acs_ts()` to set appropriate breaks:
 
 ```{r}
-acs_ts_data |> 
+acs_ts_data |>
   filter_acs(
     GEOID %in% c("24510", "24005", "24003", "24027", "24025", "24035")
-  ) |> 
+  ) |>
   ggplot(aes(x = year, y = estimate, fill = NAME)) +
   geom_col(alpha = 0.8) +
-  facet_wrap(~ NAME) +
+  facet_wrap(~NAME) +
   scale_y_acs_estimate("Population") +
   scale_x_acs_ts(survey = "acs5", year = 2021) +
   scale_fill_brewer(type = "qual", guide = "none")
