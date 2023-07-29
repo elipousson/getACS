@@ -20,7 +20,7 @@ test_that("acs_survey works", {
   )
 
   expect_identical(
-    acs_survey_label_table(table = c("B19013", "B01003")),
-    "2017-2021 ACS 5-year Estimates, Tables B19013. and B01003."
+    acs_survey_label_table(table = c("B19013", "B01003"), oxford_comma = FALSE),
+    "2017-2021 ACS 5-year Estimates, Tables B19013 and B01003."
   )
 })
