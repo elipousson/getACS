@@ -15,8 +15,6 @@ get_acs_ts <- function(geography,
                        ...) {
   years <- acs_survey_ts(survey, year)
 
-  print(years)
-
   acs_list <- purrr::map(
     years,
     function(yr) {
