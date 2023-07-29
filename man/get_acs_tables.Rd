@@ -52,7 +52,13 @@ get_acs_geography(
 )
 }
 \arguments{
-\item{geography}{The geography of your data.}
+\item{geography}{Required character vector of one or more geographies. See
+\url{https://walker-data.com/tidycensus/articles/basic-usage.html#geography-in-tidycensus}
+for supported options. Defaults to \code{c("county", "state")} for
+\code{\link[=get_acs_geographies]{get_acs_geographies()}}. If a supplied geography does not support county
+and state parameters, these options are dropped before calling
+\code{\link[tidycensus:get_acs]{tidycensus::get_acs()}}. Any required parameters are also bound to the
+returned data frame as new columns.}
 
 \item{table}{A character vector of tables.}
 
@@ -132,13 +138,6 @@ statistical area/micropolitan statistical area".}
 running function, e.g. \code{caller_env()}. The function will be
 mentioned in error messages as the source of the error. See the
 \code{call} argument of \code{\link[rlang:abort]{abort()}} for more information.}
-
-\item{geographies}{A character vector of geographies. See
-\url{https://walker-data.com/tidycensus/articles/basic-usage.html#geography-in-tidycensus}
-for supported options. Defaults to \code{c("county", "state")}. If a supplied
-geography does not support county and state parameters, these options are
-dropped before calling \code{\link[tidycensus:get_acs]{tidycensus::get_acs()}}. Any required parameters are
-also bound to the returned data frame as new columns.}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}

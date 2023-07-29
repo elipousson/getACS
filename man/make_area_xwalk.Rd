@@ -103,6 +103,20 @@ accurately assigned to this alternate geography but it is excluded from the
 returned data frame.}
 
 \item{...}{arguments to be passed to internal function \code{load_tiger}, which is not exported. See Additional Arguments.}
+
+\item{data}{A data frame downloaded with \code{\link[tidycensus:get_acs]{tidycensus::get_acs()}}.}
+
+\item{area_xwalk}{A area crosswalk data frame created with
+\code{\link[=make_area_xwalk]{make_area_xwalk()}}. Required for \code{\link[=use_area_xwalk]{use_area_xwalk()}}.}
+
+\item{geography}{A character string used as general description for area
+geography type. Defaults to "area" but typical values could include
+"neighborhood", "planning district", or "service area".}
+
+\item{perc}{If \code{TRUE} (default), use the denominator column ID to calculate
+each estimate as a percent share of the denominator value and use
+\code{\link[tidycensus:moe_prop]{tidycensus::moe_prop()}} to calculate a new margin of error for the percent
+estimate.}
 }
 \description{
 \code{make_area_xwalk()} creates a crosswalk data frame based on the \code{weight_col}

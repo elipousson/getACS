@@ -60,6 +60,11 @@ notation.
 as output (e.g., a function returned by \code{\link[scales:breaks_extended]{scales::extended_breaks()}}).
 Also accepts rlang \link[rlang:as_function]{lambda} function notation.
 }}
+
+\item{survey}{ACS survey, "acs5", "acs3", or "acs1".}
+
+\item{year}{Based on the year and survey, \code{\link[=acs_survey_ts]{acs_survey_ts()}} returns a vector
+of years for non-overlapping ACS samples to allow comparison.}
 }
 \description{
 Scales for plotting ACS data with ggplot2

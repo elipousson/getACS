@@ -2,7 +2,7 @@
 % Please edit documentation in R/fmt_acs.R
 \name{fmt_acs_jam_values}
 \alias{fmt_acs_jam_values}
-\title{Replace placeholder jam values in an ACS data frame}
+\title{Format jam values in an estimate column of a gt table or ACS data frame}
 \usage{
 fmt_acs_jam_values(data)
 }
@@ -12,4 +12,10 @@ fmt_acs_jam_values(data)
 \description{
 Currently only supports variable B25035_001 from the Median Year Structure
 Built table.
+}
+\seealso{
+\itemize{
+\item \code{\link[=fmt_acs_county]{fmt_acs_county()}}
+\item \code{\link[=fmt_acs_minutes]{fmt_acs_minutes()}}
+}
 }

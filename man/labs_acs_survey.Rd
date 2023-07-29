@@ -14,6 +14,21 @@ labs_acs_survey(
 )
 }
 \arguments{
+\item{...}{
+  Arguments passed on to \code{\link[ggplot2:labs]{ggplot2::labs}}
+  \describe{
+    \item{\code{title}}{The text for the title.}
+    \item{\code{subtitle}}{The text for the subtitle for the plot which will be
+displayed below the title.}
+    \item{\code{tag}}{The text for the tag label which will be displayed at the
+top-left of the plot by default.}
+    \item{\code{alt,alt_insight}}{Text used for the generation of alt-text for the plot.
+See \link[ggplot2]{get_alt_text} for examples.}
+  }}
+
+\item{caption}{The text for the caption which will be displayed in the
+bottom-right of the plot by default.}
+
 \item{survey}{ACS survey, "acs5", "acs3", or "acs1".}
 
 \item{year}{Based on the year and survey, \code{\link[=acs_survey_ts]{acs_survey_ts()}} returns a vector

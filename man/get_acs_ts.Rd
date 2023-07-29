@@ -17,7 +17,13 @@ get_acs_ts(
 )
 }
 \arguments{
-\item{geography}{The geography of your data.}
+\item{geography}{Required character vector of one or more geographies. See
+\url{https://walker-data.com/tidycensus/articles/basic-usage.html#geography-in-tidycensus}
+for supported options. Defaults to \code{c("county", "state")} for
+\code{\link[=get_acs_geographies]{get_acs_geographies()}}. If a supplied geography does not support county
+and state parameters, these options are dropped before calling
+\code{\link[tidycensus:get_acs]{tidycensus::get_acs()}}. Any required parameters are also bound to the
+returned data frame as new columns.}
 
 \item{variables}{Character string or vector of character strings of variable
 IDs. tidycensus automatically returns the estimate and the margin of error

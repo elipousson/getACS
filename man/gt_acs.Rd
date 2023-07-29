@@ -60,11 +60,13 @@ becomes \code{"2.3400"}. The trailing zeros can be removed with
 \code{drop_trailing_zeros = TRUE}. If you always need \code{decimals = 0}, the
 \code{\link[gt:fmt_integer]{fmt_integer()}} function should be considered.}
 
-\item{column_title_col}{Column name to check for in the input gt table. Only
-required if column_title_label is supplied.}
+\item{column_title_col, column_title_label}{Column title and label. If
+column_title_label is a string, column_title_col is required.
+column_title_label can also be a named vector in the format of \code{c("label" = "column")}. column_title_col defaults to "column_title"}
 
-\item{column_title_label}{Optional label applied to column named in
-column_title_col.}
+\item{name_col, name_col_label}{Place name column and label. name_col_label
+can be a string or a named vector (similar to column_title_label). name_col
+defaults to "NAME"}
 
 \item{source_note}{\emph{Source note text}
 
