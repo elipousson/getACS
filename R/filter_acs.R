@@ -16,10 +16,19 @@
 #' @importFrom dplyr filter
 filter_acs <- function(data,
                        ...,
+                       geography = NULL,
                        table = NULL,
                        column = NULL,
                        vars = NULL,
                        drop_vars = NULL) {
+  if (!is_null(geography)) {
+    stopifnot(
+      has_name(data, "geography")
+    )
+
+    data <- data[data[["geography"]] %in% geography, ]
+  }
+
   if (!is_null(table)) {
     stopifnot(
       has_name(data, "table_id")

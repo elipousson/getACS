@@ -7,6 +7,7 @@
 filter_acs(
   data,
   ...,
+  geography = NULL,
   table = NULL,
   column = NULL,
   vars = NULL,
