@@ -42,6 +42,7 @@ get_acs_metadata <- function(survey = "acs5",
   if (file.exists(cache_path)) {
     msg <- "Reading cached {metadata} metadata for {acs_survey_label(survey, year)}"
     file <- cache_path
+    cache_data <- FALSE
   } else {
     msg <- "Downloading {metadata} metadata for {acs_survey_label(survey, year)}"
     base_url <- "https://raw.githubusercontent.com/censusreporter/census-table-metadata/master/precomputed"
@@ -49,6 +50,8 @@ get_acs_metadata <- function(survey = "acs5",
   }
 
   check_installed("readr", call = error_call)
+
+  cli::cli_progress_step(msg)
 
   data <- readr::read_csv(
     file = file,
@@ -58,7 +61,7 @@ get_acs_metadata <- function(survey = "acs5",
   )
 
   if (cache_data) {
-    cli::cli_alert_success("Caching {metadata} metadata")
+    cli::cli_progress_step("Caching {metadata} metadata")
 
     readr::write_csv(
       x = data,
@@ -71,7 +74,7 @@ get_acs_metadata <- function(survey = "acs5",
     return(data)
   }
 
-  cli::cli_alert_success(
+  cli::cli_progress_step(
     "Filtering {metadata} metadata to table ID {.val {table}}"
   )
 
@@ -118,16 +121,16 @@ label_acs_metadata <- function(data,
 #' @name label_acs_table_metadata
 #' @inheritParams get_acs_metadata
 #' @export
-#' @importFrom dplyr mutate left_join join_by
-#' @importFrom stringr str_extract str_remove
+#' @importFrom dplyr mutate left_join all_of
+#' @importFrom stringr str_detect
 label_acs_table_metadata <- function(data,
                                      survey = "acs5",
                                      year = 2021) {
-  table_metadata <- get_acs_metadata(survey, year, metadata = "table")
-
   stopifnot(
     has_name(data, "variable")
   )
+
+  table_metadata <- get_acs_metadata(survey, year, metadata = "table")
 
   data <- dplyr::mutate(
     data,
@@ -137,16 +140,31 @@ label_acs_table_metadata <- function(data,
 
   data <- dplyr::left_join(data, table_metadata, by = dplyr::join_by(table_id))
 
-  if (any(stringr::str_detect(data[["table_id"]], "[:alpha:]"))) {
-    stopifnot(
-      has_name(data, "table_title")
-    )
-
-    data <- dplyr::mutate(
-      data,
-      race_category = stringr::str_extract(table_title, "(?<=\\().+(?=\\))")
-    )
+  if (any(stringr::str_detect(data[["table_id"]], "[:alpha:]$"))) {
+    data <- join_acs_race_iteration(data)
   }
+
+  data
+}
+
+#' @noRd
+#' @importFrom stringr str_extract str_replace_all
+join_acs_race_iteration <- function(data) {
+  stopifnot(
+    has_name(data, "table_id")
+  )
+
+  data[["race_iteration_code"]] <- stringr::str_extract(
+    data[["table_id"]], "[:alpha:]$"
+  )
+
+  data[["race_iteration_group"]] <- stringr::str_replace_all(
+    data[["race_iteration_code"]],
+    pattern = set_names(
+      race_iteration[["group"]],
+      race_iteration[["code"]]
+    )
+  )
 
   data
 }
@@ -154,8 +172,8 @@ label_acs_table_metadata <- function(data,
 #' @rdname label_acs_metadata
 #' @name label_acs_column_metadata
 #' @export
-#' @importFrom dplyr mutate left_join rename
-#' @importFrom stringr str_remove
+#' @importFrom dplyr mutate left_join all_of
+#' @importFrom stringr str_extract str_remove
 label_acs_column_metadata <- function(data,
                                       survey = "acs5",
                                       year = 2021) {
@@ -172,9 +190,9 @@ label_acs_column_metadata <- function(data,
     .after = dplyr::all_of("variable")
   )
 
-  data <- dplyr::left_join(
+  dplyr::left_join(
     data,
     column_metadata,
-    by = join_by(table_id, column_id)
+    by = dplyr::all_of(c("table_id", "column_id"))
   )
 }
