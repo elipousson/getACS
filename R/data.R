@@ -25,3 +25,18 @@
 #' }
 #' @details <https://tigerweb.geo.census.gov/arcgis/rest/services>
 "tigerweb_geo_index"
+
+
+#' Race or Latino Origin table codes
+#'
+#' For selected tables, an alphabetic suffix follows to indicate that a table is
+#' repeated for the nine major race and Hispanic or Latino groups.
+#'
+#' @format A data frame with 9 rows and 3 variables:
+#' \describe{
+#'   \item{`code`}{Code}
+#'   \item{`group`}{Race or Ethnic group}
+#'   \item{`label`}{Short label}
+#' }
+#' @details <https://www.census.gov/programs-surveys/acs/data/data-tables/table-ids-explained.html>
+"race_iteration"
