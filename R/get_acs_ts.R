@@ -1,41 +1,54 @@
 #' Get a time series of ACS data
 #'
-#' @inheritParams tidycensus::get_acs
-#' @param year description
-#' @inheritDotParams tidycensus::get_acs
+#' @inheritParams get_acs_geographies
+#' @param year If length 1, the function uses [acs_survey_ts()] to get data for
+#'   all comparable survey years back to the start of the ACS. If length is
+#'   greater than 1, return the selected years even if those years may not be
+#'   valid to compare.
 #' @export
 #' @importFrom purrr map list_cbind list_rbind
 #' @importFrom rlang try_fetch
 #' @importFrom tidycensus get_acs
 get_acs_ts <- function(geography,
-                       state = NULL,
-                       survey = "acs5",
-                       year = 2021,
+                       variables = NULL,
+                       table = NULL,
                        cache_table = TRUE,
+                       year = 2021,
+                       state = NULL,
+                       county = NULL,
+                       survey = "acs5",
                        ...) {
-  years <- acs_survey_ts(survey, year)
+  years <- year
+
+  if (has_length(year, 1)) {
+    years <- acs_survey_ts(survey, year)
+  }
 
   acs_list <- purrr::map(
-    years,
-    function(yr) {
+    seq_along(years),
+    function(i) {
       rlang::try_fetch(
         purrr::list_cbind(
           list(
-            tidycensus::get_acs(
+            get_acs_geographies(
               geography = geography,
-              state = state,
-              survey = survey,
-              year = yr,
+              variables = variables,
+              table = table,
               cache_table = cache_table,
+              year = years[[i]],
+              state = state,
+              county = county,
+              survey = survey,
               ...
             ),
-            data.frame("year" = yr)
+            data.frame("year" = years[[i]])
           )
         ),
         error = function(cnd) {
           cli_warn(
-            "Data unavailable for year {yr}."
+            "Data unavailable for year {years[[i]]}."
           )
+          return(NULL)
         }
       )
     }

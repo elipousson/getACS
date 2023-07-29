@@ -8,7 +8,7 @@
 \usage{
 get_acs_tables(
   geography,
-  table,
+  table = NULL,
   cache_table = TRUE,
   year = 2021,
   survey = "acs5",
@@ -19,15 +19,16 @@ get_acs_tables(
 )
 
 get_acs_geographies(
-  geographies = c("county", "state"),
-  state = NULL,
-  county = NULL,
-  msa = NULL,
+  geography = c("county", "state"),
+  variables = NULL,
   table = NULL,
   cache_table = TRUE,
   year = 2021,
-  label = TRUE,
+  state = NULL,
+  county = NULL,
+  msa = NULL,
   survey = "acs5",
+  label = TRUE,
   perc = TRUE,
   geoid_col = "GEOID",
   ...
@@ -35,14 +36,15 @@ get_acs_geographies(
 
 get_acs_geography(
   geography,
-  state = NULL,
-  county = NULL,
-  msa = NULL,
+  variables = NULL,
   table = NULL,
   cache_table = TRUE,
   year = 2021,
-  label = TRUE,
+  state = NULL,
+  county = NULL,
+  msa = NULL,
   survey = "acs5",
+  label = TRUE,
   perc = TRUE,
   geoid_col = "GEOID",
   ...,
@@ -77,14 +79,42 @@ estimate.}
 \item{geoid_col}{A GeoID column name to use if perc is \code{TRUE}, Defaults to
 'GEOID'.}
 
-\item{...}{Other keyword arguments}
+\item{...}{
+  Arguments passed on to \code{\link[tidycensus:get_acs]{tidycensus::get_acs}}
+  \describe{
+    \item{\code{output}}{One of "tidy" (the default) in which each row represents an
+enumeration unit-variable combination, or "wide" in which each row
+represents an enumeration unit and the variables are in the columns.}
+    \item{\code{zcta}}{The zip code tabulation area(s) for which you are requesting
+data. Specify a single value or a vector of values to get data for more
+than one ZCTA. Numeric or character ZCTA GEOIDs are accepted. When
+specifying ZCTAs, geography must be set to `"zcta"` and `state` must be specified with
+`county` left as `NULL`. Defaults to NULL.}
+    \item{\code{geometry}}{if FALSE (the default), return a regular tibble of ACS data.
+if TRUE, uses the tigris package to return an sf tibble with simple feature
+geometry in the `geometry` column.}
+    \item{\code{keep_geo_vars}}{if TRUE, keeps all the variables from the Census
+shapefile obtained by tigris.  Defaults to FALSE.}
+    \item{\code{shift_geo}}{(deprecated) if TRUE, returns geometry with Alaska and Hawaii shifted for
+thematic mapping of the entire US. Geometry was originally obtained from
+the albersusa R package. As of May 2021, we recommend using \code{tigris::shift_geometry()}
+instead.}
+    \item{\code{summary_var}}{Character string of a "summary variable" from the ACS to
+be included in your output. Usually a variable (e.g. total population) that
+you'll want to use as a denominator or comparison.}
+    \item{\code{key}}{Your Census API key. Obtain one at
+\url{https://api.census.gov/data/key_signup.html}}
+    \item{\code{moe_level}}{The confidence level of the returned margin of error.  One
+of 90 (the default), 95, or 99.}
+    \item{\code{show_call}}{if TRUE, display call made to Census API. This can be very
+useful in debugging and determining if error messages returned are due to
+tidycensus or the Census API. Copy to the API call into a browser and see
+what is returned by the API directly. Defaults to FALSE.}
+  }}
 
-\item{geographies}{A character vector of geographies. See
-\url{https://walker-data.com/tidycensus/articles/basic-usage.html#geography-in-tidycensus}
-for supported options. Defaults to \code{c("county", "state")}. If a supplied
-geography does not support county and state parameters, these options are
-dropped before calling \code{\link[tidycensus:get_acs]{tidycensus::get_acs()}}. Any required parameters are
-also bound to the returned data frame as new columns.}
+\item{variables}{Character string or vector of character strings of variable
+IDs. tidycensus automatically returns the estimate and the margin of error
+associated with the variable.}
 
 \item{state}{An optional vector of states for which you are requesting data.
 State names, postal codes, and FIPS codes are accepted. Defaults to NULL.}
@@ -102,6 +132,13 @@ statistical area/micropolitan statistical area".}
 running function, e.g. \code{caller_env()}. The function will be
 mentioned in error messages as the source of the error. See the
 \code{call} argument of \code{\link[rlang:abort]{abort()}} for more information.}
+
+\item{geographies}{A character vector of geographies. See
+\url{https://walker-data.com/tidycensus/articles/basic-usage.html#geography-in-tidycensus}
+for supported options. Defaults to \code{c("county", "state")}. If a supplied
+geography does not support county and state parameters, these options are
+dropped before calling \code{\link[tidycensus:get_acs]{tidycensus::get_acs()}}. Any required parameters are
+also bound to the returned data frame as new columns.}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
@@ -127,7 +164,7 @@ if (interactive()) {
   )
 
   get_acs_geographies(
-    geographies = c("county", "state"),
+    geography = c("county", "state"),
     state = "MD",
     table = c("B01003", "B19013")
   )

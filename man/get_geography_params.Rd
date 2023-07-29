@@ -6,9 +6,9 @@
 \usage{
 get_geography_params(
   geography,
+  year = 2021,
   state = NULL,
   county = NULL,
-  year = 2021,
   allow_decennial = FALSE,
   call = caller_env()
 )
@@ -16,9 +16,9 @@ get_geography_params(
 \arguments{
 \item{geography}{The geography of your data.}
 
-\item{state, county}{State and county. Defaults to \code{NULL}.}
-
 \item{year}{Survey year.}
+
+\item{state, county}{State and county. Defaults to \code{NULL}.}
 
 \item{allow_decennial}{If \code{TRUE}, allow geography values of "block" or
 "voting district" that are only supported by \code{\link[tidycensus:get_decennial]{tidycensus::get_decennial()}}.

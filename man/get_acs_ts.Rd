@@ -6,71 +6,46 @@
 \usage{
 get_acs_ts(
   geography,
-  state = NULL,
-  survey = "acs5",
-  year = 2021,
+  variables = NULL,
+  table = NULL,
   cache_table = TRUE,
+  year = 2021,
+  state = NULL,
+  county = NULL,
+  survey = "acs5",
   ...
 )
 }
 \arguments{
 \item{geography}{The geography of your data.}
 
-\item{state}{An optional vector of states for which you are requesting data.
-State names, postal codes, and FIPS codes are accepted. Defaults to NULL.}
+\item{variables}{Character string or vector of character strings of variable
+IDs. tidycensus automatically returns the estimate and the margin of error
+associated with the variable.}
 
-\item{survey}{The ACS contains one-year, three-year, and five-year surveys
-expressed as "acs1", "acs3", and "acs5". The default selection is "acs5."}
-
-\item{year}{description}
+\item{table}{A character vector of tables.}
 
 \item{cache_table}{Whether or not to cache table names for faster future
 access. Defaults to FALSE; if TRUE, only needs to be called once per
 dataset.  If variables dataset is already cached via the
 \code{load_variables} function, this can be bypassed.}
 
-\item{...}{
-  Arguments passed on to \code{\link[tidycensus:get_acs]{tidycensus::get_acs}}
-  \describe{
-    \item{\code{variables}}{Character string or vector of character strings of variable
-IDs. tidycensus automatically returns the estimate and the margin of error
-associated with the variable.}
-    \item{\code{table}}{The ACS table for which you would like to request all
-variables. Uses lookup tables to identify the variables; performs faster
-when variable table already exists through \code{load_variables(cache =
-TRUE)}. Only one table may be requested per call.}
-    \item{\code{output}}{One of "tidy" (the default) in which each row represents an
-enumeration unit-variable combination, or "wide" in which each row
-represents an enumeration unit and the variables are in the columns.}
-    \item{\code{county}}{The county for which you are requesting data. County names and
+\item{year}{If length 1, the function uses \code{\link[=acs_survey_ts]{acs_survey_ts()}} to get data for
+all comparable survey years back to the start of the ACS. If length is
+greater than 1, return the selected years even if those years may not be
+valid to compare.}
+
+\item{state}{An optional vector of states for which you are requesting data.
+State names, postal codes, and FIPS codes are accepted. Defaults to NULL.}
+
+\item{county}{The county for which you are requesting data. County names and
 FIPS codes are accepted. Must be combined with a value supplied to `state`.
 Defaults to NULL.}
-    \item{\code{zcta}}{The zip code tabulation area(s) for which you are requesting
-data. Specify a single value or a vector of values to get data for more
-than one ZCTA. Numeric or character ZCTA GEOIDs are accepted. When
-specifying ZCTAs, geography must be set to `"zcta"` and `state` must be specified with
-`county` left as `NULL`. Defaults to NULL.}
-    \item{\code{geometry}}{if FALSE (the default), return a regular tibble of ACS data.
-if TRUE, uses the tigris package to return an sf tibble with simple feature
-geometry in the `geometry` column.}
-    \item{\code{keep_geo_vars}}{if TRUE, keeps all the variables from the Census
-shapefile obtained by tigris.  Defaults to FALSE.}
-    \item{\code{shift_geo}}{(deprecated) if TRUE, returns geometry with Alaska and Hawaii shifted for
-thematic mapping of the entire US. Geometry was originally obtained from
-the albersusa R package. As of May 2021, we recommend using \code{tigris::shift_geometry()}
-instead.}
-    \item{\code{summary_var}}{Character string of a "summary variable" from the ACS to
-be included in your output. Usually a variable (e.g. total population) that
-you'll want to use as a denominator or comparison.}
-    \item{\code{key}}{Your Census API key. Obtain one at
-\url{https://api.census.gov/data/key_signup.html}}
-    \item{\code{moe_level}}{The confidence level of the returned margin of error.  One
-of 90 (the default), 95, or 99.}
-    \item{\code{show_call}}{if TRUE, display call made to Census API. This can be very
-useful in debugging and determining if error messages returned are due to
-tidycensus or the Census API. Copy to the API call into a browser and see
-what is returned by the API directly. Defaults to FALSE.}
-  }}
+
+\item{survey}{The ACS contains one-year, three-year, and five-year surveys
+expressed as "acs1", "acs3", and "acs5". The default selection is "acs5."}
+
+\item{...}{Other keyword arguments}
 }
 \description{
 Get a time series of ACS data

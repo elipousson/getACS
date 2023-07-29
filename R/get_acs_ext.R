@@ -17,17 +17,19 @@
 #' @rdname vec_get_acs
 #' @export
 #' @importFrom tidycensus get_acs
-#' @importFrom vctrs vec_recycle_common vec_rep vec_assign vec_slice
+#' @importFrom vctrs vec_recycle_common list_drop_empty vec_rep vec_assign
+#'   vec_slice
 vec_get_acs <- function(...,
                         .fn = tidycensus::get_acs,
                         .size = NULL,
                         .call = caller_env()) {
   params <- vctrs::vec_recycle_common(..., .size = .size, .call = .call)
+  params <- vctrs::list_drop_empty(params)
 
   if (is_empty(params)) {
     cli_abort("{.arg ...} can't be empty.", call = .call)
   } else {
-    check_required(params[["geography"]], arg = "geography", call = call)
+    check_required(params[["geography"]], arg = "geography", call = .call)
   }
 
   check_function(.fn, call = .call)
@@ -35,7 +37,7 @@ vec_get_acs <- function(...,
   df_list <- vctrs::vec_rep(
     list(data.frame()),
     times = length(params[[1]]),
-    error_call = call
+    error_call = .call
   )
 
   for (i in seq_along(params[[1]])) {
@@ -45,7 +47,7 @@ vec_get_acs <- function(...,
       value = list(
         exec(
           .fn = .fn,
-          !!!lapply(params, vctrs::vec_slice, i = i, error_call = call)
+          !!!lapply(params, vctrs::vec_slice, i = i, error_call = .call)
         )
       )
     )
@@ -86,6 +88,7 @@ get_acs_table_alert <- function(...) {
 #'   [label_acs_metadata()] before returning the data frame.
 #' @inheritParams label_acs_metadata
 #' @inheritParams rlang::args_error_context
+#' @inheritDotParams tidycensus::get_acs
 #' @examples
 #' \dontrun{
 #' if (interactive()) {
@@ -97,7 +100,7 @@ get_acs_table_alert <- function(...) {
 #'   )
 #'
 #'   get_acs_geographies(
-#'     geographies = c("county", "state"),
+#'     geography = c("county", "state"),
 #'     state = "MD",
 #'     table = c("B01003", "B19013")
 #'   )
@@ -108,7 +111,7 @@ get_acs_table_alert <- function(...) {
 #' @importFrom cli cli_progress_along col_blue symbol pb_bar pb_percent
 #' @importFrom tidycensus get_acs
 get_acs_tables <- function(geography,
-                           table,
+                           table = NULL,
                            cache_table = TRUE,
                            year = 2021,
                            survey = "acs5",
@@ -121,25 +124,45 @@ get_acs_tables <- function(geography,
     year = year
   )
 
-  check_character(table)
-  table <- unique(table)
+  params <- list2(...)
 
-  if (length(table) > 50) {
-    cli::cli_warn(
-      "{.arg table} vectors longer than 50 may return an error from the Census API."
+  if (is_null(params[["variables"]])) {
+    table <- unique(table)
+    if (length(table) > 50) {
+      cli::cli_warn(
+        "{.arg table} vectors longer than 50 may return an error from the Census API."
+      )
+    }
+
+    acs_list <- vec_get_acs(
+      geography = geography,
+      table = table,
+      cache_table = cache_table,
+      year = year,
+      survey = survey,
+      .fn = get_acs_table_alert,
+      ...
+    )
+  } else {
+    acs_list <- vec_get_acs(
+      geography = geography,
+      table = table,
+      cache_table = cache_table,
+      year = year,
+      survey = survey,
+      .fn = tidycensus::get_acs,
+      ...
     )
   }
 
-  acs_list <- vec_get_acs(
-    geography = geography,
-    table = table,
-    year = year,
-    survey = survey,
-    .fn = get_acs_table_alert,
-    ...
-  )
-
   acs_data <- purrr::list_rbind(acs_list)
+
+  if (identical(params[["output"]], "wide") && label) {
+    cli::cli_warn(
+      "{.arg label} can't be {.code TRUE} when {.code output = 'wide'}"
+    )
+    label <- FALSE
+  }
 
   if (!label) {
     cli::cli_progress_step("Download complete")
@@ -173,15 +196,16 @@ get_acs_tables <- function(geography,
 #' @export
 #' @importFrom purrr map list_rbind
 #' @importFrom cli cli_progress_along
-get_acs_geographies <- function(geographies = c("county", "state"),
-                                state = NULL,
-                                county = NULL,
-                                msa = NULL,
+get_acs_geographies <- function(geography = c("county", "state"),
+                                variables = NULL,
                                 table = NULL,
                                 cache_table = TRUE,
                                 year = 2021,
-                                label = TRUE,
+                                state = NULL,
+                                county = NULL,
+                                msa = NULL,
                                 survey = "acs5",
+                                label = TRUE,
                                 perc = TRUE,
                                 geoid_col = "GEOID",
                                 ...) {
@@ -190,21 +214,27 @@ get_acs_geographies <- function(geographies = c("county", "state"),
     year = year
   )
 
+  check_character(geography)
+  geography <- unique(geography)
+
+  print(geography)
+
   acs_list <- purrr::map(
-    cli::cli_progress_along(
-      geographies,
-      format = "Downloading tables from {survey_label}",
-      type = "tasks"
-    ),
+    seq_along(geography),
     function(i) {
+      cli::cli_progress_step(
+        "Downloading data for {geography[[i]]} from {survey_label}"
+      )
+
       get_acs_geography(
-        geography = geographies[[i]],
-        state = state,
-        county = county,
-        msa = msa,
+        geography = geography[[i]],
+        variables = variables,
         table = table,
         cache_table = cache_table,
         year = year,
+        state = state,
+        county = county,
+        msa = msa,
         label = label,
         survey = survey,
         perc = perc,
@@ -224,14 +254,15 @@ get_acs_geographies <- function(geographies = c("county", "state"),
 #' @importFrom dplyr filter
 #' @importFrom vctrs vec_cbind
 get_acs_geography <- function(geography,
-                              state = NULL,
-                              county = NULL,
-                              msa = NULL,
+                              variables = NULL,
                               table = NULL,
                               cache_table = TRUE,
                               year = 2021,
-                              label = TRUE,
+                              state = NULL,
+                              county = NULL,
+                              msa = NULL,
                               survey = "acs5",
+                              label = TRUE,
                               perc = TRUE,
                               geoid_col = "GEOID",
                               ...,
@@ -246,15 +277,16 @@ get_acs_geography <- function(geography,
 
   acs_data <- exec(
     get_acs_tables,
-    !!!params,
-    year = year,
-    survey = survey,
+    variables = variables,
     table = table,
     cache_table = cache_table,
-    label = label,
+    year = year,
+    !!!params,
+    survey = survey,
+    ...,
     perc = perc,
-    geoid_col = geoid_col,
-    ...
+    label = label,
+    geoid_col = geoid_col
   )
 
   if (!is_null(msa) &&
@@ -274,7 +306,8 @@ get_acs_geography <- function(geography,
 
   vctrs::vec_cbind(
     acs_data,
-    as.data.frame(do.call(cbind, params))
+    as.data.frame(do.call(cbind, params)),
+    .error_call = call
   )
 }
 
@@ -285,8 +318,8 @@ get_acs_geography <- function(geography,
 #' required to download data at the specified geography using the Census API.
 #'
 #' @param geography The geography of your data.
-#' @param state,county State and county. Defaults to `NULL`.
 #' @param year Survey year.
+#' @param state,county State and county. Defaults to `NULL`.
 #' @param allow_decennial If `TRUE`, allow geography values of "block" or
 #'   "voting district" that are only supported by [tidycensus::get_decennial()].
 #'   If `FALSE` (default), error on those geographies that are not supported by
@@ -296,9 +329,9 @@ get_acs_geography <- function(geography,
 #' @export
 #' @importFrom vctrs list_drop_empty
 get_geography_params <- function(geography,
+                                 year = 2021,
                                  state = NULL,
                                  county = NULL,
-                                 year = 2021,
                                  allow_decennial = FALSE,
                                  call = caller_env()) {
   check_string(geography, allow_empty = FALSE, call = call)
@@ -369,4 +402,13 @@ get_geography_params <- function(geography,
       "state" = state
     )
   )
+}
+
+#' Get race iteration versions of table string
+#'
+#' @param table Table ID.
+#' @name acs_tables_race_iteration
+#' @export
+acs_tables_race_iteration <- function(table) {
+  paste0(table, c("", race_iteration[["code"]]))
 }
