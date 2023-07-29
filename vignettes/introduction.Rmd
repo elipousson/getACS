@@ -1,0 +1,116 @@
+---
+title: "Introduction to getACS"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to getACS}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  message = FALSE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(getACS)
+library(dplyr)
+library(ggplot2)
+theme_set(theme_minimal())
+```
+
+This package is designed to build on the `{tidycensus}` package to make it easier to create reproducible reports by allowing users to:
+
+- Download multiple tables with `get_acs_tables()`
+- Download tables for multiple geographies and tables with `get_acs_geographies()`
+- Download tables for multiple years and tables with `get_acs_ts()`
+
+All of these functions use the `label_acs_metadata()` to join the variables to detailed pre-computed [table and column metadata available on GitHub](https://github.com/censusreporter/census-table-metadata) from the open-source [Census Reporter project](https://censusreporter.org/). This metadata includes a parent column ID that supports the conversion of estimate and margin of error values into a percent share of the corresponding total. The function also uses the `race_iteration` reference to add a name of the racial or ethnic group as a column where appropriate.
+
+## Using `get_acs_tables()`
+
+```{r}
+tenure_tables <- paste0("B25003", c("", "A", "B", "I"))
+
+tenure_data <- get_acs_tables(
+  geography = "county",
+  state = "MD",
+  county = "Baltimore city",
+  table = tenure_tables
+)
+```
+
+
+```{r}
+tenure_data |> 
+  filter_acs(indent > 0, !is.na(race_iteration_group)) |> 
+  select_acs_cols("race_iteration_group") |> 
+  ggplot(aes(x = column_title, y = perc_estimate, fill = race_iteration_group)) +
+  geom_col(alpha = 0.8, position = "dodge") +
+  scale_y_acs_percent("% of households") +
+  scale_fill_viridis_d("Race/ethnic group") +
+  labs_acs_survey(table = tenure_tables, x = "Tenure")
+```
+
+## Using `get_acs_geographies()`
+
+```{r}
+multigeo_acs_data <- get_acs_geographies(
+  geographies = c("county", "state"),
+  state = "MD",
+  county = "Baltimore city",
+  table = "B01003"
+)
+```
+
+```{r}
+multigeo_acs_data |> 
+  select_acs_cols(column_title_col = NULL) |> 
+  gt_acs(
+    rowname_col = "NAME",
+    est_col_label = "Population"
+    ) |> 
+  fmt_acs_county(state = "Maryland")
+```
+
+## Using `get_acs_ts()`
+
+`get_acs_ts()` relies on a helper, `acs_survey_ts()`, that identifies the non-overlapping, comparable sample years for a specific ACS sample:
+
+```{r}
+years <- acs_survey_ts("acs5", 2021)
+
+years
+```
+
+The `get_acs_ts()` calls `acs_survey_ts()` internally to return data for multiple years (warning you if a variable is unavailable for a specific year or geography):
+
+```{r}
+acs_ts_data <- get_acs_ts(
+  geography = "county",
+  state = "MD",
+  survey = "acs5",
+  year = 2021,
+  table = "B01003"
+)
+
+glimpse(acs_ts_data)
+```
+
+Helper functions for `{ggplot2}` include `scale_x_acs_ts()` to set appropriate breaks:
+
+```{r}
+acs_ts_data |> 
+  filter_acs(
+    GEOID %in% c("24510", "24005", "24003", "24027", "24025", "24035")
+  ) |> 
+  ggplot(aes(x = year, y = estimate, fill = NAME)) +
+  geom_col(alpha = 0.8) +
+  facet_wrap(~ NAME) +
+  scale_y_acs_estimate("Population") +
+  scale_x_acs_ts(survey = "acs5", year = 2021) +
+  scale_fill_brewer(type = "qual", guide = "none")
+```
