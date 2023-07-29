@@ -1,3 +1,11 @@
+.onLoad <- function(lib, pkg) {
+  utils::data(
+    list = c("race_iteration"),
+    package = pkg,
+    envir = parent.env(environment())
+  )
+}
+
 utils::globalVariables(
   c(
     "cols", "column_id", "column_title", "denominator_estimate",
