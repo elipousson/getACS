@@ -374,7 +374,7 @@ gt_acs <- function(data,
         has_name(gt_object[["_data"]], column_title_col)
       )
 
-      column_title_label <- set_names(column_title_col, column_title_label)
+      column_title_label <- set_names(column_title_label, column_title_col)
     }
 
     gt_object <- gt::cols_label(
@@ -389,7 +389,7 @@ gt_acs <- function(data,
         has_name(gt_object[["_data"]], name_col)
       )
 
-      name_col_label <- set_names(name_col, name_col_label)
+      name_col_label <- set_names(name_col_label, name_col)
     }
 
     gt_object <- gt::cols_label(
