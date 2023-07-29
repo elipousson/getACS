@@ -4,6 +4,8 @@
 #' ggplot2 plot passed to the caption parameter of [ggplot2::labs()].
 #'
 #' @inheritParams acs_survey_label_table
+#' @inheritParams ggplot2::labs
+#' @inheritDotParams ggplot2::labs
 #' @export
 labs_acs_survey <- function(...,
                             caption = NULL,
@@ -57,7 +59,7 @@ scale_y_acs_percent <- function(name = "Est. % of total",
     name = name,
     labels = labels,
     ...
-    )
+  )
 }
 
 #' @rdname scale_acs
@@ -91,13 +93,13 @@ scale_y_acs_estimate <- function(name = "Estimate",
 
 #' @rdname scale_acs
 #' @name scale_x_acs_ts
+#' @inheritParams acs_survey_ts
 #' @export
 scale_x_acs_ts <- function(name = "Year",
                            ...,
                            breaks = NULL,
                            survey = "acs5",
                            year = 2021) {
-
   ggplot2::scale_x_continuous(
     name = name,
     breaks = breaks %||% suppressMessages(acs_survey_ts(survey, year)),
@@ -113,7 +115,6 @@ scale_y_acs_ts <- function(name = "Year",
                            breaks = NULL,
                            survey = "acs5",
                            year = 2021) {
-
   ggplot2::scale_y_continuous(
     name = name,
     breaks = breaks %||% suppressMessages(acs_survey_ts(survey, year)),

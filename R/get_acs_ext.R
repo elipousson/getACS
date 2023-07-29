@@ -181,12 +181,13 @@ get_acs_tables <- function(geography,
 }
 
 
-#' @param geographies A character vector of geographies. See
+#' @param geography Required character vector of one or more geographies. See
 #'   <https://walker-data.com/tidycensus/articles/basic-usage.html#geography-in-tidycensus>
-#'   for supported options. Defaults to `c("county", "state")`. If a supplied
-#'   geography does not support county and state parameters, these options are
-#'   dropped before calling [tidycensus::get_acs()]. Any required parameters are
-#'   also bound to the returned data frame as new columns.
+#'   for supported options. Defaults to `c("county", "state")` for
+#'   [get_acs_geographies()]. If a supplied geography does not support county
+#'   and state parameters, these options are dropped before calling
+#'   [tidycensus::get_acs()]. Any required parameters are also bound to the
+#'   returned data frame as new columns.
 #' @param msa Name or GeoID of a metro area that should be filtered from the
 #'   overall list of metro areas returned when geography or geographies  is
 #'   "metropolitan/micropolitan statistical area", "cbsa", or "metropolitan

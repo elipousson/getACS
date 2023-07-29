@@ -226,7 +226,13 @@ st_make_valid_union <- function(x, is_coverage = TRUE) {
 #' when aggregating a household-level variable and population counts when
 #' aggregating a individual-level variable.
 #'
+#' @param area_xwalk A area crosswalk data frame created with
+#'   [make_area_xwalk()]. Required for [use_area_xwalk()].
+#' @param geography A character string used as general description for area
+#'   geography type. Defaults to "area" but typical values could include
+#'   "neighborhood", "planning district", or "service area".
 #' @rdname make_area_xwalk
+#' @inheritParams label_acs_metadata
 #' @export
 use_area_xwalk <- function(data,
                            area_xwalk,

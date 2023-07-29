@@ -259,14 +259,17 @@ cols_label_ext <- function(gt_object,
 #'   spanner parameter for [fmt_acs_estimate()]
 #' @param perc_cols,perc_col_label,perc_spanner Passed to columns, col_labels,
 #'   and spanner parameter for [fmt_acs_percent()]
-#' @inheritParams fmt_acs_estimate
-#' @param column_title_col Column name to check for in the input gt table. Only
-#'   required if column_title_label is supplied.
-#' @param column_title_label Optional label applied to column named in
-#'   column_title_col.
 #' @param combined_spanner If not `NULL`, combined_spanner is passed to label
 #'   parameter of [gt::tab_spanner()] using both est_cols and perc_cols as the
 #'   columns parameter.
+#' @inheritParams fmt_acs_estimate
+#' @param column_title_col,column_title_label Column title and label. If
+#'   column_title_label is a string, column_title_col is required.
+#'   column_title_label can also be a named vector in the format of `c("label" =
+#'   "column")`. column_title_col defaults to "column_title"
+#' @param name_col,name_col_label Place name column and label. name_col_label
+#'   can be a string or a named vector (similar to column_title_label). name_col
+#'   defaults to "NAME"
 #' @inheritParams tab_acs_source_note
 #' @family gt table
 #' @examples
