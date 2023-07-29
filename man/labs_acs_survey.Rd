@@ -24,6 +24,6 @@ of years for non-overlapping ACS samples to allow comparison.}
 \item{table}{One or more table IDs to include in label or source note.}
 }
 \description{
-Label a ggplot2 plot and add a caption based on an ACS survey year
+\code{labs_acs_survey()} uses \code{acs_survey_label_table()} to create a label for a
+ggplot2 plot passed to the caption parameter of \code{\link[ggplot2:labs]{ggplot2::labs()}}.
 }
-\keyword{internal}
