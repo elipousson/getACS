@@ -3,9 +3,7 @@
 #' These simple functions allow validating ACS survey options, getting
 #' comparable years for time series analysis, and creating standard labels.
 #'
-#' @name acs_survey
 #' @examples
-#'
 #' acs_survey_match("acs1")
 #'
 #' acs_survey_sample("acs3")
@@ -15,7 +13,7 @@
 #' acs_survey_label()
 #'
 #' acs_survey_label_table(table = c("B19013", "B01003"))
-#' @export
+#' @name acs_survey
 NULL
 
 

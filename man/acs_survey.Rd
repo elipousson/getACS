@@ -80,7 +80,6 @@ These simple functions allow validating ACS survey options, getting
 comparable years for time series analysis, and creating standard labels.
 }
 \examples{
-
 acs_survey_match("acs1")
 
 acs_survey_sample("acs3")
