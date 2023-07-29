@@ -48,13 +48,13 @@ join_acs_percent <- function(data,
       denominator_estimate = estimate,
       denominator_moe = moe,
       denominator_column_title = column_title,
-      denominator_column_id = column_id
+      "{denominator_col}" := column_id
     )
 
   data |>
     dplyr::left_join(
       denominator_data,
-      by = dplyr::join_by({{ geoid_col }}, denominator_col),
+      by = dplyr::join_by({{ geoid_col }}, {{ denominator_col }}),
       na_matches = na_matches
     ) |>
     dplyr::mutate(
@@ -69,7 +69,6 @@ join_acs_percent <- function(data,
       .after = all_of("moe")
     )
 }
-
 
 #' Use parent column IDs to join parent column titles to ACS data
 #'
