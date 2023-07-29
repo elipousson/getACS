@@ -7,14 +7,13 @@
 tab_acs_source_note(
   gt_object,
   source_note = NULL,
+  append_note = FALSE,
   survey = "acs5",
   year = 2021,
-  prefix = "Source: ",
-  before = "",
-  after = ".",
   table = NULL,
   table_label = "Table",
-  append_note = FALSE,
+  prefix = "Source: ",
+  end = ".",
   use_md = FALSE,
   ...
 )
@@ -30,23 +29,21 @@ Text to be used in the source note. We can optionally use the \code{\link[gt:md]
 \code{\link[gt:html]{html()}} functions to style the text as Markdown or to retain HTML elements
 in the text.}
 
+\item{append_note}{If \code{TRUE}, add source_note to the end of the generated ACS
+data label. If \code{FALSE}, any supplied source_note will be used instead of an
+ACS label.}
+
 \item{survey}{ACS survey, "acs5", "acs3", or "acs1".}
 
 \item{year}{Based on the year and survey, \code{\link[=acs_survey_ts]{acs_survey_ts()}} returns a vector
 of years for non-overlapping ACS samples to allow comparison.}
-
-\item{prefix}{Text to insert before ACS survey label.}
-
-\item{before, after}{A character string to be added before/after each word.}
 
 \item{table}{One or more table IDs to include in label or source note.}
 
 \item{table_label}{Label to use when referring to table or tables. A "s" is
 appended to the end of the table_label if tables is more than length 1.}
 
-\item{append_note}{If \code{TRUE}, add source_note to the end of the generated ACS
-data label. If \code{FALSE}, any supplied source_note will be used instead of an
-ACS label.}
+\item{prefix}{Text to insert before ACS survey label.}
 
 \item{use_md}{If \code{TRUE}, pass source_note to \code{\link[gt:md]{gt::md()}} first.}
 

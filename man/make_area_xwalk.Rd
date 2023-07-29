@@ -26,7 +26,7 @@ make_area_xwalk(
 use_area_xwalk(
   data,
   area_xwalk,
-  name_col = "name",
+  name_col = "NAME",
   geoid_col = "GEOID",
   suffix = c("_area", ""),
   weight_col = "HOUSING20",

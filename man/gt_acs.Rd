@@ -7,6 +7,7 @@ gt table}
 \usage{
 gt_acs(
   data,
+  ...,
   est_cols = c("estimate", "moe"),
   est_col_label = "Est.",
   perc_cols = c("perc_estimate", "perc_moe"),
@@ -14,18 +15,18 @@ gt_acs(
   est_spanner = NULL,
   perc_spanner = NULL,
   combined_spanner = NULL,
-  source_note = NULL,
-  survey = "acs5",
-  year = 2021,
-  prefix = "Source: ",
-  before = "",
-  after = ".",
-  table = NULL,
   decimals = 0,
   column_title_col = "column_title",
   column_title_label = NULL,
+  name_col = "NAME",
+  name_col_label = NULL,
+  source_note = NULL,
   append_note = FALSE,
-  ...
+  survey = "acs5",
+  year = 2021,
+  table = NULL,
+  prefix = "Source: ",
+  end = "."
 )
 }
 \arguments{
@@ -34,6 +35,9 @@ gt_acs(
 \verb{obj:<data.frame>|obj:<tbl_df>} // \strong{required}
 
 A \code{data.frame} object or a tibble (\code{tbl_df}).}
+
+\item{...}{Additional parameters passed to \code{\link[gt:fmt_number]{gt::fmt_number()}} by
+\code{\link[=fmt_acs_estimate]{fmt_acs_estimate()}} or to \code{\link[gt:fmt_percent]{gt::fmt_percent()}} by \code{\link[=fmt_acs_percent]{fmt_acs_percent()}}.}
 
 \item{est_cols, est_col_label, est_spanner}{Passed to columns, col_labels, and
 spanner parameter for \code{\link[=fmt_acs_estimate]{fmt_acs_estimate()}}}
@@ -44,25 +48,6 @@ and spanner parameter for \code{\link[=fmt_acs_percent]{fmt_acs_percent()}}}
 \item{combined_spanner}{If not \code{NULL}, combined_spanner is passed to label
 parameter of \code{\link[gt:tab_spanner]{gt::tab_spanner()}} using both est_cols and perc_cols as the
 columns parameter.}
-
-\item{source_note}{\emph{Source note text}
-
-\verb{scalar<character>} // \strong{required}
-
-Text to be used in the source note. We can optionally use the \code{\link[gt:md]{md()}} and
-\code{\link[gt:html]{html()}} functions to style the text as Markdown or to retain HTML elements
-in the text.}
-
-\item{survey}{ACS survey, "acs5", "acs3", or "acs1".}
-
-\item{year}{Based on the year and survey, \code{\link[=acs_survey_ts]{acs_survey_ts()}} returns a vector
-of years for non-overlapping ACS samples to allow comparison.}
-
-\item{prefix}{Text to insert before ACS survey label.}
-
-\item{before, after}{A character string to be added before/after each word.}
-
-\item{table}{One or more table IDs to include in label or source note.}
 
 \item{decimals}{\emph{Number of decimal places}
 
@@ -81,12 +66,26 @@ required if column_title_label is supplied.}
 \item{column_title_label}{Optional label applied to column named in
 column_title_col.}
 
+\item{source_note}{\emph{Source note text}
+
+\verb{scalar<character>} // \strong{required}
+
+Text to be used in the source note. We can optionally use the \code{\link[gt:md]{md()}} and
+\code{\link[gt:html]{html()}} functions to style the text as Markdown or to retain HTML elements
+in the text.}
+
 \item{append_note}{If \code{TRUE}, add source_note to the end of the generated ACS
 data label. If \code{FALSE}, any supplied source_note will be used instead of an
 ACS label.}
 
-\item{...}{Additional parameters passed to \code{\link[gt:fmt_number]{gt::fmt_number()}} by
-\code{\link[=fmt_acs_estimate]{fmt_acs_estimate()}} or to \code{\link[gt:fmt_percent]{gt::fmt_percent()}} by \code{\link[=fmt_acs_percent]{fmt_acs_percent()}}.}
+\item{survey}{ACS survey, "acs5", "acs3", or "acs1".}
+
+\item{year}{Based on the year and survey, \code{\link[=acs_survey_ts]{acs_survey_ts()}} returns a vector
+of years for non-overlapping ACS samples to allow comparison.}
+
+\item{table}{One or more table IDs to include in label or source note.}
+
+\item{prefix}{Text to insert before ACS survey label.}
 }
 \description{
 Create or format a gt table with an estimate and margin of error and

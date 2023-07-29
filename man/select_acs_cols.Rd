@@ -7,7 +7,7 @@
 select_acs_cols(
   data,
   ...,
-  name_col = "name",
+  name_col = "NAME",
   column_title_col = "column_title",
   est_cols = c("estimate", "moe"),
   perc_est_cols = c("perc_estimate", "perc_moe"),

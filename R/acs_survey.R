@@ -115,7 +115,8 @@ acs_survey_label_table <- function(survey = "acs5",
                                    sep = ", ",
                                    and = " and ",
                                    before = "",
-                                   after = ".",
+                                   after = before,
+                                   end = ".",
                                    oxford_comma = TRUE) {
   label <- acs_survey_label(survey, year, prefix = prefix)
 
@@ -136,5 +137,5 @@ acs_survey_label_table <- function(survey = "acs5",
     oxford_comma = oxford_comma
   )
 
-  glue("{label}, {table_label} {table}")
+  glue("{label}, {table_label} {table}{end}")
 }

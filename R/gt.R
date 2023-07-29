@@ -27,19 +27,17 @@ NULL
 #' @importFrom gt md tab_source_note
 tab_acs_source_note <- function(gt_object,
                                 source_note = NULL,
+                                append_note = FALSE,
                                 survey = "acs5",
                                 year = 2021,
-                                prefix = "Source: ",
-                                before = "",
-                                after = ".",
                                 table = NULL,
                                 table_label = "Table",
-                                append_note = FALSE,
+                                prefix = "Source: ",
+                                end = ".",
                                 use_md = FALSE,
                                 ...) {
   if (append_note) {
-    after <- after %||% ""
-    after <- paste(after, source_note)
+    end <- paste(end, source_note)
     source_note <- NULL
   }
 
@@ -49,8 +47,7 @@ tab_acs_source_note <- function(gt_object,
     prefix = prefix,
     table = table,
     table_label = table_label,
-    before = before,
-    after = after,
+    end = end,
     ...
   )
 
@@ -105,12 +102,8 @@ cols_merge_uncert_ext <- function(gt_object,
 
   columns <- stringr::str_c(prefix, columns, postfix, sep = sep)
 
-  if (!has_length(columns, 2)) {
-    cli_abort(
-      "{.fn cols_merge_uncert_ext} requires {.arg columns} be
-      a length 2 character vector.",
-      call = call
-    )
+  if (has_length(columns, 1)) {
+    return(gt_object)
   }
 
   if (!all(has_name(gt_object[["_data"]], columns))) {
@@ -299,6 +292,7 @@ cols_label_ext <- function(gt_object,
 #' @export
 #' @importFrom gt gt tab_spanner cols_label
 gt_acs <- function(data,
+                   ...,
                    est_cols = c("estimate", "moe"),
                    est_col_label = "Est.",
                    perc_cols = c("perc_estimate", "perc_moe"),
@@ -306,42 +300,64 @@ gt_acs <- function(data,
                    est_spanner = NULL,
                    perc_spanner = NULL,
                    combined_spanner = NULL,
-                   source_note = NULL,
-                   survey = "acs5",
-                   year = 2021,
-                   prefix = "Source: ",
-                   before = "",
-                   after = ".",
-                   table = NULL,
                    decimals = 0,
                    column_title_col = "column_title",
                    column_title_label = NULL,
+                   name_col = "NAME",
+                   name_col_label = NULL,
+                   source_note = NULL,
                    append_note = FALSE,
-                   ...) {
+                   survey = "acs5",
+                   year = 2021,
+                   table = NULL,
+                   prefix = "Source: ",
+                   end = ".") {
   gt_object <- data
 
   if (!inherits(data, "gt_tbl")) {
     gt_object <- gt::gt(data, ...)
   }
 
+  if (identical(column_title_label, "from_table")) {
+    metadata <- get_acs_metadata(survey, year, table = table)
+
+    if (has_length(unique(metadata[["simple_table_title"]]), 1)) {
+      column_title_label <- metadata[["simple_table_title"]]
+    }
+  }
+
   if (!is_null(est_cols)) {
-    gt_object <- fmt_acs_estimate(
-      gt_object,
-      columns = est_cols,
-      col_labels = est_col_label,
-      decimals = decimals,
-      spanner = est_spanner
-    )
+    if (all(is.na(gt_object[["_data"]][[est_cols[[1]]]]))) {
+      gt_object <- gt::cols_hide(
+        gt_object,
+        dplyr::any_of(est_cols)
+      )
+    } else {
+      gt_object <- fmt_acs_estimate(
+        gt_object,
+        columns = est_cols,
+        col_labels = est_col_label,
+        decimals = decimals,
+        spanner = est_spanner
+      )
+    }
   }
 
   if (!is_null(perc_cols)) {
-    gt_object <- fmt_acs_percent(
-      gt_object,
-      columns = perc_cols,
-      col_labels = perc_col_label,
-      decimals = decimals,
-      spanner = perc_spanner
-    )
+    if (all(is.na(gt_object[["_data"]][[perc_cols[[1]]]]))) {
+      gt_object <- gt::cols_hide(
+        gt_object,
+        dplyr::any_of(perc_cols)
+      )
+    } else {
+      gt_object <- fmt_acs_percent(
+        gt_object,
+        columns = perc_cols,
+        col_labels = perc_col_label,
+        decimals = decimals,
+        spanner = perc_spanner
+      )
+    }
   }
 
   if (!is_null(combined_spanner)) {
@@ -353,13 +369,32 @@ gt_acs <- function(data,
   }
 
   if (!is_null(column_title_label)) {
-    stopifnot(
-      has_name(gt_object[["_data"]], column_title_col)
-    )
+    if (!is_named(column_title_label)) {
+      stopifnot(
+        has_name(gt_object[["_data"]], column_title_col)
+      )
+
+      column_title_label <- set_names(column_title_col, column_title_label)
+    }
 
     gt_object <- gt::cols_label(
       gt_object,
-      .list = set_names(column_title_label, column_title_col)
+      .list = column_title_label
+    )
+  }
+
+  if (!is_null(name_col_label)) {
+    if (!is_named(name_col_label)) {
+      stopifnot(
+        has_name(gt_object[["_data"]], name_col)
+      )
+
+      name_col_label <- set_names(name_col, name_col_label)
+    }
+
+    gt_object <- gt::cols_label(
+      gt_object,
+      .list = name_col_label
     )
   }
 
@@ -369,10 +404,9 @@ gt_acs <- function(data,
     append_note = append_note,
     survey = survey,
     year = year,
+    table = table,
     prefix = prefix,
-    before = before,
-    after = after,
-    table = table
+    end = end
   )
 }
 

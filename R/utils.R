@@ -35,7 +35,7 @@ check_sf <- function(x, allow_null = FALSE, arg = caller_arg(x), call = caller_e
 #' @importFrom tidyselect any_of starts_with
 select_acs_cols <- function(data,
                             ...,
-                            name_col = "name",
+                            name_col = "NAME",
                             column_title_col = "column_title",
                             est_cols = c("estimate", "moe"),
                             perc_est_cols = c("perc_estimate", "perc_moe"),

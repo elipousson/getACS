@@ -30,7 +30,8 @@ acs_survey_label_table(
   sep = ", ",
   and = " and ",
   before = "",
-  after = ".",
+  after = before,
+  end = ".",
   oxford_comma = TRUE
 )
 }

@@ -230,7 +230,7 @@ st_make_valid_union <- function(x, is_coverage = TRUE) {
 #' @export
 use_area_xwalk <- function(data,
                            area_xwalk,
-                           name_col = "name",
+                           name_col = "NAME",
                            geoid_col = "GEOID",
                            suffix = c("_area", ""),
                            weight_col = "HOUSING20",
