@@ -134,7 +134,7 @@ label_acs_table_metadata <- function(data,
 
   data <- dplyr::mutate(
     data,
-    table_id = stringr::str_extract(variable, ".+(?=_)"),
+    table_id = str_table_id(variable),
     .after = dplyr::all_of("variable")
   )
 
@@ -145,6 +145,12 @@ label_acs_table_metadata <- function(data,
   }
 
   data
+}
+
+#' @noRd
+#' @importFrom stringr str_extract
+str_table_id <- function(variable) {
+  stringr::str_extract(variable, ".+(?=_)")
 }
 
 #' @noRd
@@ -190,9 +196,15 @@ label_acs_column_metadata <- function(data,
     .after = dplyr::all_of("variable")
   )
 
-  dplyr::left_join(
+  data <- dplyr::left_join(
     data,
     column_metadata,
     by = dplyr::all_of(c("table_id", "column_id"))
+  )
+
+  # Strip trailing ":" from "Total:"
+  dplyr::mutate(
+    data,
+    column_title = stringr::str_remove(column_title, ":$")
   )
 }
