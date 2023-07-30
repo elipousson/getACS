@@ -12,17 +12,20 @@ MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.or
 [![Project Status: WIP – Initial development is in progress, but there
 has not yet been a stable, usable release suitable for the
 public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
+
 <!-- badges: end -->
 
 The goal of getACS is to make it easier to work with [American Community
 Survey data](https://www.census.gov/programs-surveys/acs) from the
-[tidycensus package](https://walker-data.com/tidycensus/). The package
-includes:
+[tidycensus package](https://walker-data.com/tidycensus/) by Kyle Walker
+and others.
 
-- Helpers for creating tables of ACS data using the [gt
+This package includes:
+
+- Functions that extend `tidycensus::get_acs()` to support multiple
+  tables, geographies, or years
+- Functions for creating formatted tables from ACS data using the [gt
   package](https://gt.rstudio.com/)
-- Helpers that extend the existing `tidycensus::get_acs()` function to
-  work with multiple years or geographies
 
 Note that I don’t love the current name for this package and expect to
 rename it as soon as I think of a better one.
@@ -53,10 +56,9 @@ acs_data <- get_acs_geographies(
   geography = c("county", "state"),
   county = "Baltimore city",
   state = "MD",
-  table = c("B08134"),
+  table = "B08134",
   quiet = TRUE
 )
-#> [1] "county" "state"
 ```
 
 The package also includes utility functions for filtering data and
@@ -77,7 +79,7 @@ commute_tbl <- gt_acs(
 as_raw_html(commute_tbl)
 ```
 
-<div id="pllryryofu" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="kiexesjwrt" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
   &#10;  <table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false" style="-webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'; display: table; border-collapse: collapse; line-height: normal; margin-left: auto; margin-right: auto; color: #333333; font-size: 16px; font-weight: normal; font-style: normal; background-color: #FFFFFF; width: auto; border-top-style: solid; border-top-width: 2px; border-top-color: #A8A8A8; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #A8A8A8; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3;" bgcolor="#FFFFFF">
   <thead style="border-style: none;">
     &#10;    <tr class="gt_col_headings" style="border-style: none; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3;">
@@ -163,8 +165,8 @@ plots with the `{ggplot2}` package:
 plot_data <- filter_acs(acs_data, indent == 1, line_number > 10)
 plot_data <- select_acs_cols(plot_data)
 
-plot_data |> 
-  fmt_acs_county(state = "Maryland") |> 
+plot_data |>
+  fmt_acs_county(state = "Maryland") |>
   ggplot(aes(x = perc_estimate, y = column_title, fill = NAME)) +
   geom_col(position = "dodge", alpha = 0.75) +
   scale_x_acs_percent() +
@@ -174,13 +176,21 @@ plot_data |>
   labs_acs_survey(
     y = "Means of transportation to work",
     fill = "Geography",
-    table = acs_data$table_id[[1]]
+    table = acs_data$table_id
   )
 ```
 
 <img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
 
-## Related packages
+For more information on working with Census data in R [read the book
+*Analyzing US Census Data: Methods, Maps, and Models in
+R*](https://walker-data.com/census-r) (February 2023).
 
-- [easycensus](https://github.com/CoryMcCartan/easycensus)
-- [cwi](https://ct-data-haven.github.io/cwi/)
+## Related R packages
+
+- [easycensus](https://github.com/CoryMcCartan/easycensus): Quickly
+  Extract and Marginalize U.S. Census Tables
+- [cwi](https://ct-data-haven.github.io/cwi/): Functions to speed up and
+  standardize Census ACS data analysis for multiple staff people at
+  DataHaven, preview trends and patterns, and get data in more
+  layperson-friendly formats.

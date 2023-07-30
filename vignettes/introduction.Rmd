@@ -33,7 +33,7 @@ All of these functions use the `label_acs_metadata()` to join the variables to d
 ## Using `get_acs_tables()`
 
 ```{r}
-tenure_tables <- paste0("B25003", c("", "A", "B", "I"))
+tenure_tables <- acs_tables_race_iteration("B25003")[c(2, 3, 10)]
 
 tenure_data <- get_acs_tables(
   geography = "county",
@@ -46,7 +46,7 @@ tenure_data <- get_acs_tables(
 
 ```{r}
 tenure_data |>
-  filter_acs(indent > 0, !is.na(race_iteration_group)) |>
+  filter_acs(indent > 0) |>
   select_acs_cols("race_iteration_group") |>
   ggplot(aes(x = column_title, y = perc_estimate, fill = race_iteration_group)) +
   geom_col(alpha = 0.8, position = "dodge") +
@@ -59,7 +59,7 @@ tenure_data |>
 
 ```{r}
 multigeo_acs_data <- get_acs_geographies(
-  geographies = c("county", "state"),
+  geography = c("county", "state"),
   state = "MD",
   county = "Baltimore city",
   table = "B01003"
