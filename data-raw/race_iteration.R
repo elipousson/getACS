@@ -11,5 +11,4 @@ race_iteration <- tibble::tribble(
   "I", "Hispanic or Latino", "Hispanic/Latino"
 )
 
-
 usethis::use_data(race_iteration, overwrite = TRUE)
