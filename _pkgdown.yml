@@ -1,4 +1,29 @@
 url: https://elipousson.github.io/getACS/
 template:
   bootstrap: 5
-
+reference:
+- title: Get American Community Survey (ACS) data and metadata
+  contents:
+  - starts_with("get_")
+  - '`vec_get_acs`'
+- title: Interpolate ACS data across areas
+  contents:
+  - starts_with("make_")
+- title: Format gt tables and ACS data frames
+  contents:
+  - '`gt_acs`'
+  - starts_with("tab_")
+  - starts_with("fmt_acs")
+- title: Apply labels and scales to ggplot2 plots
+  contents:
+  - has_keyword("ggplot2")
+- title: Additional utility functions for ACS data frames
+  contents:
+  - starts_with("acs_")
+  - starts_with("join_acs_")
+  - '`select_acs_cols`'
+  - '`filter_acs`'
+- title: Reference data
+  contents:
+  - '`race_iteration`'
+  - '`tigerweb_geo_index`'
