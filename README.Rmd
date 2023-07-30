@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
- [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
 <!-- badges: end -->
 
@@ -36,9 +36,64 @@ You can install the development version of getACS from [GitHub](https://github.c
 # install.packages("pak")
 pak::pkg_install("elipousson/getACS")
 ```
+## Usage
+
+```{r setup}
+library(getACS)
+library(gt)
+library(ggplot2)
+```
+
+The main feature of `{getACS}` is support for returning multiple tables, geographies, and years.
+
+```{r}
+acs_data <- get_acs_geographies(
+  geography = c("county", "state"),
+  county = "Baltimore city",
+  state = "MD",
+  table = c("B08134"),
+  quiet = TRUE
+)
+```
+
+The package also includes utility functions for filtering data and selecting columns to support the creation of tables using the `{gt}` package:
+
+```{r}
+tbl_data <- filter_acs(acs_data, indent == 1, line_number <= 10)
+tbl_data <- select_acs_cols(tbl_data)
+
+commute_tbl <- gt_acs(
+  tbl_data,
+  groupname_col = "NAME",
+  column_title_label = "Commute time",
+  table = "B08134"
+)
+
+as_raw_html(commute_tbl)
+```
+
+The package also includes several simple functions to support creating plots with the `{ggplot2}` package:
+
+```{r}
+plot_data <- filter_acs(acs_data, indent == 1, line_number > 10)
+plot_data <- select_acs_cols(plot_data)
+
+plot_data |> 
+  fmt_acs_county(state = "Maryland") |> 
+  ggplot(aes(x = perc_estimate, y = column_title, fill = NAME)) +
+  geom_col(position = "dodge", alpha = 0.75) +
+  scale_x_acs_percent() +
+  scale_fill_viridis_d() +
+  theme_minimal() +
+  theme(legend.position = "top") +
+  labs_acs_survey(
+    y = "Means of transportation to work",
+    fill = "Geography",
+    table = acs_data$table_id[[1]]
+  )
+```
 
 ## Related packages
 
 - [easycensus](https://github.com/CoryMcCartan/easycensus)
 - [cwi](https://ct-data-haven.github.io/cwi/)
-
