@@ -2,7 +2,7 @@
 % Please edit documentation in R/xwalk.R
 \name{make_block_xwalk}
 \alias{make_block_xwalk}
-\title{Make a crosswalk data frame for U.S. Census blocks and tracts}
+\title{Make crosswalk data for U.S. Census blocks and tracts}
 \usage{
 make_block_xwalk(
   state,
@@ -67,7 +67,7 @@ Should be a character vector of length 2.}
   }}
 }
 \description{
-\code{make_block_xwalk()} joined U.S. Census blocks data from \code{\link[tigris:blocks]{tigris::blocks()}}
+\code{\link[=make_block_xwalk]{make_block_xwalk()}} joined U.S. Census blocks data from \code{\link[tigris:blocks]{tigris::blocks()}}
 to a data frame from \code{\link[tigris:tracts]{tigris::tracts()}} to provide a crosswalk between both
 geographies. If \code{year = 2020}, the suffix parameter is not used. If year is
 any other year than 2020, the by parameter must be changed from the default

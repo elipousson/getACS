@@ -4,8 +4,7 @@
 \alias{fmt_acs_estimate}
 \alias{fmt_acs_percent}
 \alias{cols_label_ext}
-\title{Format estimate and margin of error columns (or \% estimate and \% margin of
-error columns) in a gt table}
+\title{Format estimate and margin of error columns in a gt table}
 \usage{
 fmt_acs_estimate(
   gt_object,
@@ -85,7 +84,9 @@ mentioned in error messages as the source of the error. See the
 }
 \description{
 \code{\link[=fmt_acs_estimate]{fmt_acs_estimate()}} formats estimate and margin of error columns for a gt
-table. Used by \code{\link[=gt_acs]{gt_acs()}}
+table created with ACS data. \code{\link[=fmt_acs_percent]{fmt_acs_percent()}} does the same for the
+perc_estimate and perc_moe columns calculated by \code{\link[=join_acs_percent]{join_acs_percent()}}.  Both
+functions are used internally by \code{\link[=gt_acs]{gt_acs()}}.
 }
 \details{
 Using cols_label_ext
@@ -94,8 +95,8 @@ Using cols_label_ext
 }
 \seealso{
 Other gt table: 
-\code{\link{cols_merge_uncert_ext}()},
 \code{\link{gt_acs}()},
 \code{\link{tab_acs_source_note}()}
 }
 \concept{gt table}
+\keyword{gt}

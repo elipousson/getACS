@@ -3,8 +3,8 @@
 \name{make_area_xwalk}
 \alias{make_area_xwalk}
 \alias{use_area_xwalk}
-\title{Make a crosswalk data frame for U.S. Census tracts and arbitrary areas based
-on block-level attributes}
+\title{Make and use crosswalk data based on U.S. Census block-level weights for U.S.
+Census tracts and non-Census geographic areas}
 \usage{
 make_area_xwalk(
   area,

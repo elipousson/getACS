@@ -1,10 +1,9 @@
-#' Calculate estimates as a percent of the denominators for ACS data
+#' Join percent estimates to ACS data based on denominator values
 #'
-#' Use the denominator_column_id value from the column metadata added with
-#' [label_acs_metadata()] to calculate the estimate as a percent share of the
-#' denominator value. [tidycensus::moe_prop()] is used to calculate the margin
-#' of error for the percentage. Typically, this function should only be used as
-#' an internal function.
+#' [join_acs_percent()] uses the denominator_column_id value from the column
+#' metadata added with [label_acs_metadata()] to calculate the estimate as a
+#' percent share of the denominator value. [tidycensus::moe_prop()] is used to
+#' calculate the margin of error for the percentage.
 #'
 #' @param data A data frame with column names including "column_id", "column_title",
 #' "denominator_column_id", "estimate", and "moe".
@@ -13,7 +12,6 @@
 #' @inheritParams base::round
 #' @inheritParams dplyr::left_join
 #' @seealso [tidycensus::moe_prop()]
-#' @keywords internal
 #' @export
 #' @importFrom dplyr filter select left_join mutate join_by
 #' @importFrom tidycensus moe_prop
@@ -70,7 +68,10 @@ join_acs_percent <- function(data,
     )
 }
 
-#' Use parent column IDs to join parent column titles to ACS data
+#' Join parent column titles to ACS data based on parent column ID values
+#'
+#' [join_acs_parent_column()] uses data labelled with parent_column_id values to
+#' join parent column titles to a data frame of ACS data.
 #'
 #' @param data A data frame with the specified column names. Expected to be
 #'   labelled using [label_acs_metadata()].
@@ -79,7 +80,7 @@ join_acs_percent <- function(data,
 #' @param suffix Suffix passed to [dplyr::left_join()], Default: `c("",
 #'   "_parent")`
 #' @inheritParams dplyr::left_join
-#' @return A modified data frame.
+#' @return A data frame with added parent column title.
 #' @rdname join_acs_parent_column
 #' @export
 #' @importFrom dplyr distinct left_join

@@ -69,3 +69,4 @@ of years for non-overlapping ACS samples to allow comparison.}
 \description{
 Scales for plotting ACS data with ggplot2
 }
+\keyword{ggplot2}

@@ -17,6 +17,7 @@
 #' @inheritParams gt::fmt
 #' @inheritDotParams gt::fmt
 #' @name fmt_acs_county
+#' @keywords gt
 #' @export
 #' @importFrom dplyr all_of
 #' @importFrom gt fmt
@@ -89,6 +90,7 @@ fmt_acs_minutes <- function(data,
 #' @seealso
 #' - [fmt_acs_county()]
 #' - [fmt_acs_minutes()]
+#' @keywords gt
 #' @export
 #' @importFrom dplyr filter mutate if_else
 #' @importFrom cli cli_bullets

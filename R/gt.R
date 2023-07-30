@@ -22,6 +22,7 @@ NULL
 #'   parameters passed to [gt::cols_merge_uncert()]. For [fmt_acs_percent()],
 #'   additional parameters passed to [gt::fmt_percent()].
 #' @family gt table
+#' @keywords gt
 #' @export
 #' @importFrom glue glue
 #' @importFrom gt md tab_source_note
@@ -82,7 +83,7 @@ tab_acs_source_note <- function(gt_object,
 #'   you want to apply a prefix to only one or the other column specification.
 #' @inheritParams stringr::str_c
 #' @inheritParams rlang::args_error_context
-#' @family gt table
+#' @keywords internal
 #' @export
 #' @importFrom stringr str_c
 #' @importFrom gt cols_merge_uncert
@@ -122,11 +123,12 @@ cols_merge_uncert_ext <- function(gt_object,
   )
 }
 
-#' Format estimate and margin of error columns (or % estimate and % margin of
-#' error columns) in a gt table
+#' Format estimate and margin of error columns in a gt table
 #'
 #' [fmt_acs_estimate()] formats estimate and margin of error columns for a gt
-#' table. Used by [gt_acs()]
+#' table created with ACS data. [fmt_acs_percent()] does the same for the
+#' perc_estimate and perc_moe columns calculated by [join_acs_percent()].  Both
+#' functions are used internally by [gt_acs()].
 #'
 #' @inheritParams gt_params
 #' @param col_est,col_moe Column names for the estimate and margin of error
@@ -143,6 +145,7 @@ cols_merge_uncert_ext <- function(gt_object,
 #'   [fmt_acs_estimate()] or to [gt::fmt_percent()] by [fmt_acs_percent()].
 #' @inheritParams rlang::args_error_context
 #' @family gt table
+#' @keywords gt
 #' @export
 #' @importFrom gt fmt_number tab_spanner
 fmt_acs_estimate <- function(gt_object,
@@ -272,6 +275,7 @@ cols_label_ext <- function(gt_object,
 #'   defaults to "NAME"
 #' @inheritParams tab_acs_source_note
 #' @family gt table
+#' @keywords gt
 #' @examples
 #' \dontrun{
 #' if (interactive()) {

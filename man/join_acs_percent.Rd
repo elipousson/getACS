@@ -2,7 +2,7 @@
 % Please edit documentation in R/join_acs.R
 \name{join_acs_percent}
 \alias{join_acs_percent}
-\title{Calculate estimates as a percent of the denominators for ACS data}
+\title{Join percent estimates to ACS data based on denominator values}
 \usage{
 join_acs_percent(
   data,
@@ -33,13 +33,11 @@ for database sources and to \code{base::merge(incomparables = NA)}.
     For \code{round}, negative values are allowed (see \sQuote{Details}).}
 }
 \description{
-Use the denominator_column_id value from the column metadata added with
-\code{\link[=label_acs_metadata]{label_acs_metadata()}} to calculate the estimate as a percent share of the
-denominator value. \code{\link[tidycensus:moe_prop]{tidycensus::moe_prop()}} is used to calculate the margin
-of error for the percentage. Typically, this function should only be used as
-an internal function.
+\code{\link[=join_acs_percent]{join_acs_percent()}} uses the denominator_column_id value from the column
+metadata added with \code{\link[=label_acs_metadata]{label_acs_metadata()}} to calculate the estimate as a
+percent share of the denominator value. \code{\link[tidycensus:moe_prop]{tidycensus::moe_prop()}} is used to
+calculate the margin of error for the percentage.
 }
 \seealso{
 \code{\link[tidycensus:moe_prop]{tidycensus::moe_prop()}}
 }
-\keyword{internal}

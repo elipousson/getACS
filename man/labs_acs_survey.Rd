@@ -42,3 +42,4 @@ of years for non-overlapping ACS samples to allow comparison.}
 \code{labs_acs_survey()} uses \code{acs_survey_label_table()} to create a label for a
 ggplot2 plot passed to the caption parameter of \code{\link[ggplot2:labs]{ggplot2::labs()}}.
 }
+\keyword{ggplot2}

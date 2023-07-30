@@ -79,10 +79,4 @@ and optionally apply a prefix or postfix value. These options are primarily
 for internal use by \code{\link[=gt_acs]{gt_acs()}}, \code{\link[=fmt_acs_estimate]{fmt_acs_estimate()}}, and
 \code{\link[=fmt_acs_percent]{fmt_acs_percent()}}.
 }
-\seealso{
-Other gt table: 
-\code{\link{fmt_acs_estimate}()},
-\code{\link{gt_acs}()},
-\code{\link{tab_acs_source_note}()}
-}
-\concept{gt table}
+\keyword{internal}

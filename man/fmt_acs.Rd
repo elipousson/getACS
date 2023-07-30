@@ -89,3 +89,4 @@ ACS data and \code{\link[=fmt_acs_minutes]{fmt_acs_minutes()}} does the same for
 (e.g. commute times). If data is not a \code{gt_tbl} object, both function can use
 \code{\link[dplyr:mutate]{dplyr::mutate()}} to transform a standard data frame.
 }
+\keyword{gt}

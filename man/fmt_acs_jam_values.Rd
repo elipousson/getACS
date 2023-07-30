@@ -19,3 +19,4 @@ Built table.
 \item \code{\link[=fmt_acs_minutes]{fmt_acs_minutes()}}
 }
 }
+\keyword{gt}

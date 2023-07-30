@@ -121,8 +121,8 @@ if (interactive()) {
 }
 \seealso{
 Other gt table: 
-\code{\link{cols_merge_uncert_ext}()},
 \code{\link{fmt_acs_estimate}()},
 \code{\link{tab_acs_source_note}()}
 }
 \concept{gt table}
+\keyword{gt}

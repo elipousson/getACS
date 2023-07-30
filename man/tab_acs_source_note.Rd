@@ -61,8 +61,8 @@ additional parameters passed to \code{\link[gt:fmt_percent]{gt::fmt_percent()}}.
 }
 \seealso{
 Other gt table: 
-\code{\link{cols_merge_uncert_ext}()},
 \code{\link{fmt_acs_estimate}()},
 \code{\link{gt_acs}()}
 }
 \concept{gt table}
+\keyword{gt}

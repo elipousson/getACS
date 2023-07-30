@@ -13,6 +13,27 @@ utils::globalVariables(
   )
 )
 
+#' From `cliExtras::cli_quiet`
+#'
+#' @param quiet If `FALSE` (default), leave `cli.default_handler` option
+#'   unchanged. If `TRUE`, set `cli.default_handler` to [suppressMessages]
+#'   temporarily with [rlang::local_options()]
+#' @keywords internal
+cli_quiet <- function(quiet = FALSE,
+                      push = FALSE,
+                      .frame = rlang::caller_env()) {
+  if (rlang::is_false(quiet)) {
+    return(invisible(NULL))
+  }
+
+  if (rlang::is_true(push)) {
+    return(rlang::push_options("cli.default_handler" = suppressMessages))
+  }
+
+  rlang::local_options("cli.default_handler" = suppressMessages, .frame = .frame)
+}
+
+
 #' @noRd
 check_sf <- function(x, allow_null = FALSE, arg = caller_arg(x), call = caller_env()) {
   if (inherits(x, "sf")) {
@@ -27,7 +48,7 @@ check_sf <- function(x, allow_null = FALSE, arg = caller_arg(x), call = caller_e
   )
 }
 
-#' Helper function to select columns typically used in an ACS table
+#' Select columns for a gt table based on ACS data
 #'
 #' @inheritParams gt_acs
 #' @param ... Additional parameters passed to [dplyr::select()]

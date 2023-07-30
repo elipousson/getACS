@@ -4,7 +4,7 @@
 \alias{get_acs_tables}
 \alias{get_acs_geographies}
 \alias{get_acs_geography}
-\title{Get multiple ACS tables or multiple tables for multiple geographies}
+\title{Get multiple tables or multiple geographies of ACS data}
 \usage{
 get_acs_tables(
   geography,
@@ -12,10 +12,11 @@ get_acs_tables(
   cache_table = TRUE,
   year = 2021,
   survey = "acs5",
+  ...,
   label = TRUE,
   perc = TRUE,
   geoid_col = "GEOID",
-  ...
+  quiet = FALSE
 )
 
 get_acs_geographies(
@@ -28,10 +29,11 @@ get_acs_geographies(
   county = NULL,
   msa = NULL,
   survey = "acs5",
+  ...,
   label = TRUE,
   perc = TRUE,
   geoid_col = "GEOID",
-  ...
+  quiet = FALSE
 )
 
 get_acs_geography(
@@ -44,10 +46,10 @@ get_acs_geography(
   county = NULL,
   msa = NULL,
   survey = "acs5",
+  ...,
   label = TRUE,
   perc = TRUE,
   geoid_col = "GEOID",
-  ...,
   call = caller_env()
 )
 }
@@ -73,17 +75,6 @@ through 2021, with the exception of 2020.  Defaults to 2021.}
 
 \item{survey}{The ACS contains one-year, three-year, and five-year surveys
 expressed as "acs1", "acs3", and "acs5". The default selection is "acs5."}
-
-\item{label}{If \code{TRUE} (default), label the returned ACS data with
-\code{\link[=label_acs_metadata]{label_acs_metadata()}} before returning the data frame.}
-
-\item{perc}{If \code{TRUE} (default), use the denominator column ID to calculate
-each estimate as a percent share of the denominator value and use
-\code{\link[tidycensus:moe_prop]{tidycensus::moe_prop()}} to calculate a new margin of error for the percent
-estimate.}
-
-\item{geoid_col}{A GeoID column name to use if perc is \code{TRUE}, Defaults to
-'GEOID'.}
 
 \item{...}{
   Arguments passed on to \code{\link[tidycensus:get_acs]{tidycensus::get_acs}}
@@ -117,6 +108,21 @@ useful in debugging and determining if error messages returned are due to
 tidycensus or the Census API. Copy to the API call into a browser and see
 what is returned by the API directly. Defaults to FALSE.}
   }}
+
+\item{label}{If \code{TRUE} (default), label the returned ACS data with
+\code{\link[=label_acs_metadata]{label_acs_metadata()}} before returning the data frame.}
+
+\item{perc}{If \code{TRUE} (default), use the denominator column ID to calculate
+each estimate as a percent share of the denominator value and use
+\code{\link[tidycensus:moe_prop]{tidycensus::moe_prop()}} to calculate a new margin of error for the percent
+estimate.}
+
+\item{geoid_col}{A GeoID column name to use if perc is \code{TRUE}, Defaults to
+'GEOID'.}
+
+\item{quiet}{If \code{FALSE} (default), leave \code{cli.default_handler} option
+unchanged. If \code{TRUE}, set \code{cli.default_handler} to \link{suppressMessages}
+temporarily with \code{\link[rlang:local_options]{rlang::local_options()}}}
 
 \item{variables}{Character string or vector of character strings of variable
 IDs. tidycensus automatically returns the estimate and the margin of error

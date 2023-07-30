@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_acs_ext.R
 \name{acs_tables_race_iteration}
 \alias{acs_tables_race_iteration}
-\title{Get race iteration versions of table string}
+\title{Append race iteration codes to a table ID}
 \usage{
 acs_tables_race_iteration(table)
 }
@@ -10,5 +10,6 @@ acs_tables_race_iteration(table)
 \item{table}{Table ID.}
 }
 \description{
-Get race iteration versions of table string
+Append race iteration codes to a table ID
 }
+\keyword{internal}

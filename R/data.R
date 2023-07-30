@@ -27,7 +27,7 @@
 "tigerweb_geo_index"
 
 
-#' Race or Latino Origin table codes
+#' Race or Latino Origin Table Codes
 #'
 #' For selected tables, an alphabetic suffix follows to indicate that a table is
 #' repeated for the nine major race and Hispanic or Latino groups.

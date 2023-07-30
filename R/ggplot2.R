@@ -6,6 +6,7 @@
 #' @inheritParams acs_survey_label_table
 #' @inheritParams ggplot2::labs
 #' @inheritDotParams ggplot2::labs
+#' @keywords ggplot2
 #' @export
 labs_acs_survey <- function(...,
                             caption = NULL,
@@ -32,6 +33,7 @@ labs_acs_survey <- function(...,
 #'
 #' @inheritParams ggplot2::scale_x_continuous
 #' @name scale_acs
+#' @keywords ggplot2
 NULL
 
 #' @rdname scale_acs

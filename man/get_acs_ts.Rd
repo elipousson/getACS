@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_acs_ts.R
 \name{get_acs_ts}
 \alias{get_acs_ts}
-\title{Get a time series of ACS data}
+\title{Get multiple years, tables, and geographies of ACS data}
 \usage{
 get_acs_ts(
   geography,
@@ -13,7 +13,8 @@ get_acs_ts(
   state = NULL,
   county = NULL,
   survey = "acs5",
-  ...
+  ...,
+  quiet = FALSE
 )
 }
 \arguments{
@@ -52,7 +53,11 @@ Defaults to NULL.}
 expressed as "acs1", "acs3", and "acs5". The default selection is "acs5."}
 
 \item{...}{Other keyword arguments}
+
+\item{quiet}{If \code{FALSE} (default), leave \code{cli.default_handler} option
+unchanged. If \code{TRUE}, set \code{cli.default_handler} to \link{suppressMessages}
+temporarily with \code{\link[rlang:local_options]{rlang::local_options()}}}
 }
 \description{
-Get a time series of ACS data
+Get multiple years, tables, and geographies of ACS data
 }

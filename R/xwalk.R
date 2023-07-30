@@ -1,6 +1,6 @@
-#' Make a crosswalk data frame for U.S. Census blocks and tracts
+#' Make crosswalk data for U.S. Census blocks and tracts
 #'
-#' `make_block_xwalk()` joined U.S. Census blocks data from [tigris::blocks()]
+#' [make_block_xwalk()] joined U.S. Census blocks data from [tigris::blocks()]
 #' to a data frame from [tigris::tracts()] to provide a crosswalk between both
 #' geographies. If `year = 2020`, the suffix parameter is not used. If year is
 #' any other year than 2020, the by parameter must be changed from the default
@@ -57,8 +57,8 @@ make_block_xwalk <- function(state,
   )
 }
 
-#' Make a crosswalk data frame for U.S. Census tracts and arbitrary areas based
-#' on block-level attributes
+#' Make and use crosswalk data based on U.S. Census block-level weights for U.S.
+#' Census tracts and non-Census geographic areas
 #'
 #' `make_area_xwalk()` creates a crosswalk data frame based on the `weight_col`
 #' parameter (if `year = 2020`, use "POP20" for population, "HOUSING20" for

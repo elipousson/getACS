@@ -2,7 +2,7 @@
 % Please edit documentation in R/join_acs.R
 \name{join_acs_parent_column}
 \alias{join_acs_parent_column}
-\title{Use parent column IDs to join parent column titles to ACS data}
+\title{Join parent column titles to ACS data based on parent column ID values}
 \usage{
 join_acs_parent_column(
   data,
@@ -65,8 +65,9 @@ exists.
 see \code{unmatched}.}
 }
 \value{
-A modified data frame.
+A data frame with added parent column title.
 }
 \description{
-Use parent column IDs to join parent column titles to ACS data
+\code{\link[=join_acs_parent_column]{join_acs_parent_column()}} uses data labelled with parent_column_id values to
+join parent column titles to a data frame of ACS data.
 }

@@ -67,7 +67,7 @@ get_acs_table_alert <- function(...) {
   suppressMessages(tidycensus::get_acs(...))
 }
 
-#' Get multiple ACS tables or multiple tables for multiple geographies
+#' Get multiple tables or multiple geographies of ACS data
 #'
 #' @description
 #' `r lifecycle::badge('experimental')`
@@ -84,11 +84,12 @@ get_acs_table_alert <- function(...) {
 #'
 #' @param table A character vector of tables.
 #' @inheritParams tidycensus::get_acs
+#' @inheritDotParams tidycensus::get_acs
 #' @param label If `TRUE` (default), label the returned ACS data with
 #'   [label_acs_metadata()] before returning the data frame.
 #' @inheritParams label_acs_metadata
+#' @inheritParams cli_quiet
 #' @inheritParams rlang::args_error_context
-#' @inheritDotParams tidycensus::get_acs
 #' @examples
 #' \dontrun{
 #' if (interactive()) {
@@ -115,10 +116,13 @@ get_acs_tables <- function(geography,
                            cache_table = TRUE,
                            year = 2021,
                            survey = "acs5",
+                           ...,
                            label = TRUE,
                            perc = TRUE,
                            geoid_col = "GEOID",
-                           ...) {
+                           quiet = FALSE) {
+  cli_quiet(quiet)
+
   survey_label <- acs_survey_label(
     survey = survey,
     year = year
@@ -206,10 +210,13 @@ get_acs_geographies <- function(geography = c("county", "state"),
                                 county = NULL,
                                 msa = NULL,
                                 survey = "acs5",
+                                ...,
                                 label = TRUE,
                                 perc = TRUE,
                                 geoid_col = "GEOID",
-                                ...) {
+                                quiet = FALSE) {
+  cli_quiet(quiet)
+
   survey_label <- acs_survey_label(
     survey = survey,
     year = year
@@ -263,10 +270,10 @@ get_acs_geography <- function(geography,
                               county = NULL,
                               msa = NULL,
                               survey = "acs5",
+                              ...,
                               label = TRUE,
                               perc = TRUE,
                               geoid_col = "GEOID",
-                              ...,
                               call = caller_env()) {
   params <- get_geography_params(
     geography,
@@ -405,10 +412,11 @@ get_geography_params <- function(geography,
   )
 }
 
-#' Get race iteration versions of table string
+#' Append race iteration codes to a table ID
 #'
 #' @param table Table ID.
 #' @name acs_tables_race_iteration
+#' @keywords internal
 #' @export
 acs_tables_race_iteration <- function(table) {
   paste0(table, c("", race_iteration[["code"]]))

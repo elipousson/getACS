@@ -3,7 +3,7 @@
 \docType{data}
 \name{race_iteration}
 \alias{race_iteration}
-\title{Race or Latino Origin table codes}
+\title{Race or Latino Origin Table Codes}
 \format{
 A data frame with 9 rows and 3 variables:
 \describe{
