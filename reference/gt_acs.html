@@ -135,14 +135,16 @@ becomes <code>"2.3400"</code>. The trailing zeros can be removed with
 <code><a href="https://gt.rstudio.com/reference/fmt_integer.html" class="external-link">fmt_integer()</a></code> function should be considered.</p></dd>
 
 
-<dt>column_title_col</dt>
-<dd><p>Column name to check for in the input gt table. Only
-required if column_title_label is supplied.</p></dd>
+<dt>column_title_col, column_title_label</dt>
+<dd><p>Column title and label. If
+column_title_label is a string, column_title_col is required.
+column_title_label can also be a named vector in the format of <code>c("label" = "column")</code>. column_title_col defaults to "column_title"</p></dd>
 
 
-<dt>column_title_label</dt>
-<dd><p>Optional label applied to column named in
-column_title_col.</p></dd>
+<dt>name_col, name_col_label</dt>
+<dd><p>Place name column and label. name_col_label
+can be a string or a named vector (similar to column_title_label). name_col
+defaults to "NAME"</p></dd>
 
 
 <dt>source_note</dt>
@@ -184,7 +186,6 @@ to ".".</p></dd>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p>Other gt table: 
-<code><a href="cols_merge_uncert_ext.html">cols_merge_uncert_ext</a>()</code>,
 <code><a href="fmt_acs_estimate.html">fmt_acs_estimate</a>()</code>,
 <code><a href="tab_acs_source_note.html">tab_acs_source_note</a>()</code></p></div>
     </div>

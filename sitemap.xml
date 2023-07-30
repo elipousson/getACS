@@ -34,6 +34,9 @@
     <loc>https://elipousson.github.io/getACS/reference/acs_tables_race_iteration.html</loc>
   </url>
   <url>
+    <loc>https://elipousson.github.io/getACS/reference/cli_quiet.html</loc>
+  </url>
+  <url>
     <loc>https://elipousson.github.io/getACS/reference/cols_merge_uncert_ext.html</loc>
   </url>
   <url>
@@ -50,9 +53,6 @@
   </url>
   <url>
     <loc>https://elipousson.github.io/getACS/reference/fmt_acs_jam_values.html</loc>
-  </url>
-  <url>
-    <loc>https://elipousson.github.io/getACS/reference/fmt_acs_minutes.html</loc>
   </url>
   <url>
     <loc>https://elipousson.github.io/getACS/reference/getACS-package.html</loc>

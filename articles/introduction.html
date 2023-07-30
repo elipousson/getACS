@@ -120,9 +120,9 @@ ethnic group as a column where appropriate.</p>
 <span>  table <span class="op">=</span> <span class="va">tenure_tables</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">tenure_data</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="../reference/filter_acs.html">filter_acs</a></span><span class="op">(</span><span class="va">indent</span> <span class="op">&gt;</span> <span class="fl">0</span>, <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">race_iteration_group</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="../reference/select_acs_cols.html">select_acs_cols</a></span><span class="op">(</span><span class="st">"race_iteration_group"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<code class="sourceCode R"><span><span class="va">tenure_data</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/filter_acs.html">filter_acs</a></span><span class="op">(</span><span class="va">indent</span> <span class="op">&gt;</span> <span class="fl">0</span>, <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">race_iteration_group</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/select_acs_cols.html">select_acs_cols</a></span><span class="op">(</span><span class="st">"race_iteration_group"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">column_title</span>, y <span class="op">=</span> <span class="va">perc_estimate</span>, fill <span class="op">=</span> <span class="va">race_iteration_group</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_col</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">0.8</span>, position <span class="op">=</span> <span class="st">"dodge"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/scale_acs.html">scale_y_acs_percent</a></span><span class="op">(</span><span class="st">"% of households"</span><span class="op">)</span> <span class="op">+</span></span>
@@ -142,30 +142,30 @@ ethnic group as a column where appropriate.</p>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "county" "state"</span></span></code></pre></div>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">multigeo_acs_data</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="../reference/select_acs_cols.html">select_acs_cols</a></span><span class="op">(</span>column_title_col <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<code class="sourceCode R"><span><span class="va">multigeo_acs_data</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/select_acs_cols.html">select_acs_cols</a></span><span class="op">(</span>column_title_col <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/gt_acs.html">gt_acs</a></span><span class="op">(</span></span>
 <span>    rowname_col <span class="op">=</span> <span class="st">"NAME"</span>,</span>
 <span>    est_col_label <span class="op">=</span> <span class="st">"Population"</span></span>
-<span>    <span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/fmt_acs.html">fmt_acs_county</a></span><span class="op">(</span>state <span class="op">=</span> <span class="st">"Maryland"</span><span class="op">)</span></span></code></pre></div>
-<div id="tuwwxxjprb" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#tuwwxxjprb table {
+<div id="nfjsjkpmid" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#nfjsjkpmid table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#tuwwxxjprb thead, #tuwwxxjprb tbody, #tuwwxxjprb tfoot, #tuwwxxjprb tr, #tuwwxxjprb td, #tuwwxxjprb th {
+#nfjsjkpmid thead, #nfjsjkpmid tbody, #nfjsjkpmid tfoot, #nfjsjkpmid tr, #nfjsjkpmid td, #nfjsjkpmid th {
   border-style: none;
 }
 
-#tuwwxxjprb p {
+#nfjsjkpmid p {
   margin: 0;
   padding: 0;
 }
 
-#tuwwxxjprb .gt_table {
+#nfjsjkpmid .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -191,12 +191,12 @@ ethnic group as a column where appropriate.</p>
   border-left-color: #D3D3D3;
 }
 
-#tuwwxxjprb .gt_caption {
+#nfjsjkpmid .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#tuwwxxjprb .gt_title {
+#nfjsjkpmid .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -208,7 +208,7 @@ ethnic group as a column where appropriate.</p>
   border-bottom-width: 0;
 }
 
-#tuwwxxjprb .gt_subtitle {
+#nfjsjkpmid .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -220,7 +220,7 @@ ethnic group as a column where appropriate.</p>
   border-top-width: 0;
 }
 
-#tuwwxxjprb .gt_heading {
+#nfjsjkpmid .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -232,13 +232,13 @@ ethnic group as a column where appropriate.</p>
   border-right-color: #D3D3D3;
 }
 
-#tuwwxxjprb .gt_bottom_border {
+#nfjsjkpmid .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#tuwwxxjprb .gt_col_headings {
+#nfjsjkpmid .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -253,7 +253,7 @@ ethnic group as a column where appropriate.</p>
   border-right-color: #D3D3D3;
 }
 
-#tuwwxxjprb .gt_col_heading {
+#nfjsjkpmid .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -273,7 +273,7 @@ ethnic group as a column where appropriate.</p>
   overflow-x: hidden;
 }
 
-#tuwwxxjprb .gt_column_spanner_outer {
+#nfjsjkpmid .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -285,15 +285,15 @@ ethnic group as a column where appropriate.</p>
   padding-right: 4px;
 }
 
-#tuwwxxjprb .gt_column_spanner_outer:first-child {
+#nfjsjkpmid .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#tuwwxxjprb .gt_column_spanner_outer:last-child {
+#nfjsjkpmid .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#tuwwxxjprb .gt_column_spanner {
+#nfjsjkpmid .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -305,11 +305,11 @@ ethnic group as a column where appropriate.</p>
   width: 100%;
 }
 
-#tuwwxxjprb .gt_spanner_row {
+#nfjsjkpmid .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#tuwwxxjprb .gt_group_heading {
+#nfjsjkpmid .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -335,7 +335,7 @@ ethnic group as a column where appropriate.</p>
   text-align: left;
 }
 
-#tuwwxxjprb .gt_empty_group_heading {
+#nfjsjkpmid .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -350,15 +350,15 @@ ethnic group as a column where appropriate.</p>
   vertical-align: middle;
 }
 
-#tuwwxxjprb .gt_from_md > :first-child {
+#nfjsjkpmid .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#tuwwxxjprb .gt_from_md > :last-child {
+#nfjsjkpmid .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#tuwwxxjprb .gt_row {
+#nfjsjkpmid .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -377,7 +377,7 @@ ethnic group as a column where appropriate.</p>
   overflow-x: hidden;
 }
 
-#tuwwxxjprb .gt_stub {
+#nfjsjkpmid .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -390,7 +390,7 @@ ethnic group as a column where appropriate.</p>
   padding-right: 5px;
 }
 
-#tuwwxxjprb .gt_stub_row_group {
+#nfjsjkpmid .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -404,15 +404,15 @@ ethnic group as a column where appropriate.</p>
   vertical-align: top;
 }
 
-#tuwwxxjprb .gt_row_group_first td {
+#nfjsjkpmid .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#tuwwxxjprb .gt_row_group_first th {
+#nfjsjkpmid .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#tuwwxxjprb .gt_summary_row {
+#nfjsjkpmid .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -422,16 +422,16 @@ ethnic group as a column where appropriate.</p>
   padding-right: 5px;
 }
 
-#tuwwxxjprb .gt_first_summary_row {
+#nfjsjkpmid .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#tuwwxxjprb .gt_first_summary_row.thick {
+#nfjsjkpmid .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#tuwwxxjprb .gt_last_summary_row {
+#nfjsjkpmid .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -441,7 +441,7 @@ ethnic group as a column where appropriate.</p>
   border-bottom-color: #D3D3D3;
 }
 
-#tuwwxxjprb .gt_grand_summary_row {
+#nfjsjkpmid .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -451,7 +451,7 @@ ethnic group as a column where appropriate.</p>
   padding-right: 5px;
 }
 
-#tuwwxxjprb .gt_first_grand_summary_row {
+#nfjsjkpmid .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -461,7 +461,7 @@ ethnic group as a column where appropriate.</p>
   border-top-color: #D3D3D3;
 }
 
-#tuwwxxjprb .gt_last_grand_summary_row_top {
+#nfjsjkpmid .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -471,11 +471,11 @@ ethnic group as a column where appropriate.</p>
   border-bottom-color: #D3D3D3;
 }
 
-#tuwwxxjprb .gt_striped {
+#nfjsjkpmid .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#tuwwxxjprb .gt_table_body {
+#nfjsjkpmid .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -484,7 +484,7 @@ ethnic group as a column where appropriate.</p>
   border-bottom-color: #D3D3D3;
 }
 
-#tuwwxxjprb .gt_footnotes {
+#nfjsjkpmid .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -498,7 +498,7 @@ ethnic group as a column where appropriate.</p>
   border-right-color: #D3D3D3;
 }
 
-#tuwwxxjprb .gt_footnote {
+#nfjsjkpmid .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -507,7 +507,7 @@ ethnic group as a column where appropriate.</p>
   padding-right: 5px;
 }
 
-#tuwwxxjprb .gt_sourcenotes {
+#nfjsjkpmid .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -521,7 +521,7 @@ ethnic group as a column where appropriate.</p>
   border-right-color: #D3D3D3;
 }
 
-#tuwwxxjprb .gt_sourcenote {
+#nfjsjkpmid .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -529,63 +529,63 @@ ethnic group as a column where appropriate.</p>
   padding-right: 5px;
 }
 
-#tuwwxxjprb .gt_left {
+#nfjsjkpmid .gt_left {
   text-align: left;
 }
 
-#tuwwxxjprb .gt_center {
+#nfjsjkpmid .gt_center {
   text-align: center;
 }
 
-#tuwwxxjprb .gt_right {
+#nfjsjkpmid .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#tuwwxxjprb .gt_font_normal {
+#nfjsjkpmid .gt_font_normal {
   font-weight: normal;
 }
 
-#tuwwxxjprb .gt_font_bold {
+#nfjsjkpmid .gt_font_bold {
   font-weight: bold;
 }
 
-#tuwwxxjprb .gt_font_italic {
+#nfjsjkpmid .gt_font_italic {
   font-style: italic;
 }
 
-#tuwwxxjprb .gt_super {
+#nfjsjkpmid .gt_super {
   font-size: 65%;
 }
 
-#tuwwxxjprb .gt_footnote_marks {
+#nfjsjkpmid .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#tuwwxxjprb .gt_asterisk {
+#nfjsjkpmid .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#tuwwxxjprb .gt_indent_1 {
+#nfjsjkpmid .gt_indent_1 {
   text-indent: 5px;
 }
 
-#tuwwxxjprb .gt_indent_2 {
+#nfjsjkpmid .gt_indent_2 {
   text-indent: 10px;
 }
 
-#tuwwxxjprb .gt_indent_3 {
+#nfjsjkpmid .gt_indent_3 {
   text-indent: 15px;
 }
 
-#tuwwxxjprb .gt_indent_4 {
+#nfjsjkpmid .gt_indent_4 {
   text-indent: 20px;
 }
 
-#tuwwxxjprb .gt_indent_5 {
+#nfjsjkpmid .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -675,13 +675,13 @@ is unavailable for a specific year or geography):</p>
 <p>Helper functions for <a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a> include
 <code><a href="../reference/scale_acs.html">scale_x_acs_ts()</a></code> to set appropriate breaks:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">acs_ts_data</span> <span class="op">|&gt;</span> </span>
+<code class="sourceCode R"><span><span class="va">acs_ts_data</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/filter_acs.html">filter_acs</a></span><span class="op">(</span></span>
 <span>    <span class="va">GEOID</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"24510"</span>, <span class="st">"24005"</span>, <span class="st">"24003"</span>, <span class="st">"24027"</span>, <span class="st">"24025"</span>, <span class="st">"24035"</span><span class="op">)</span></span>
-<span>  <span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">year</span>, y <span class="op">=</span> <span class="va">estimate</span>, fill <span class="op">=</span> <span class="va">NAME</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_col</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span> <span class="va">NAME</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">NAME</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/scale_acs.html">scale_y_acs_estimate</a></span><span class="op">(</span><span class="st">"Population"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/scale_acs.html">scale_x_acs_ts</a></span><span class="op">(</span>survey <span class="op">=</span> <span class="st">"acs5"</span>, year <span class="op">=</span> <span class="fl">2021</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_brewer</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"qual"</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span></span></code></pre></div>

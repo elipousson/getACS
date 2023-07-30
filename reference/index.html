@@ -51,7 +51,113 @@
     </div>
 
     <div class="section level2">
-      <h2 id="all-functions">All functions<a class="anchor" aria-label="anchor" href="#all-functions"></a></h2>
+      <h2 id="get-american-community-survey-acs-data-and-metadata">Get American Community Survey (ACS) data and metadata<a class="anchor" aria-label="anchor" href="#get-american-community-survey-acs-data-and-metadata"></a></h2>
+      
+      
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="get_acs_tables.html">get_acs_tables()</a></code> <code><a href="get_acs_tables.html">get_acs_geographies()</a></code> <code><a href="get_acs_tables.html">get_acs_geography()</a></code> 
+        </dt>
+        <dd>Get multiple tables or multiple geographies of ACS data</dd>
+      </dl><dl><dt>
+          
+          <code><a href="get_acs_ts.html">get_acs_ts()</a></code> 
+        </dt>
+        <dd>Get multiple years, tables, and geographies of ACS data</dd>
+      </dl><dl><dt>
+          
+          <code><a href="vec_get_acs.html">vec_get_acs()</a></code> 
+        </dt>
+        <dd>Vectorized variant of <a href="https://walker-data.com/tidycensus/reference/get_acs.html" class="external-link">tidycensus::get_acs</a></dd>
+      </dl></div><div class="section level2">
+      <h2 id="interpolate-acs-data-across-areas">Interpolate ACS data across areas<a class="anchor" aria-label="anchor" href="#interpolate-acs-data-across-areas"></a></h2>
+      
+      
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="make_area_xwalk.html">make_area_xwalk()</a></code> <code><a href="make_area_xwalk.html">use_area_xwalk()</a></code> 
+        </dt>
+        <dd>Make and use crosswalk data based on U.S. Census block-level weights for U.S.
+Census tracts and non-Census geographic areas</dd>
+      </dl><dl><dt>
+          
+          <code><a href="make_block_xwalk.html">make_block_xwalk()</a></code> 
+        </dt>
+        <dd>Make crosswalk data for U.S. Census blocks and tracts</dd>
+      </dl></div><div class="section level2">
+      <h2 id="format-gt-tables-and-acs-data-frames">Format gt tables and ACS data frames<a class="anchor" aria-label="anchor" href="#format-gt-tables-and-acs-data-frames"></a></h2>
+      
+      
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="gt_acs.html">gt_acs()</a></code> 
+        </dt>
+        <dd>Format American Community Survey estimate and percent estimate columns for a
+gt table</dd>
+      </dl><dl><dt>
+          
+          <code><a href="tab_acs_source_note.html">tab_acs_source_note()</a></code> 
+        </dt>
+        <dd>Add a Census data source note to a gt table</dd>
+      </dl><dl><dt>
+          
+          <code><a href="fmt_acs.html">fmt_acs_county()</a></code> <code><a href="fmt_acs.html">fmt_acs_minutes()</a></code> 
+        </dt>
+        <dd>Format place names or column titles in a gt table or data frame with ACS data</dd>
+      </dl><dl><dt>
+          
+          <code><a href="fmt_acs_estimate.html">fmt_acs_estimate()</a></code> <code><a href="fmt_acs_estimate.html">fmt_acs_percent()</a></code> <code><a href="fmt_acs_estimate.html">cols_label_ext()</a></code> 
+        </dt>
+        <dd>Format estimate and margin of error columns in a gt table</dd>
+      </dl><dl><dt>
+          
+          <code><a href="fmt_acs_jam_values.html">fmt_acs_jam_values()</a></code> 
+        </dt>
+        <dd>Format jam values in an estimate column of a gt table or ACS data frame</dd>
+      </dl></div><div class="section level2">
+      <h2 id="apply-labels-and-scales-to-ggplot-plots">Apply labels and scales to ggplot2 plots<a class="anchor" aria-label="anchor" href="#apply-labels-and-scales-to-ggplot-plots"></a></h2>
+      
+      
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="labs_acs_survey.html">labs_acs_survey()</a></code> 
+        </dt>
+        <dd>Label a ggplot2 plot and add a caption based on an ACS survey year</dd>
+      </dl><dl><dt>
+          
+          <code><a href="scale_acs.html">scale_x_acs_estimate()</a></code> <code><a href="scale_acs.html">scale_y_acs_percent()</a></code> <code><a href="scale_acs.html">scale_x_acs_percent()</a></code> <code><a href="scale_acs.html">scale_y_acs_estimate()</a></code> <code><a href="scale_acs.html">scale_x_acs_ts()</a></code> <code><a href="scale_acs.html">scale_y_acs_ts()</a></code> 
+        </dt>
+        <dd>Scales for plotting ACS data with ggplot2</dd>
+      </dl></div><div class="section level2">
+      <h2 id="additional-utility-functions-for-acs-data-frames">Additional utility functions for ACS data frames<a class="anchor" aria-label="anchor" href="#additional-utility-functions-for-acs-data-frames"></a></h2>
       
       
 
@@ -68,99 +174,48 @@
         <dd>Assorted helpers for ACS survey types and labels</dd>
       </dl><dl><dt>
           
-          <code><a href="acs_tables_race_iteration.html">acs_tables_race_iteration()</a></code> 
-        </dt>
-        <dd>Get race iteration versions of table string</dd>
-      </dl><dl><dt>
-          
-          <code><a href="cols_merge_uncert_ext.html">cols_merge_uncert_ext()</a></code> 
-        </dt>
-        <dd>Merge columns to a value-with-uncertainty column</dd>
-      </dl><dl><dt>
-          
-          <code><a href="fmt_acs.html">fmt_acs_county()</a></code> 
-        </dt>
-        <dd>Assorted formatting functions for ACS tables</dd>
-      </dl><dl><dt>
-          
-          <code><a href="fmt_acs_estimate.html">fmt_acs_estimate()</a></code> <code><a href="fmt_acs_estimate.html">fmt_acs_percent()</a></code> <code><a href="fmt_acs_estimate.html">cols_label_ext()</a></code> 
-        </dt>
-        <dd>Format estimate and margin of error columns (or % estimate and % margin of
-error columns) in a gt table</dd>
-      </dl><dl><dt>
-          
-          <code><a href="fmt_acs_jam_values.html">fmt_acs_jam_values()</a></code> 
-        </dt>
-        <dd>Replace placeholder jam values in an ACS data frame</dd>
-      </dl><dl><dt>
-          
-          <code><a href="get_acs_tables.html">get_acs_tables()</a></code> <code><a href="get_acs_tables.html">get_acs_geographies()</a></code> <code><a href="get_acs_tables.html">get_acs_geography()</a></code> 
-        </dt>
-        <dd>Get multiple ACS tables or multiple tables for multiple geographies</dd>
-      </dl><dl><dt>
-          
-          <code><a href="get_acs_ts.html">get_acs_ts()</a></code> 
-        </dt>
-        <dd>Get a time series of ACS data</dd>
-      </dl><dl><dt>
-          
-          <code><a href="gt_acs.html">gt_acs()</a></code> 
-        </dt>
-        <dd>Format American Community Survey estimate and percent estimate columns for a
-gt table</dd>
-      </dl><dl><dt>
-          
           <code><a href="join_acs_parent_column.html">join_acs_parent_column()</a></code> 
         </dt>
-        <dd>Use parent column IDs to join parent column titles to ACS data</dd>
+        <dd>Join parent column titles to ACS data based on parent column ID values</dd>
       </dl><dl><dt>
           
-          <code><a href="labs_acs_survey.html">labs_acs_survey()</a></code> 
+          <code><a href="join_acs_percent.html">join_acs_percent()</a></code> 
         </dt>
-        <dd>Label a ggplot2 plot and add a caption based on an ACS survey year</dd>
-      </dl><dl><dt>
-          
-          <code><a href="make_area_xwalk.html">make_area_xwalk()</a></code> <code><a href="make_area_xwalk.html">use_area_xwalk()</a></code> 
-        </dt>
-        <dd>Make a crosswalk data frame for U.S. Census tracts and arbitrary areas based
-on block-level attributes</dd>
-      </dl><dl><dt>
-          
-          <code><a href="make_block_xwalk.html">make_block_xwalk()</a></code> 
-        </dt>
-        <dd>Make a crosswalk data frame for U.S. Census blocks and tracts</dd>
-      </dl><dl><dt>
-          
-          <code><a href="race_iteration.html">race_iteration</a></code> 
-        </dt>
-        <dd>Race or Latino Origin table codes</dd>
-      </dl><dl><dt>
-          
-          <code><a href="scale_acs.html">scale_x_acs_estimate()</a></code> <code><a href="scale_acs.html">scale_y_acs_percent()</a></code> <code><a href="scale_acs.html">scale_x_acs_percent()</a></code> <code><a href="scale_acs.html">scale_y_acs_estimate()</a></code> <code><a href="scale_acs.html">scale_x_acs_ts()</a></code> <code><a href="scale_acs.html">scale_y_acs_ts()</a></code> 
-        </dt>
-        <dd>Scales for plotting ACS data with ggplot2</dd>
+        <dd>Join percent estimates to ACS data based on denominator values</dd>
       </dl><dl><dt>
           
           <code><a href="select_acs_cols.html">select_acs_cols()</a></code> 
         </dt>
-        <dd>Helper function to select columns typically used in an ACS table</dd>
+        <dd>Select columns for a gt table based on ACS data</dd>
       </dl><dl><dt>
           
-          <code><a href="tab_acs_source_note.html">tab_acs_source_note()</a></code> 
+          <code><a href="filter_acs.html">filter_acs()</a></code> 
         </dt>
-        <dd>Add a Census data source note to a gt table</dd>
+        <dd>Filter American Community Survey data by table, variables, or other attributes</dd>
+      </dl></div><div class="section level2">
+      <h2 id="reference-data">Reference data<a class="anchor" aria-label="anchor" href="#reference-data"></a></h2>
+      
+      
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="race_iteration.html">race_iteration</a></code> 
+        </dt>
+        <dd>Race or Latino Origin Table Codes</dd>
       </dl><dl><dt>
           
           <code><a href="tigerweb_geo_index.html">tigerweb_geo_index</a></code> 
         </dt>
         <dd>U.S. Census Bureau ArcGIS Services Index</dd>
-      </dl><dl><dt>
-          
-          <code><a href="vec_get_acs.html">vec_get_acs()</a></code> 
-        </dt>
-        <dd>Vectorized variant of <a href="https://walker-data.com/tidycensus/reference/get_acs.html" class="external-link">tidycensus::get_acs</a></dd>
       </dl></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
