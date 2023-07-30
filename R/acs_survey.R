@@ -127,6 +127,7 @@ acs_survey_label_table <- function(survey = "acs5",
                                    end = ".",
                                    oxford_comma = TRUE) {
   label <- acs_survey_label(survey, year, prefix = prefix)
+  table <- unique(table)
 
   if (is_empty(table) || identical(table, "")) {
     return(paste0(label, end))

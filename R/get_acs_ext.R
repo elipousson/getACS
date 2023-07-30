@@ -15,6 +15,7 @@
 #' }
 #' }
 #' @rdname vec_get_acs
+#' @returns A list of data frames.
 #' @export
 #' @importFrom tidycensus get_acs
 #' @importFrom vctrs vec_recycle_common list_drop_empty vec_rep vec_assign
@@ -120,7 +121,8 @@ get_acs_tables <- function(geography,
                            label = TRUE,
                            perc = TRUE,
                            geoid_col = "GEOID",
-                           quiet = FALSE) {
+                           quiet = FALSE,
+                           call = caller_env()) {
   cli_quiet(quiet)
 
   survey_label <- acs_survey_label(
@@ -128,9 +130,11 @@ get_acs_tables <- function(geography,
     year = year
   )
 
+  .fn <- tidycensus::get_acs
+
   params <- list2(...)
 
-  if (is_null(params[["variables"]])) {
+  if (!is.null(table)) {
     table <- unique(table)
     if (length(table) > 50) {
       cli::cli_warn(
@@ -138,26 +142,24 @@ get_acs_tables <- function(geography,
       )
     }
 
-    acs_list <- vec_get_acs(
-      geography = geography,
-      table = table,
-      cache_table = cache_table,
-      year = year,
-      survey = survey,
-      .fn = get_acs_table_alert,
-      ...
-    )
-  } else {
-    acs_list <- vec_get_acs(
-      geography = geography,
-      table = table,
-      cache_table = cache_table,
-      year = year,
-      survey = survey,
-      .fn = tidycensus::get_acs,
-      ...
-    )
+    if (is_null(params[["variables"]])) {
+      .fn <- get_acs_table_alert
+    }
   }
+
+  geography <- unique(geography)
+  check_string(geography, allow_empty = FALSE, call = call)
+
+  acs_list <- vec_get_acs(
+    geography = geography,
+    table = table,
+    cache_table = cache_table,
+    year = year,
+    survey = survey,
+    ...,
+    .fn = .fn,
+    .call = call
+  )
 
   acs_data <- purrr::list_rbind(acs_list)
 
@@ -176,7 +178,7 @@ get_acs_tables <- function(geography,
   cli::cli_progress_step("Labelling data")
 
   label_acs_metadata(
-    acs_data,
+    data = acs_data,
     survey = survey,
     year = year,
     perc = perc,
@@ -225,8 +227,6 @@ get_acs_geographies <- function(geography = c("county", "state"),
   check_character(geography)
   geography <- unique(geography)
 
-  print(geography)
-
   acs_list <- purrr::map(
     seq_along(geography),
     function(i) {
@@ -243,11 +243,11 @@ get_acs_geographies <- function(geography = c("county", "state"),
         state = state,
         county = county,
         msa = msa,
+        ...,
         label = label,
         survey = survey,
         perc = perc,
-        geoid_col = geoid_col,
-        ...
+        geoid_col = geoid_col
       )
     }
   )
@@ -277,9 +277,9 @@ get_acs_geography <- function(geography,
                               call = caller_env()) {
   params <- get_geography_params(
     geography,
+    year = year,
     state = state,
     county = county,
-    year = year,
     call = call
   )
 
@@ -292,8 +292,8 @@ get_acs_geography <- function(geography,
     !!!params,
     survey = survey,
     ...,
-    perc = perc,
     label = label,
+    perc = perc,
     geoid_col = geoid_col
   )
 

@@ -16,7 +16,8 @@ get_acs_tables(
   label = TRUE,
   perc = TRUE,
   geoid_col = "GEOID",
-  quiet = FALSE
+  quiet = FALSE,
+  call = caller_env()
 )
 
 get_acs_geographies(
@@ -124,6 +125,11 @@ estimate.}
 unchanged. If \code{TRUE}, set \code{cli.default_handler} to \link{suppressMessages}
 temporarily with \code{\link[rlang:local_options]{rlang::local_options()}}}
 
+\item{call}{The execution environment of a currently
+running function, e.g. \code{caller_env()}. The function will be
+mentioned in error messages as the source of the error. See the
+\code{call} argument of \code{\link[rlang:abort]{abort()}} for more information.}
+
 \item{variables}{Character string or vector of character strings of variable
 IDs. tidycensus automatically returns the estimate and the margin of error
 associated with the variable.}
@@ -139,11 +145,6 @@ Defaults to NULL.}
 overall list of metro areas returned when geography or geographies  is
 "metropolitan/micropolitan statistical area", "cbsa", or "metropolitan
 statistical area/micropolitan statistical area".}
-
-\item{call}{The execution environment of a currently
-running function, e.g. \code{caller_env()}. The function will be
-mentioned in error messages as the source of the error. See the
-\code{call} argument of \code{\link[rlang:abort]{abort()}} for more information.}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}

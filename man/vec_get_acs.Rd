@@ -23,6 +23,8 @@ mentioned in error messages as the source of the error. See the
 \value{
 A list of data frames (using default .fn value or another function
 that returns a data frame).
+
+A list of data frames.
 }
 \description{
 Vectorized variant of \link[tidycensus:get_acs]{tidycensus::get_acs}
