@@ -29,26 +29,17 @@ fmt_acs_county <- function(data,
                            name_col = "NAME",
                            columns = dplyr::all_of(name_col),
                            ...) {
-  if (inherits(data, "gt_tbl")) {
-    gt::fmt(
-      data,
-      columns = columns,
-      ...,
-      fns = function(x) {
-        stringr::str_replace(x, glue(pattern), replacement)
-      }
-    )
-  } else if (is.data.frame(data)) {
-    dplyr::mutate(
-      data,
-      "{name_col}" := stringr::str_replace(
-        .data[[name_col]],
-        glue(pattern), replacement
-      )
-    )
-  }
-}
+  pattern <- glue(pattern)
 
+  fmt_str_replace(
+    data = data,
+    pattern = pattern,
+    replacement = replacement,
+    col = name_col,
+    columns = columns,
+    ...
+  )
+}
 
 #' @rdname fmt_acs
 #' @name fmt_acs_minutes
@@ -59,6 +50,23 @@ fmt_acs_minutes <- function(data,
                             replacement = "",
                             column_title_col = "column_title",
                             columns = dplyr::all_of(column_title_col),
+                            ...) {
+  fmt_str_replace(
+    data = data,
+    pattern = pattern,
+    replacement = replacement,
+    col = column_title_col,
+    columns = columns,
+    ...
+  )
+}
+
+#' @noRd
+fmt_str_replace <- function(data,
+                            pattern,
+                            replacement,
+                            col = "NAME",
+                            columns = dplyr::all_of(col),
                             ...) {
   if (inherits(data, "gt_tbl")) {
     gt::fmt(
@@ -72,8 +80,8 @@ fmt_acs_minutes <- function(data,
   } else if (is.data.frame(data)) {
     dplyr::mutate(
       data,
-      "{column_title_col}" := stringr::str_replace(
-        .data[[column_title_col]],
+      "{col}" := stringr::str_replace(
+        .data[[col]],
         pattern, replacement
       )
     )
