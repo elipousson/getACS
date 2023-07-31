@@ -199,7 +199,7 @@ label_acs_column_metadata <- function(data,
   data <- dplyr::left_join(
     data,
     column_metadata,
-    by = dplyr::all_of(c("table_id", "column_id"))
+    by = c("table_id", "column_id")
   )
 
   # Strip trailing ":" from "Total:"
