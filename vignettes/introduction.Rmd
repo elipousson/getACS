@@ -25,8 +25,8 @@ theme_set(theme_minimal())
 This package is designed to build on the `{tidycensus}` package to make it easier to create reproducible reports by allowing users to:
 
 - Download multiple tables with `get_acs_tables()`
-- Download tables for multiple geographies and tables with `get_acs_geographies()`
-- Download tables for multiple years and tables with `get_acs_ts()`
+- Download multiple geographies and tables with `get_acs_geographies()`
+- Download multiple years and tables with `get_acs_ts()`
 
 All of these functions use the `label_acs_metadata()` to join the variables to detailed pre-computed [table and column metadata available on GitHub](https://github.com/censusreporter/census-table-metadata) from the open-source [Census Reporter project](https://censusreporter.org/). This metadata includes a parent column ID that supports the conversion of estimate and margin of error values into a percent share of the corresponding total. The function also uses the `race_iteration` reference to add a name of the racial or ethnic group as a column where appropriate.
 
