@@ -13,6 +13,7 @@ get_acs_metadata(
   cache_data = TRUE,
   progress = FALSE,
   show_col_types = FALSE,
+  quiet = FALSE,
   error_call = caller_env()
 )
 }

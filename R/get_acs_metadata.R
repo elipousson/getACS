@@ -19,6 +19,7 @@ get_acs_metadata <- function(survey = "acs5",
                              cache_data = TRUE,
                              progress = FALSE,
                              show_col_types = FALSE,
+                             quiet = FALSE,
                              error_call = caller_env()) {
   stopifnot(
     (year >= 2006) && (year <= 2021)
@@ -51,6 +52,8 @@ get_acs_metadata <- function(survey = "acs5",
 
   check_installed("readr", call = error_call)
 
+  cli_quiet(quiet)
+
   cli::cli_progress_step(msg)
 
   data <- readr::read_csv(
@@ -77,6 +80,8 @@ get_acs_metadata <- function(survey = "acs5",
   cli::cli_progress_step(
     "Filtering {metadata} metadata to table ID {.val {table}}"
   )
+
+  table <- arg_match(table, data[["table_id"]], error_call = error_call)
 
   vctrs::vec_slice(
     data,
