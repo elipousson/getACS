@@ -20,6 +20,7 @@ make_area_xwalk(
   suffix = c("_block", "_tract"),
   digits = 2,
   add_coverage = TRUE,
+  crs = NULL,
   ...
 )
 
@@ -101,6 +102,9 @@ with the difference between the unioned area geometry and unioned
 block_xwalk geometry. This additional coverage ensures that blocks are
 accurately assigned to this alternate geography but it is excluded from the
 returned data frame.}
+
+\item{crs}{Coordinate reference system to use for input data. Recommended to
+set to a projected CRS if input area data is in a geographic CRS.}
 
 \item{...}{arguments to be passed to internal function \code{load_tiger}, which is not exported. See Additional Arguments.}
 

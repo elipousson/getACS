@@ -13,6 +13,7 @@
 #' @inheritDotParams tigris::blocks
 #' @param keep_zipped_shapefile Passed to [tigris::blocks()] and
 #'   [tigris::tracts()] to keep and re-use the zipped shapefile.
+#' @param crs Coordinate reference system to return.
 #' @export
 #' @importFrom cli cli_progress_message
 #' @importFrom tigris blocks tracts
@@ -24,6 +25,7 @@ make_block_xwalk <- function(state,
                              by = c("TRACTCE20" = "TRACTCE"),
                              keep_zipped_shapefile = TRUE,
                              suffix = c("_block", "_tract"),
+                             crs = NULL,
                              ...) {
   cli::cli_progress_step(
     "Downloading blocks"
@@ -48,6 +50,11 @@ make_block_xwalk <- function(state,
     keep_zipped_shapefile = keep_zipped_shapefile,
     ...
   )
+
+  if (!is.null(crs)) {
+    block_sf <- sf::st_transform(block_sf, crs = crs)
+    tract_sf <- sf::st_transform(tract_sf, crs = crs)
+  }
 
   dplyr::left_join(
     x = block_sf,
@@ -86,6 +93,8 @@ make_block_xwalk <- function(state,
 #'   block_xwalk geometry. This additional coverage ensures that blocks are
 #'   accurately assigned to this alternate geography but it is excluded from the
 #'   returned data frame.
+#' @param crs Coordinate reference system to use for input data. Recommended to
+#'   set to a projected CRS if input area data is in a geographic CRS.
 #' @export
 #' @importFrom cli cli_progress_step
 #' @importFrom vctrs vec_rbind
@@ -104,6 +113,7 @@ make_area_xwalk <- function(area,
                             suffix = c("_block", "_tract"),
                             digits = 2,
                             add_coverage = TRUE,
+                            crs = NULL,
                             ...) {
   block_xwalk <- block_xwalk %||%
     make_block_xwalk(
@@ -122,7 +132,12 @@ make_area_xwalk <- function(area,
   check_sf(area)
   check_sf(block_xwalk)
 
-  block_xwalk <- sf::st_transform(block_xwalk, sf::st_crs(area))
+  if (!is.null(crs)) {
+    block_xwalk <- sf::st_transform(block_xwalk, crs = crs)
+    area <- sf::st_transform(area, crs = crs)
+  } else {
+    block_xwalk <- sf::st_transform(block_xwalk, sf::st_crs(area))
+  }
 
   if (add_coverage) {
     cli::cli_progress_step("Adding coverage for {.arg block_xwalk}")

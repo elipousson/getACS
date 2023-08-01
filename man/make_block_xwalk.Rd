@@ -11,6 +11,7 @@ make_block_xwalk(
   by = c(TRACTCE20 = "TRACTCE"),
   keep_zipped_shapefile = TRUE,
   suffix = c("_block", "_tract"),
+  crs = NULL,
   ...
 )
 }
@@ -59,6 +60,8 @@ To perform a cross-join, generating all combinations of \code{x} and \code{y}, s
 \item{suffix}{If there are non-joined duplicate variables in \code{x} and
 \code{y}, these suffixes will be added to the output to disambiguate them.
 Should be a character vector of length 2.}
+
+\item{crs}{Coordinate reference system to return.}
 
 \item{...}{
   Arguments passed on to \code{\link[tigris:blocks]{tigris::blocks}}
