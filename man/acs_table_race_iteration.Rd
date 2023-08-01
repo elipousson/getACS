@@ -4,7 +4,7 @@
 \alias{acs_table_race_iteration}
 \title{Append race iteration codes to a table ID}
 \usage{
-acs_table_race_iteration(table, codes = NULL)
+acs_table_race_iteration(table, codes = NULL, error_call = caller_env())
 }
 \arguments{
 \item{table}{Table ID.}
