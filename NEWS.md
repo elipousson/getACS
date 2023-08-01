@@ -1,11 +1,8 @@
 # getACS (development version)
 
-* Add tests.
-* Fix issue with `tab_acs_source_note()` handling of multiple tables.
-
-# getACS (development)
-
-* Added `tigerweb_geo_index` data (2023-07-20).
+* Add working versions of the `make_block_xwalk()`, `make_area_xwalk()`, and `use_area_xwalk()` functions.
+* Add `tigerweb_geo_index` and `race_iteration` reference data.
+* Add vignettes.
 
 # getACS 0.1.0
 
