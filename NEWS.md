@@ -1,4 +1,4 @@
-# getACS (development version)
+# getACS 0.1.1
 
 * Add working versions of the `make_block_xwalk()`, `make_area_xwalk()`, and `use_area_xwalk()` functions.
 * Add `tigerweb_geo_index` and `race_iteration` reference data.
