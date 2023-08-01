@@ -1,0 +1,13 @@
+dd > p:nth-child(1) > em {
+  color: #4169E1 !important;
+  margin-bottom: 4px !important
+}
+
+dd > p:nth-child(1) {
+  margin-bottom: -5px !important;
+  margin-left: -3px !important;
+}
+
+dd > p:nth-child(2) {
+  margin-left: -6px !important;
+}
