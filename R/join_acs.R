@@ -9,6 +9,7 @@
 #' "denominator_column_id", "estimate", and "moe".
 #' @param geoid_col A GeoID column name to use if perc is `TRUE`, Defaults to
 #'   'GEOID'.
+#' @param denominator_col "denominator_column_id"
 #' @inheritParams base::round
 #' @inheritParams dplyr::left_join
 #' @seealso [tidycensus::moe_prop()]
@@ -17,19 +18,20 @@
 #' @importFrom tidycensus moe_prop
 join_acs_percent <- function(data,
                              geoid_col = "GEOID",
+                             column_col = "column_id",
                              denominator_col = "denominator_column_id",
                              na_matches = "never",
                              digits = 2) {
   stopifnot(
     all(has_name(data, c(
-      geoid_col, "column_id", "column_title",
+      geoid_col, column_col, "column_title",
       denominator_col, "estimate", "moe"
     )))
   )
 
   if (nrow(dplyr::filter(
     data,
-    .data[[denominator_col]] %in% data[["column_id"]],
+    .data[[denominator_col]] %in% data[[column_col]],
     .data[["indent"]] > 0
   )) > 1) {
     cli_alert_warning(
@@ -46,7 +48,7 @@ join_acs_percent <- function(data,
       denominator_estimate = estimate,
       denominator_moe = moe,
       denominator_column_title = column_title,
-      "{denominator_col}" := column_id
+      "{denominator_col}" := .data[[column_col]]
     )
 
   data |>

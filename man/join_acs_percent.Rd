@@ -7,6 +7,7 @@
 join_acs_percent(
   data,
   geoid_col = "GEOID",
+  column_col = "column_id",
   denominator_col = "denominator_column_id",
   na_matches = "never",
   digits = 2
@@ -18,6 +19,8 @@ join_acs_percent(
 
 \item{geoid_col}{A GeoID column name to use if perc is \code{TRUE}, Defaults to
 'GEOID'.}
+
+\item{denominator_col}{"denominator_column_id"}
 
 \item{na_matches}{Should two \code{NA} or two \code{NaN} values match?
 \itemize{
