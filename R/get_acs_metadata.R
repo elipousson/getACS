@@ -81,7 +81,7 @@ get_acs_metadata <- function(survey = "acs5",
     "Filtering {metadata} metadata to table ID {.val {table}}"
   )
 
-  table <- arg_match(table, data[["table_id"]], error_call = error_call)
+  table <- arg_match(table, data[["table_id"]], multiple = TRUE, error_call = error_call)
 
   vctrs::vec_slice(
     data,

@@ -415,9 +415,47 @@ get_geography_params <- function(geography,
 #' Append race iteration codes to a table ID
 #'
 #' @param table Table ID.
-#' @name acs_tables_race_iteration
+#' @name acs_table_race_iteration
 #' @keywords internal
 #' @export
-acs_tables_race_iteration <- function(table) {
-  paste0(table, c("", race_iteration[["code"]]))
+acs_table_race_iteration <- function(table,
+                                     codes = NULL,
+                                     error_call = caller_env()) {
+  check_string(table, call = error_call)
+  codes <- codes %||% c("", race_iteration[["code"]])
+  check_character(codes, call = error_call)
+
+  paste0(table, codes)
+}
+
+#' Convert a table ID into a set of variable ID using a numeric vector for
+#' variables
+#'
+#' @name acs_table_variables
+#' @keywords internal
+#' @export
+#' @importFrom stringr str_pad
+acs_table_variables <- function(table,
+                                variables = NULL,
+                                survey = "acs5",
+                                year = 2021,
+                                error_call = caller_env()) {
+  check_string(table, call = error_call)
+
+  if (is.null(variables)) {
+    table_metadata <- get_acs_metadata(
+      survey,
+      year,
+      "column",
+      table = table,
+      call = error_call,
+      quiet = TRUE
+    )
+
+    variables <- table_metadata[["line_number"]]
+  }
+
+  check_number_whole(variables, call = error_call)
+
+  paste0(table, "_", stringr::str_pad(variables, 2, pad = "0"))
 }

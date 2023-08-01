@@ -32,8 +32,10 @@ All of these functions use the `label_acs_metadata()` to join the variables to d
 
 ## Using `get_acs_tables()`
 
+Get the race iteration tables for a tenure status table using a county level geography:
+
 ```{r}
-tenure_tables <- acs_tables_race_iteration("B25003")[c(2, 3, 10)]
+tenure_tables <- acs_table_race_iteration("B25003")[c(2, 3, 10)]
 
 tenure_data <- get_acs_tables(
   geography = "county",
@@ -43,6 +45,7 @@ tenure_data <- get_acs_tables(
 )
 ```
 
+Filter out the totals and create a simple bar chart to compare the data across tables: 
 
 ```{r}
 tenure_data |>
@@ -57,6 +60,8 @@ tenure_data |>
 
 ## Using `get_acs_geographies()`
 
+Get both county and state level geography for a population table: 
+
 ```{r}
 multigeo_acs_data <- get_acs_geographies(
   geography = c("county", "state"),
@@ -65,6 +70,8 @@ multigeo_acs_data <- get_acs_geographies(
   table = "B01003"
 )
 ```
+
+Drop the column title (the table contains only a single variable) and use the `rowname_col` parameter to group by the name of the area. `fmt_acs_county()` is a helper function to strip the text ", Maryland" from the end of the name of "Baltimore city".
 
 ```{r}
 multigeo_acs_data |>
