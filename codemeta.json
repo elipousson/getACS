@@ -7,7 +7,7 @@
   "codeRepository": "https://github.com/elipousson/getACS",
   "issueTracker": "https://github.com/elipousson/getACS/issues",
   "license": "https://spdx.org/licenses/MIT",
-  "version": "0.1.0.9001",
+  "version": "0.1.1",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
@@ -56,18 +56,6 @@
     },
     {
       "@type": "SoftwareApplication",
-      "identifier": "ggplot2",
-      "name": "ggplot2",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=ggplot2"
-    },
-    {
-      "@type": "SoftwareApplication",
       "identifier": "readr",
       "name": "readr",
       "provider": {
@@ -77,6 +65,18 @@
         "url": "https://cran.r-project.org"
       },
       "sameAs": "https://CRAN.R-project.org/package=readr"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "rmarkdown",
+      "name": "rmarkdown",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=rmarkdown"
     },
     {
       "@type": "SoftwareApplication",
@@ -125,6 +125,18 @@
     },
     "4": {
       "@type": "SoftwareApplication",
+      "identifier": "ggplot2",
+      "name": "ggplot2",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=ggplot2"
+    },
+    "5": {
+      "@type": "SoftwareApplication",
       "identifier": "glue",
       "name": "glue",
       "provider": {
@@ -135,7 +147,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=glue"
     },
-    "5": {
+    "6": {
       "@type": "SoftwareApplication",
       "identifier": "gt",
       "name": "gt",
@@ -147,7 +159,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=gt"
     },
-    "6": {
+    "7": {
       "@type": "SoftwareApplication",
       "identifier": "knitr",
       "name": "knitr",
@@ -159,7 +171,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=knitr"
     },
-    "7": {
+    "8": {
       "@type": "SoftwareApplication",
       "identifier": "lifecycle",
       "name": "lifecycle",
@@ -171,7 +183,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=lifecycle"
     },
-    "8": {
+    "9": {
       "@type": "SoftwareApplication",
       "identifier": "purrr",
       "name": "purrr",
@@ -183,7 +195,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=purrr"
     },
-    "9": {
+    "10": {
       "@type": "SoftwareApplication",
       "identifier": "rappdirs",
       "name": "rappdirs",
@@ -195,7 +207,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=rappdirs"
     },
-    "10": {
+    "11": {
       "@type": "SoftwareApplication",
       "identifier": "rlang",
       "name": "rlang",
@@ -208,7 +220,19 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=rlang"
     },
-    "11": {
+    "12": {
+      "@type": "SoftwareApplication",
+      "identifier": "scales",
+      "name": "scales",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=scales"
+    },
+    "13": {
       "@type": "SoftwareApplication",
       "identifier": "sf",
       "name": "sf",
@@ -220,7 +244,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=sf"
     },
-    "12": {
+    "14": {
       "@type": "SoftwareApplication",
       "identifier": "stringr",
       "name": "stringr",
@@ -232,7 +256,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=stringr"
     },
-    "13": {
+    "15": {
       "@type": "SoftwareApplication",
       "identifier": "tidycensus",
       "name": "tidycensus",
@@ -244,7 +268,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=tidycensus"
     },
-    "14": {
+    "16": {
       "@type": "SoftwareApplication",
       "identifier": "tidyselect",
       "name": "tidyselect",
@@ -256,7 +280,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=tidyselect"
     },
-    "15": {
+    "17": {
       "@type": "SoftwareApplication",
       "identifier": "tigris",
       "name": "tigris",
@@ -268,7 +292,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=tigris"
     },
-    "16": {
+    "18": {
       "@type": "SoftwareApplication",
       "identifier": "vctrs",
       "name": "vctrs",
@@ -282,9 +306,10 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "158.887KB",
+  "fileSize": "286.706KB",
   "relatedLink": "https://elipousson.github.io/getACS/",
   "releaseNotes": "https://github.com/elipousson/getACS/blob/master/NEWS.md",
   "readme": "https://github.com/elipousson/getACS/blob/main/README.md",
-  "developmentStatus": ["https://lifecycle.r-lib.org/articles/stages.html#experimental", "https://www.repostatus.org/#wip"]
+  "developmentStatus": ["https://lifecycle.r-lib.org/articles/stages.html#experimental", "https://www.repostatus.org/#wip"],
+  "keywords": ["american-community-survey", "tidycensus"]
 }
