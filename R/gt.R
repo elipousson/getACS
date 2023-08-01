@@ -273,6 +273,8 @@ cols_label_ext <- function(gt_object,
 #' @param name_col,name_col_label Place name column and label. name_col_label
 #'   can be a string or a named vector (similar to column_title_label). name_col
 #'   defaults to "NAME"
+#' @param drop_geometry If `TRUE` (default) and data is an sf object, drop
+#'   geometry before turning the data frame into a table.
 #' @inheritParams tab_acs_source_note
 #' @family gt table
 #' @keywords gt
@@ -298,6 +300,7 @@ cols_label_ext <- function(gt_object,
 #' }
 #' @export
 #' @importFrom gt gt tab_spanner cols_label
+#' @importFrom sf st_drop_geometry
 gt_acs <- function(data,
                    ...,
                    est_cols = c("estimate", "moe"),
@@ -314,12 +317,17 @@ gt_acs <- function(data,
                    name_col_label = NULL,
                    source_note = NULL,
                    append_note = FALSE,
+                   drop_geometry = TRUE,
                    survey = "acs5",
                    year = 2021,
                    table = NULL,
                    prefix = "Source: ",
                    end = ".") {
   gt_object <- data
+
+  if (drop_geometry && inherits(data, "sf")) {
+    data <- sf::st_drop_geometry(data)
+  }
 
   if (!inherits(data, "gt_tbl")) {
     gt_object <- gt::gt(data, ...)

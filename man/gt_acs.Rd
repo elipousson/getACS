@@ -22,6 +22,7 @@ gt_acs(
   name_col_label = NULL,
   source_note = NULL,
   append_note = FALSE,
+  drop_geometry = TRUE,
   survey = "acs5",
   year = 2021,
   table = NULL,
@@ -79,6 +80,9 @@ in the text.}
 \item{append_note}{If \code{TRUE}, add source_note to the end of the generated ACS
 data label. If \code{FALSE}, any supplied source_note will be used instead of an
 ACS label.}
+
+\item{drop_geometry}{If \code{TRUE} (default) and data is an sf object, drop
+geometry before turning the data frame into a table.}
 
 \item{survey}{ACS survey, "acs5", "acs3", or "acs1".}
 
