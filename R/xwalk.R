@@ -96,7 +96,7 @@ make_area_xwalk <- function(area,
                             state = NULL,
                             county = NULL,
                             year = 2020,
-                            name_col = "name",
+                            name_col = "NAME",
                             weight_col = "HOUSING20",
                             geoid_col = "GEOID",
                             tract_col = "TRACTCE20",
@@ -125,7 +125,7 @@ make_area_xwalk <- function(area,
   block_xwalk <- sf::st_transform(block_xwalk, sf::st_crs(area))
 
   if (add_coverage) {
-    cli::cli_progress_step("Adding coverage for block_xwalk")
+    cli::cli_progress_step("Adding coverage for {.arg block_xwalk}")
 
     coverage_name <- tempfile(tmpdir = "")
 
@@ -142,13 +142,14 @@ make_area_xwalk <- function(area,
     area <- sf::st_as_sf(area)
   }
 
-  cli::cli_progress_step("Joining block_xwalk to area")
+  cli::cli_progress_step("Joining {.arg block_xwalk} to {.arg area}")
 
   area_xwalk <- suppressWarnings(sf::st_join(
     block_xwalk,
     area,
     left = FALSE,
-    largest = TRUE
+    largest = TRUE,
+    suffix = c("_block", "")
   ))
 
   area_xwalk <- sf::st_drop_geometry(area_xwalk)

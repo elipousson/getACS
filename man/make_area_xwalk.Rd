@@ -12,7 +12,7 @@ make_area_xwalk(
   state = NULL,
   county = NULL,
   year = 2020,
-  name_col = "name",
+  name_col = "NAME",
   weight_col = "HOUSING20",
   geoid_col = "GEOID",
   tract_col = "TRACTCE20",
