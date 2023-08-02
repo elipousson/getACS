@@ -132,6 +132,12 @@ make_area_xwalk <- function(area,
   check_sf(area)
   check_sf(block_xwalk)
 
+  if (!has_name(area, name_col)) {
+    cli_abort(
+      "{.arg} area is missing a {.arg name_col} {.value {name_col}}"
+    )
+  }
+
   if (!is.null(crs)) {
     block_xwalk <- sf::st_transform(block_xwalk, crs = crs)
     area <- sf::st_transform(area, crs = crs)
