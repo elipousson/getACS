@@ -18,7 +18,7 @@
 #' @importFrom cli cli_progress_step
 #' @importFrom tigris blocks tracts
 #' @importFrom dplyr left_join
-#' @importFrom sf st_drop_geometry
+#' @importFrom sf st_drop_geometry st_make_valid st_crs st_transform
 make_block_xwalk <- function(state,
                              county = NULL,
                              year = 2020,
@@ -51,17 +51,20 @@ make_block_xwalk <- function(state,
     ...
   )
 
-  if (!is.null(crs)) {
-    block_sf <- sf::st_transform(block_sf, crs = crs)
-    tract_sf <- sf::st_transform(tract_sf, crs = crs)
-  }
-
-  dplyr::left_join(
+  block_xwalk <- dplyr::left_join(
     x = block_sf,
     y = sf::st_drop_geometry(tract_sf),
     by = by,
     suffix = suffix
   )
+
+  block_xwalk <- sf::st_make_valid(block_xwalk)
+
+  if (is.null(crs)) {
+    return(block_xwalk)
+  }
+
+  sf::st_transform(block_xwalk, crs = sf::st_crs(crs))
 }
 
 #' Make and use crosswalk data based on U.S. Census block-level weights for U.S.
