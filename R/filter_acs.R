@@ -7,7 +7,10 @@
 #'   columns.
 #' @param ... Parameters passed to [dplyr::filter()]
 #' @param table,column Table ID and column title values to return.
-#' @param vars,drop_vars Variables to keep and drop.
+#' @param vars,drop_vars Variable IDs to keep or to drop. If table is supplied
+#'   (or if data only contains data for a single table), numeric values are
+#'   allowed for vars and drop_vars (e.g. if table is "B14001" and vars is 2
+#'   data is filtered to variable "B14001_002").
 #' @keywords internal
 #' @seealso
 #'  [dplyr::filter()]
@@ -16,11 +19,11 @@
 #' @importFrom dplyr filter
 filter_acs <- function(data,
                        ...,
-                       geography = NULL,
                        table = NULL,
                        column = NULL,
                        vars = NULL,
-                       drop_vars = NULL) {
+                       drop_vars = NULL,
+                       geography = NULL) {
   if (!is_null(geography)) {
     stopifnot(
       has_name(data, "geography")
@@ -33,6 +36,7 @@ filter_acs <- function(data,
     stopifnot(
       has_name(data, "table_id")
     )
+
     data <- dplyr::filter(
       data,
       table_id %in% table
@@ -43,9 +47,18 @@ filter_acs <- function(data,
     stopifnot(
       has_name(data, "variable")
     )
+
+    if (!is.character(drop_vars)) {
+      drop_vars <- acs_table_variables(
+        table = table,
+        variables = drop_vars,
+        data = data
+        )
+    }
+
     data <- dplyr::filter(
       data,
-      !(variable %in% drop_vars)
+      !(.data[["variable"]] %in% drop_vars)
     )
   }
 
@@ -54,9 +67,17 @@ filter_acs <- function(data,
       has_name(data, "variable")
     )
 
+    if (!is.character(vars)) {
+      vars <- acs_table_variables(
+        table = table,
+        variables = vars,
+        data = data
+        )
+    }
+
     data <- dplyr::filter(
       data,
-      variable %in% vars
+      .data[["variable"]] %in% vars
     )
   }
 
