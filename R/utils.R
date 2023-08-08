@@ -48,6 +48,35 @@ check_sf <- function(x, allow_null = FALSE, arg = caller_arg(x), call = caller_e
   )
 }
 
+#' @noRd
+check_has_name <- function(x,
+                           nm,
+                           allow_null = FALSE,
+                           allow_any = FALSE,
+                           arg = caller_arg(x),
+                           call = caller_env()) {
+  if (allow_null && is_null(x)) {
+    return(invisible(NULL))
+  }
+
+  nm_check <- has_name(x, nm)
+  has_nm <- all(nm_check)
+
+  msg <- c("{.arg {arg}} must have names {.val {nm}}",
+          "i" = "{.arg {arg}} is missing {length(nm[!nm_check])} name{?s}: {.val {nm[!nm_check]}}")
+
+  if (allow_any) {
+    has_nm <- any(nm_check)
+    msg <- "{.arg {arg}} must have any of the names {.val {nm}}"
+  }
+
+  if (has_nm) {
+    return(invisible(NULL))
+  }
+
+  cli_abort(msg, call = call)
+}
+
 #' Select columns for a gt table based on ACS data
 #'
 #' @inheritParams gt_acs

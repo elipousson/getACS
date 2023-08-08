@@ -15,7 +15,7 @@
 #'   [tigris::tracts()] to keep and re-use the zipped shapefile.
 #' @param crs Coordinate reference system to return.
 #' @export
-#' @importFrom cli cli_progress_message
+#' @importFrom cli cli_progress_step
 #' @importFrom tigris blocks tracts
 #' @importFrom dplyr left_join
 #' @importFrom sf st_drop_geometry
@@ -93,13 +93,21 @@ make_block_xwalk <- function(state,
 #'   block_xwalk geometry. This additional coverage ensures that blocks are
 #'   accurately assigned to this alternate geography but it is excluded from the
 #'   returned data frame.
+#' @param erase_water If `TRUE`, apply [tigris::erase_water()] to input area and
+#'   block_xwalk before joining. Defaults to `FALSE`.
+#' @param keep_geometry If `TRUE`, area_xwalk is a sf object with the same
+#'   geometry as the input area.
 #' @param crs Coordinate reference system to use for input data. Recommended to
 #'   set to a projected CRS if input area data is in a geographic CRS.
+#' @returns A tibble or a sf object.
 #' @export
+#' @importFrom dplyr select all_of filter group_by summarise across mutate
+#'   ungroup left_join
+#' @importFrom tigris erase_water
 #' @importFrom cli cli_progress_step
 #' @importFrom vctrs vec_rbind
-#' @importFrom sf st_join
-#' @importFrom dplyr filter group_by summarise across all_of mutate
+#' @importFrom sf st_make_valid st_as_sf st_transform st_crs st_join
+#'   st_drop_geometry
 make_area_xwalk <- function(area,
                             block_xwalk = NULL,
                             state = NULL,
@@ -113,8 +121,22 @@ make_area_xwalk <- function(area,
                             suffix = c("_block", "_tract"),
                             digits = 2,
                             add_coverage = TRUE,
+                            erase_water = FALSE,
+                            keep_geometry = FALSE,
                             crs = NULL,
                             ...) {
+  check_name(name_col)
+  check_name(tract_col)
+  check_name(weight_col)
+  check_character(by)
+  check_sf(area)
+
+  if (!has_name(area, name_col)) {
+    cli_abort(
+      "{.arg area} is missing the supplied {.arg name_col}: {.val {name_col}}"
+    )
+  }
+
   block_xwalk <- block_xwalk %||%
     make_block_xwalk(
       state = state,
@@ -125,17 +147,10 @@ make_area_xwalk <- function(area,
       ...
     )
 
-  check_name(name_col)
-  check_name(tract_col)
-  check_name(weight_col)
-  check_character(by)
-  check_sf(area)
   check_sf(block_xwalk)
 
-  if (!has_name(area, name_col)) {
-    cli_abort(
-      "{.arg} area is missing a {.arg name_col} {.value {name_col}}"
-    )
+  if (keep_geometry) {
+    area_geometry <- dplyr::select(area, dplyr::all_of(name_col))
   }
 
   if (!is.null(crs)) {
@@ -145,22 +160,37 @@ make_area_xwalk <- function(area,
     block_xwalk <- sf::st_transform(block_xwalk, sf::st_crs(area))
   }
 
+  if (erase_water) {
+    area <- tigris::erase_water(area)
+    block_xwalk <- tigris::erase_water(block_xwalk)
+  }
+
   if (add_coverage) {
     cli::cli_progress_step("Adding coverage for {.arg block_xwalk}")
 
     coverage_name <- tempfile(tmpdir = "")
 
+    area_coverage <- st_make_valid_coverage(block_xwalk, area)
+
+    if (is_empty(area_coverage)) {
+      cli_abort(
+        c("{.arg area} is not covered by {.arg block_xwalk}",
+          "i" = "Supply a {.arg block_xwalk} covering the full geometry of
+          {.arg area} or set {.arg add_coverage} to {.code FALSE}")
+      )
+    }
+
     area_coverage <- data.frame(
       coverage_name,
-      st_make_valid_coverage(block_xwalk, area)
+      area_coverage
     )
 
     area <- vctrs::vec_rbind(
-      set_names(area_coverage, c(name_col, "geometry")),
-      area
+      area,
+      set_names(area_coverage, c(name_col, "geometry"))
     )
 
-    area <- sf::st_as_sf(area)
+    area <- sf::st_make_valid(sf::st_as_sf(area))
   }
 
   cli::cli_progress_step("Joining {.arg block_xwalk} to {.arg area}")
@@ -214,6 +244,11 @@ make_area_xwalk <- function(area,
     area_xwalk <- dplyr::filter(area_xwalk, .data[[name_col]] != coverage_name)
   }
 
+  if (keep_geometry) {
+    area_xwalk <- dplyr::left_join(area_xwalk, area_geometry)
+    area_xwalk <- sf::st_as_sf(area_xwalk)
+  }
+
   area_xwalk
 }
 
@@ -256,6 +291,9 @@ st_make_valid_union <- function(x, is_coverage = TRUE) {
 #' @rdname make_area_xwalk
 #' @inheritParams label_acs_metadata
 #' @export
+#' @importFrom cli cli_progress_step
+#' @importFrom dplyr select all_of left_join summarise
+#' @importFrom tidycensus moe_sum
 use_area_xwalk <- function(data,
                            area_xwalk,
                            name_col = "NAME",
@@ -266,16 +304,17 @@ use_area_xwalk <- function(data,
                            digits = 0,
                            perc = TRUE,
                            ...) {
-  stopifnot(
-    is.data.frame(area_xwalk),
-    is.data.frame(data),
-    all(has_name(area_xwalk, c(geoid_col, paste0("perc_", weight_col)))),
-    all(has_name(data, c(geoid_col, "variable", "estimate", "moe")))
-  )
+  check_data_frame(area_xwalk)
+  check_data_frame(data)
+  check_has_name(area_xwalk, c(geoid_col, paste0("perc_", weight_col)))
+  check_has_name(data, c(geoid_col, "variable", "estimate", "moe"))
 
   cli::cli_progress_step("Joining {.arg data} to {.arg area_xwalk}")
 
-  data <- dplyr::select(data, dplyr::all_of(c(geoid_col, "variable", "estimate", "moe")))
+  data <- dplyr::select(
+    data,
+    dplyr::all_of(c(geoid_col, "variable", "estimate", "moe"))
+    )
 
   area_data <- dplyr::left_join(
     area_xwalk,

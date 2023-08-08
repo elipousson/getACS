@@ -20,6 +20,8 @@ make_area_xwalk(
   suffix = c("_block", "_tract"),
   digits = 2,
   add_coverage = TRUE,
+  erase_water = FALSE,
+  keep_geometry = FALSE,
   crs = NULL,
   ...
 )
@@ -103,6 +105,12 @@ block_xwalk geometry. This additional coverage ensures that blocks are
 accurately assigned to this alternate geography but it is excluded from the
 returned data frame.}
 
+\item{erase_water}{If \code{TRUE}, apply \code{\link[tigris:erase_water]{tigris::erase_water()}} to input area and
+block_xwalk before joining. Defaults to \code{FALSE}.}
+
+\item{keep_geometry}{If \code{TRUE}, area_xwalk is a sf object with the same
+geometry as the input area.}
+
 \item{crs}{Coordinate reference system to use for input data. Recommended to
 set to a projected CRS if input area data is in a geographic CRS.}
 
@@ -121,6 +129,9 @@ geography type. Defaults to "area" but typical values could include
 each estimate as a percent share of the denominator value and use
 \code{\link[tidycensus:moe_prop]{tidycensus::moe_prop()}} to calculate a new margin of error for the percent
 estimate.}
+}
+\value{
+A tibble or a sf object.
 }
 \description{
 \code{make_area_xwalk()} creates a crosswalk data frame based on the \code{weight_col}
