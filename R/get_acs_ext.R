@@ -462,7 +462,5 @@ acs_table_variables <- function(table = NULL,
     variables <- table_metadata[["line_number"]]
   }
 
-  check_number_whole(variables, call = error_call)
-
   paste0(table, "_", stringr::str_pad(variables, width = width, pad = "0"))
 }
