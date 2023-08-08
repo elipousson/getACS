@@ -22,12 +22,46 @@ join_acs_percent <- function(data,
                              denominator_col = "denominator_column_id",
                              na_matches = "never",
                              digits = 2) {
+  data <- join_acs_denominator(
+    data = data,
+    geoid_col = geoid_col,
+    column_col = column_col,
+    denominator_col = denominator_col,
+    na_matches = na_matches,
+    digits = digits
+  )
+
+  data |>
+    dplyr::mutate(
+      perc_estimate = round(estimate / denominator_estimate, digits = digits),
+      perc_moe = round(
+        tidycensus::moe_prop(
+          estimate, denominator_estimate,
+          moe, denominator_moe
+        ),
+        digits = digits
+      ),
+      .after = all_of("moe")
+    )
+}
+
+#' @noRd
+join_acs_denominator <- function(data,
+                                 geoid_col = "GEOID",
+                                 column_col = "column_id",
+                                 denominator_col = "denominator_column_id",
+                                 na_matches = "never",
+                                 digits = 2) {
   stopifnot(
     all(has_name(data, c(
       geoid_col, column_col, "column_title",
-      denominator_col, "estimate", "moe"
+      denominator_col, "estimate"
     )))
   )
+
+  if (!has_name(data, "moe")) {
+    data[["moe"]] <- NA_integer_
+  }
 
   if (nrow(dplyr::filter(
     data,
@@ -48,26 +82,113 @@ join_acs_percent <- function(data,
       denominator_estimate = estimate,
       denominator_moe = moe,
       denominator_column_title = column_title,
-      "{denominator_col}" := .data[[column_col]]
+      "{denominator_col}" := dplyr::all_of(column_col)
     )
 
-  data |>
-    dplyr::left_join(
-      denominator_data,
-      by = dplyr::join_by({{ geoid_col }}, {{ denominator_col }}),
-      na_matches = na_matches
-    ) |>
-    dplyr::mutate(
-      perc_estimate = round(estimate / denominator_estimate, digits = digits),
-      perc_moe = round(
-        tidycensus::moe_prop(
-          estimate, denominator_estimate,
-          moe, denominator_moe
-        ),
-        digits = digits
-      ),
-      .after = all_of("moe")
+  dplyr::left_join(
+    data,
+    denominator_data,
+    by = dplyr::join_by({{ geoid_col }}, {{ denominator_col }}),
+    na_matches = na_matches
+  )
+}
+
+#' Join parent column titles to ACS data based on parent column ID values
+#'
+#' [join_acs_prop()] uses data from [get_acs_geographies()] to support the
+#' calculation of proportions join parent column titles to a data frame of ACS
+#' data.
+#'
+#' @param data A data frame with column names matching the supplied parameters.
+#' @param column_col Variable column name to join as join variable, Default:
+#'   'variable'
+#' @param estimate_col,moe_col Estimate and margin of error column names,
+#'   Default: 'estimate' and 'moe'
+#' @param geography Value in geography column to use as comparison values,
+#'   Default: 'county'
+#' @inheritParams dplyr::left_join
+#' @inheritParams base::round
+#' @seealso [tidycensus::moe_ratio()]
+#' @returns A data frame with new estimate and moe columns prefixed with
+#'   "ratio_".
+#' @rdname join_acs_geography_ratio
+#' @export
+#' @importFrom dplyr filter select left_join join_by mutate across all_of
+#' @importFrom tidycensus moe_ratio
+join_acs_geography_ratio <- function(data,
+                                     column_col = "variable",
+                                     estimate_col = "estimate",
+                                     moe_col = "moe",
+                                     geography = "county",
+                                     na_matches = "never",
+                                     digits = 2) {
+  stopifnot(
+    all(has_name(data, c(column_col, estimate_col, moe_col, "geography")))
+  )
+
+  geography_estimate_col <- paste0(geography, "_", estimate_col)
+  geography_moe_col <- paste0(geography, "_", moe_col)
+
+  comparison_data <- data |>
+    dplyr::filter(.data[["geography"]] %in% {{ geography }}) |>
+    dplyr::select(
+      all_of(column_col),
+      "{geography_estimate_col}" := all_of(estimate_col),
+      "{geography_moe_col}" := all_of(moe_col)
     )
+
+  stopifnot(
+    nrow(comparison_data) > 0
+  )
+
+  geography_values <- unique(comparison_data[[geography]])
+
+  if (length(geography_values) > 1) {
+    cli_abort(
+      c(
+        "Calculating a proportion requires the input data include only a
+      single {.val {geography}} value",
+        "{.arg data} values for {.val {geography}} include {.val {geography_values}}"
+      )
+    )
+  }
+
+  data <- dplyr::left_join(
+    data,
+    comparison_data,
+    by = dplyr::join_by({{ column_col }}),
+    na_matches = na_matches
+  )
+
+  ratio_estimate_col <- paste0("ratio_", estimate_col)
+  ratio_moe_col <- paste0("ratio_", moe_col)
+
+  if (any(has_name(data, c(ratio_estimate_col, ratio_moe_col)))) {
+    cli_warn(
+      "{.arg data} already contains columns named {ratio_estimate_col} or {ratio_moe_col}",
+      "i" = "These values will be over-written by this function."
+    )
+  }
+
+  data <- dplyr::mutate(
+    data,
+    "{ratio_estimate_col}" := .data[[estimate_col]] / .data[[geography_estimate_col]],
+    "{ratio_moe_col}" := tidycensus::moe_ratio(
+      .data[[estimate_col]], .data[[geography_estimate_col]],
+      .data[[moe_col]], .data[[geography_moe_col]]
+    ),
+    .after = all_of(moe_col)
+  )
+
+  dplyr::mutate(
+    data,
+    dplyr::across(
+      dplyr::all_of(c(ratio_estimate_col, ratio_moe_col)),
+      function(x) {
+        round(x, digits = digits)
+      }
+    )
+  )
 }
 
 #' Join parent column titles to ACS data based on parent column ID values
@@ -115,4 +236,48 @@ join_acs_parent_column <- function(data,
     multiple = "any",
     relationship = relationship
   )
+}
+
+
+#' Join geometry from `{tigris}` to an ACS data frame by GeoID
+#'
+#' @keywords internal
+#' @noRd
+join_tigris_geometry <- function(data,
+                                 geography,
+                                 state = NULL,
+                                 county = NULL,
+                                 year = 2021,
+                                 by = "GEOID",
+                                 suffix = c("", "_geometry"),
+                                 crs = NULL,
+                                 ...) {
+  params <- get_geography_params(
+    geography = geography,
+    year = year,
+    state = state,
+    county = county
+  )
+
+  params[["geography"]] <- NULL
+
+  geometry <- switch(geography,
+    "tract" = exec(tigris::tracts, !!!params, ..., year = year),
+    "county" = exec(tigris::counties, !!!params, ..., year = year)
+  )
+
+  data <- dplyr::left_join(
+    data,
+    geometry,
+    by = by,
+    suffix = suffix
+  )
+
+  data <- sf::st_as_sf(data)
+
+  if (is.null(crs)) {
+    return(data)
+  }
+
+  sf::st_transform(data, crs = sf::st_crs(crs))
 }
