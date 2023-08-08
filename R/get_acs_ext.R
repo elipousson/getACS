@@ -435,11 +435,18 @@ acs_table_race_iteration <- function(table,
 #' @keywords internal
 #' @export
 #' @importFrom stringr str_pad
-acs_table_variables <- function(table,
+acs_table_variables <- function(table = NULL,
                                 variables = NULL,
+                                data = NULL,
                                 survey = "acs5",
                                 year = 2021,
+                                width = 3,
                                 error_call = caller_env()) {
+  if (is.data.frame(data) && is.null(table)) {
+    stopifnot(has_name(data, "table_id"))
+    table <- unique(data[["table_id"]])
+  }
+
   check_string(table, call = error_call)
 
   if (is.null(variables)) {
@@ -457,5 +464,5 @@ acs_table_variables <- function(table,
 
   check_number_whole(variables, call = error_call)
 
-  paste0(table, "_", stringr::str_pad(variables, 2, pad = "0"))
+  paste0(table, "_", stringr::str_pad(variables, width = width, pad = "0"))
 }

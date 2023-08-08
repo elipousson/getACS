@@ -6,10 +6,12 @@
 variables}
 \usage{
 acs_table_variables(
-  table,
+  table = NULL,
   variables = NULL,
+  data = NULL,
   survey = "acs5",
   year = 2021,
+  width = 3,
   error_call = caller_env()
 )
 }
