@@ -26,7 +26,7 @@ areas if that is the case.'><!-- mathjax --><script src="https://cdnjs.cloudflar
     
     <a class="navbar-brand me-2" href="../index.html">getACS</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.9001</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,7 +40,6 @@ areas if that is the case.'><!-- mathjax --><script src="https://cdnjs.cloudflar
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/area_xwalk.html">Interpolating </a>
     <a class="dropdown-item" href="../articles/gt-tables.html">Creating gt tables</a>
     <a class="dropdown-item" href="../articles/introduction.html">Introduction to getACS</a>
   </div>
@@ -96,20 +95,28 @@ areas if that is the case.</p>
 <span>  by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>TRACTCE20 <span class="op">=</span> <span class="st">"TRACTCE"</span><span class="op">)</span>,</span>
 <span>  suffix <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"_block"</span>, <span class="st">"_tract"</span><span class="op">)</span>,</span>
 <span>  digits <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  extensive <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  add_coverage <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  erase_water <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  keep_geometry <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  crs <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">use_area_xwalk</span><span class="op">(</span></span>
 <span>  <span class="va">data</span>,</span>
 <span>  <span class="va">area_xwalk</span>,</span>
+<span>  geography <span class="op">=</span> <span class="st">"area"</span>,</span>
 <span>  name_col <span class="op">=</span> <span class="st">"NAME"</span>,</span>
 <span>  geoid_col <span class="op">=</span> <span class="st">"GEOID"</span>,</span>
 <span>  suffix <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"_area"</span>, <span class="st">""</span><span class="op">)</span>,</span>
-<span>  weight_col <span class="op">=</span> <span class="st">"HOUSING20"</span>,</span>
-<span>  geography <span class="op">=</span> <span class="st">"area"</span>,</span>
+<span>  weight_col <span class="op">=</span> <span class="st">"perc_HOUSING20"</span>,</span>
+<span>  variable_col <span class="op">=</span> <span class="st">"variable"</span>,</span>
+<span>  value_col <span class="op">=</span> <span class="st">"estimate"</span>,</span>
+<span>  moe_col <span class="op">=</span> <span class="st">"moe"</span>,</span>
 <span>  digits <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  perc <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  extensive <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -147,7 +154,11 @@ Can also be a county name or vector of names.</p></dd>
 
 
 <dt>weight_col</dt>
-<dd><p>Column name to use for weighting</p></dd>
+<dd><p>Column name in input block_xwalk to use for weighting.
+Generated weight_col used by <code>use_area_xwalk()</code> should be the same as the
+weight_col for <code>make_area_xwalk()</code> but include the "perc_" prefix. Defaults
+to "HOUSING20" for <code><a href="make_block_xwalk.html">make_block_xwalk()</a></code> and "perc_HOUSING20" for
+<code>use_area_xwalk()</code>.</p></dd>
 
 
 <dt>geoid_col, tract_col</dt>
@@ -190,6 +201,14 @@ Should be a character vector of length 2.</p></dd>
 <dd><p>Digits to use for percent share of weight value.</p></dd>
 
 
+<dt>extensive</dt>
+<dd><p>If <code>TRUE</code> (default) calculate new estimate values as
+weighted sums and re-calculate margin of error with
+<code><a href="https://walker-data.com/tidycensus/reference/moe_sum.html" class="external-link">tidycensus::moe_sum()</a></code>. If <code>FALSE</code>, calculate new estimate values as
+weighted means (appropriate for ACS median variables) and drop the margin
+of error. <code>perc</code> is also always set to <code>FALSE</code> if extensive is <code>FALSE</code>.</p></dd>
+
+
 <dt>add_coverage</dt>
 <dd><p>If <code>TRUE</code> (default), it is assumed that area does not
 cover the full extent of the block_xwalk and an additional feature is added
@@ -197,6 +216,21 @@ with the difference between the unioned area geometry and unioned
 block_xwalk geometry. This additional coverage ensures that blocks are
 accurately assigned to this alternate geography but it is excluded from the
 returned data frame.</p></dd>
+
+
+<dt>erase_water</dt>
+<dd><p>If <code>TRUE</code>, apply <code><a href="https://rdrr.io/pkg/tigris/man/erase_water.html" class="external-link">tigris::erase_water()</a></code> to input area and
+block_xwalk before joining. Defaults to <code>FALSE</code>.</p></dd>
+
+
+<dt>keep_geometry</dt>
+<dd><p>If <code>TRUE</code>, area_xwalk is a sf object with the same
+geometry as the input area.</p></dd>
+
+
+<dt>crs</dt>
+<dd><p>Coordinate reference system to use for input data. Recommended to
+set to a projected CRS if input area data is in a geographic CRS.</p></dd>
 
 
 <dt>...</dt>
@@ -218,6 +252,15 @@ geography type. Defaults to "area" but typical values could include
 "neighborhood", "planning district", or "service area".</p></dd>
 
 
+<dt>variable_col</dt>
+<dd><p>Variable column name. Defaults to "variable"</p></dd>
+
+
+<dt>value_col, moe_col</dt>
+<dd><p>Value and margin of error column names (defaults to
+"estimate" and "moe").</p></dd>
+
+
 <dt>perc</dt>
 <dd><p>If <code>TRUE</code> (default), use the denominator column ID to calculate
 each estimate as a percent share of the denominator value and use
@@ -225,6 +268,12 @@ each estimate as a percent share of the denominator value and use
 estimate.</p></dd>
 
 </dl></div>
+    <div class="section level2">
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
+    
+
+<p>A tibble or a sf object.</p>
+    </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>Using an area crosswalk</p>
@@ -238,6 +287,10 @@ substitution of 0 for "1939 or older" for the Median Year Built variable.
 Ideally, the weight used for aggregation should be based on household counts
 when aggregating a household-level variable and population counts when
 aggregating a individual-level variable.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
+    <div class="dont-index"><p><code><a href="https://walker-data.com/tidycensus/reference/interpolate_pw.html" class="external-link">tidycensus::interpolate_pw()</a></code>, <code><a href="https://slu-openGIS.github.io/areal/reference/aw_interpolate.html" class="external-link">areal::aw_interpolate()</a></code></p></div>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

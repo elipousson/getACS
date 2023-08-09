@@ -22,7 +22,7 @@ to use this crosswalk data frame with make_area_xwalk().'><!-- mathjax --><scrip
     
     <a class="navbar-brand me-2" href="../index.html">getACS</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.9001</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,7 +36,6 @@ to use this crosswalk data frame with make_area_xwalk().'><!-- mathjax --><scrip
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/area_xwalk.html">Interpolating </a>
     <a class="dropdown-item" href="../articles/gt-tables.html">Creating gt tables</a>
     <a class="dropdown-item" href="../articles/introduction.html">Introduction to getACS</a>
   </div>
@@ -84,6 +83,7 @@ to use this crosswalk data frame with <code><a href="make_area_xwalk.html">make_
 <span>  by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>TRACTCE20 <span class="op">=</span> <span class="st">"TRACTCE"</span><span class="op">)</span>,</span>
 <span>  keep_zipped_shapefile <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  suffix <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"_block"</span>, <span class="st">"_tract"</span><span class="op">)</span>,</span>
+<span>  crs <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -139,6 +139,10 @@ use a named character vector like <code>by = c("x_a" = "y_a", "x_b" = "y_b")</co
 <dd><p>If there are non-joined duplicate variables in <code>x</code> and
 <code>y</code>, these suffixes will be added to the output to disambiguate them.
 Should be a character vector of length 2.</p></dd>
+
+
+<dt>crs</dt>
+<dd><p>Coordinate reference system to return.</p></dd>
 
 
 <dt>...</dt>

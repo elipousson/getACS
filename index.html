@@ -29,7 +29,7 @@
     
     <a class="navbar-brand me-2" href="index.html">getACS</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.9001</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -44,7 +44,6 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="articles/area_xwalk.html">Interpolating </a>
     <a class="dropdown-item" href="articles/gt-tables.html">Creating gt tables</a>
     <a class="dropdown-item" href="articles/introduction.html">Introduction to getACS</a>
   </div>
@@ -122,7 +121,7 @@
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://gt.rstudio.com/reference/as_raw_html.html" class="external-link">as_raw_html</a></span><span class="op">(</span><span class="va">commute_tbl</span><span class="op">)</span></span></code></pre></div>
-<div id="kiexesjwrt" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="edfjzigkdz" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 
 
 <table class="table gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false" style="-webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'; display: table; border-collapse: collapse; line-height: normal; margin-left: auto; margin-right: auto; color: #333333; font-size: 16px; font-weight: normal; font-style: normal; background-color: #FFFFFF; width: auto; border-top-style: solid; border-top-width: 2px; border-top-color: #A8A8A8; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #A8A8A8; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3;" bgcolor="#FFFFFF">
@@ -376,14 +375,31 @@ Source: 2017-2021 ACS 5-year Estimates, Table B08134.
 <p>For more information on working with Census data in R <a href="https://walker-data.com/census-r" class="external-link">read the book <em>Analyzing US Census Data: Methods, Maps, and Models in R</em></a> (February 2023).</p>
 </div>
 <div class="section level2">
-<h2 id="related-r-packages">Related R packages<a class="anchor" aria-label="anchor" href="#related-r-packages"></a>
+<h2 id="related-projects">Related projects<a class="anchor" aria-label="anchor" href="#related-projects"></a>
 </h2>
+<div class="section level3">
+<h3 id="related-r-packages">Related R packages<a class="anchor" aria-label="anchor" href="#related-r-packages"></a>
+</h3>
 <ul>
 <li>
-<a href="https://github.com/CoryMcCartan/easycensus" class="external-link">easycensus</a>: Quickly Extract and Marginalize U.S. Census Tables</li>
+<a href="https://github.com/CoryMcCartan/easycensus" class="external-link">{easycensus}</a>: Quickly Extract and Marginalize U.S. Census Tables</li>
 <li>
-<a href="https://ct-data-haven.github.io/cwi/" class="external-link">cwi</a>: Functions to speed up and standardize Census ACS data analysis for multiple staff people at DataHaven, preview trends and patterns, and get data in more layperson-friendly formats.</li>
+<a href="https://ct-data-haven.github.io/cwi/" class="external-link">{cwi}</a>: Functions to speed up and standardize Census ACS data analysis for multiple staff people at DataHaven, preview trends and patterns, and get data in more layperson-friendly</li>
+<li>
+<a href="https://camille-s.github.io/camiller/" class="external-link">{camiller}</a>: A set of convenience functions, functions for working with ACS data via <a href="https://walker-data.com/tidycensus/" class="external-link">tidycensus</a>
+</li>
 </ul>
+</div>
+<div class="section level3">
+<h3 id="related-python-libraries">Related Python libraries<a class="anchor" aria-label="anchor" href="#related-python-libraries"></a>
+</h3>
+<ul>
+<li>
+<a href="https://github.com/datadesk/census-data-aggregator" class="external-link">census-data-aggregator</a>: A Python library from the L.A. Times data desk to help “combine U.S. census data responsibly”</li>
+<li>
+<a href="https://github.com/censusreporter/census-table-metadata" class="external-link">census-table-metadata</a>: Tools for generating metadata about tables and fields in a Census release based on sequence lookup and table shell files. (Note: the pre-computed data from this repository is used to label ACS data by <code><a href="reference/label_acs_metadata.html">label_acs_metadata()</a></code>)</li>
+</ul>
+</div>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">

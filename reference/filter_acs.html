@@ -12,7 +12,7 @@ metadata using the label_acs_metadata() function."><!-- mathjax --><script src="
     
     <a class="navbar-brand me-2" href="../index.html">getACS</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.9001</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -26,7 +26,6 @@ metadata using the label_acs_metadata() function."><!-- mathjax --><script src="
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/area_xwalk.html">Interpolating </a>
     <a class="dropdown-item" href="../articles/gt-tables.html">Creating gt tables</a>
     <a class="dropdown-item" href="../articles/introduction.html">Introduction to getACS</a>
   </div>
@@ -65,11 +64,11 @@ metadata using the <code><a href="label_acs_metadata.html">label_acs_metadata()<
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">filter_acs</span><span class="op">(</span></span>
 <span>  <span class="va">data</span>,</span>
 <span>  <span class="va">...</span>,</span>
-<span>  geography <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  table <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  column <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  vars <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  drop_vars <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  drop_vars <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  geography <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -89,7 +88,10 @@ columns.</p></dd>
 
 
 <dt>vars, drop_vars</dt>
-<dd><p>Variables to keep and drop.</p></dd>
+<dd><p>Variable IDs to keep or to drop. If table is supplied
+(or if data only contains data for a single table), numeric values are
+allowed for vars and drop_vars (e.g. if table is "B14001" and vars is 2
+data is filtered to variable "B14001_002").</p></dd>
 
 </dl></div>
     <div class="section level2">

@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">getACS</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.9001</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -24,7 +24,6 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/area_xwalk.html">Interpolating </a>
     <a class="dropdown-item" href="../articles/gt-tables.html">Creating gt tables</a>
     <a class="dropdown-item" href="../articles/introduction.html">Introduction to getACS</a>
   </div>
@@ -54,8 +53,16 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="getacs-development-version">getACS (development version)<a class="anchor" aria-label="anchor" href="#getacs-development-version"></a></h2>
-<ul><li>Add tests.</li>
-<li>Fix issue with <code><a href="../reference/tab_acs_source_note.html">tab_acs_source_note()</a></code> handling of multiple tables.</li>
+<ul><li>Add <code>jam_values</code> reference data.</li>
+<li>Add <code><a href="../reference/collapse_acs_variables.html">collapse_acs_variables()</a></code> helper function.</li>
+<li>Add <code>extensive</code> parameter to <code><a href="../reference/make_area_xwalk.html">use_area_xwalk()</a></code> to support calculation of weighted mean estimates.</li>
+<li>Fix errors due to invalid geometry in <code><a href="../reference/make_block_xwalk.html">make_block_xwalk()</a></code> and <code><a href="../reference/make_area_xwalk.html">make_area_xwalk()</a></code> functions.</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.1" id="getacs-011">getACS 0.1.1<a class="anchor" aria-label="anchor" href="#getacs-011"></a></h2>
+<ul><li>Add working versions of the <code><a href="../reference/make_block_xwalk.html">make_block_xwalk()</a></code>, <code><a href="../reference/make_area_xwalk.html">make_area_xwalk()</a></code>, and <code><a href="../reference/make_area_xwalk.html">use_area_xwalk()</a></code> functions.</li>
+<li>Add <code>tigerweb_geo_index</code> and <code>race_iteration</code> reference data.</li>
+<li>Add vignettes.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.0" id="getacs-010">getACS 0.1.0<a class="anchor" aria-label="anchor" href="#getacs-010"></a></h2>
