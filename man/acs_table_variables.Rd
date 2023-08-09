@@ -15,8 +15,28 @@ acs_table_variables(
   error_call = caller_env()
 )
 }
-\description{
-Convert a table ID into a set of variable ID using a numeric vector for
-variables
+\arguments{
+\item{table}{A table ID string.}
+
+\item{variables}{A numeric vector corresponding to the line number of the
+variables.}
+
+\item{data}{If data is provided and table is \code{NULL}, table is set based on
+the unique values in the "table_id" column of data. If data contains more
+than one table_id value, the function will error}
+
+\item{survey}{Survey, "acs5", "acs3", or "acs1".}
+
+\item{year}{Sample year (between 2006 and 2021).}
 }
-\keyword{internal}
+\value{
+A character vector of variable ID values.
+}
+\description{
+\code{\link[=acs_table_variables]{acs_table_variables()}} supports the creation of variable ID values based on
+a table ID string. The returned variable IDs use the format returned by
+\code{\link[tidycensus:get_acs]{tidycensus::get_acs()}}, e.g. "{table_id}_{line_number}" where the
+line_number is a width 3 string prefixed by "0". If variables is \code{NULL}, the
+function calls \code{\link[=get_acs_metadata]{get_acs_metadata()}} with \code{metadata = "column"} and returns
+all available variables for the table for the supplied year and survey.
+}
