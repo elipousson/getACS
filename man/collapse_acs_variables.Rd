@@ -66,5 +66,5 @@ if (interactive()) {
 }
 }
 \seealso{
-\code{\link[forcats:fct_inorder]{forcats::fct_inorder()}}, \code{\link[forcats:fct_collapse]{forcats::fct_collapse()}}
+\code{\link[forcats:fct_collapse]{forcats::fct_collapse()}}, \code{\link[camiller:add_grps]{camiller::add_grps()}}
 }

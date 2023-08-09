@@ -42,5 +42,5 @@ percent share of the denominator value. \code{\link[tidycensus:moe_prop]{tidycen
 calculate the margin of error for the percentage.
 }
 \seealso{
-\code{\link[tidycensus:moe_prop]{tidycensus::moe_prop()}}
+\code{\link[tidycensus:moe_prop]{tidycensus::moe_prop()}}, \code{\link[camiller:calc_shares]{camiller::calc_shares()}}
 }

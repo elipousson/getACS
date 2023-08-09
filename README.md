@@ -79,7 +79,7 @@ commute_tbl <- gt_acs(
 as_raw_html(commute_tbl)
 ```
 
-<div id="kiexesjwrt" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="edfjzigkdz" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
   &#10;  <table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false" style="-webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'; display: table; border-collapse: collapse; line-height: normal; margin-left: auto; margin-right: auto; color: #333333; font-size: 16px; font-weight: normal; font-style: normal; background-color: #FFFFFF; width: auto; border-top-style: solid; border-top-width: 2px; border-top-color: #A8A8A8; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #A8A8A8; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3;" bgcolor="#FFFFFF">
   <thead style="border-style: none;">
     &#10;    <tr class="gt_col_headings" style="border-style: none; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3;">
@@ -186,11 +186,27 @@ For more information on working with Census data in R [read the book
 *Analyzing US Census Data: Methods, Maps, and Models in
 R*](https://walker-data.com/census-r) (February 2023).
 
-## Related R packages
+## Related projects
 
-- [easycensus](https://github.com/CoryMcCartan/easycensus): Quickly
+### Related R packages
+
+- [{easycensus}](https://github.com/CoryMcCartan/easycensus): Quickly
   Extract and Marginalize U.S. Census Tables
-- [cwi](https://ct-data-haven.github.io/cwi/): Functions to speed up and
-  standardize Census ACS data analysis for multiple staff people at
+- [{cwi}](https://ct-data-haven.github.io/cwi/): Functions to speed up
+  and standardize Census ACS data analysis for multiple staff people at
   DataHaven, preview trends and patterns, and get data in more
-  layperson-friendly formats.
+  layperson-friendly
+- [{camiller}](https://camille-s.github.io/camiller/): A set of
+  convenience functions, functions for working with ACS data via
+  `{tidycensus}`
+
+### Related Python libraries
+
+- [census-data-aggregator](https://github.com/datadesk/census-data-aggregator):
+  A Python library from the L.A. Times data desk to help “combine U.S.
+  census data responsibly”
+- [census-table-metadata](https://github.com/censusreporter/census-table-metadata):
+  Tools for generating metadata about tables and fields in a Census
+  release based on sequence lookup and table shell files. (Note: the
+  pre-computed data from this repository is used to label ACS data by
+  `label_acs_metadata()`)

@@ -157,3 +157,6 @@ Ideally, the weight used for aggregation should be based on household counts
 when aggregating a household-level variable and population counts when
 aggregating a individual-level variable.
 }
+\seealso{
+\code{\link[tidycensus:interpolate_pw]{tidycensus::interpolate_pw()}}, \code{\link[areal:aw_interpolate]{areal::aw_interpolate()}}
+}

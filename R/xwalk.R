@@ -103,6 +103,7 @@ make_block_xwalk <- function(state,
 #' @param crs Coordinate reference system to use for input data. Recommended to
 #'   set to a projected CRS if input area data is in a geographic CRS.
 #' @returns A tibble or a sf object.
+#' @seealso [tidycensus::interpolate_pw()], [areal::aw_interpolate()]
 #' @export
 #' @importFrom dplyr select all_of filter group_by summarise across mutate
 #'   ungroup left_join
@@ -151,6 +152,8 @@ make_area_xwalk <- function(area,
     )
 
   check_sf(block_xwalk)
+
+  area <- sf::st_make_valid(area)
 
   if (keep_geometry) {
     area_geometry <- dplyr::select(area, dplyr::all_of(name_col))

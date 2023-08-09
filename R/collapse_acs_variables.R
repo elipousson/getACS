@@ -36,7 +36,7 @@
 #' }
 #' }
 #' @seealso
-#'  [forcats::fct_inorder()], [forcats::fct_collapse()]
+#'  [forcats::fct_collapse()], [camiller::add_grps()]
 #' @rdname collapse_acs_variables
 #' @export
 #' @importFrom dplyr group_by mutate all_of summarise across any_of

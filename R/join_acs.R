@@ -12,7 +12,7 @@
 #' @param denominator_col "denominator_column_id"
 #' @inheritParams base::round
 #' @inheritParams dplyr::left_join
-#' @seealso [tidycensus::moe_prop()]
+#' @seealso [tidycensus::moe_prop()], [camiller::calc_shares()]
 #' @export
 #' @importFrom dplyr filter select left_join mutate join_by
 #' @importFrom tidycensus moe_prop
