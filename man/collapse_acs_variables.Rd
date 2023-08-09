@@ -11,6 +11,8 @@ collapse_acs_variables(
   name_col = "NAME",
   variable_col = "variable",
   label_col = "label",
+  value_col = "estimate",
+  moe_col = "moe",
   na.rm = TRUE,
   digits = 2
 )
@@ -30,6 +32,9 @@ placed at end of levels.}
 
 \item{label_col}{Label column name, Default: 'label'. Label is a factor
 column added to the returned data frame.}
+
+\item{value_col, moe_col}{Value and margin of error column names (default to
+"estimate" and "moe").}
 
 \item{na.rm}{Passed to \code{\link[=sum]{sum()}}, Default: \code{TRUE}}
 

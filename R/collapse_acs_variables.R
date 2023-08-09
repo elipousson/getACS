@@ -12,6 +12,8 @@
 #' @param column_title_col Column title column name, Default: 'column_title'
 #' @param label_col Label column name, Default: 'label'. Label is a factor
 #'   column added to the returned data frame.
+#' @param value_col,moe_col Value and margin of error column names (default to
+#'   "estimate" and "moe").
 #' @param na.rm Passed to [sum()], Default: `TRUE`
 #' @param digits Passed to [digits()], Default: 2
 #' @examples
@@ -48,11 +50,12 @@ collapse_acs_variables <- function(data,
                                    name_col = "NAME",
                                    variable_col = "variable",
                                    label_col = "label",
+                                   value_col = "estimate",
+                                   moe_col = "moe",
                                    na.rm = TRUE,
                                    digits = 2) {
   stopifnot(
-    all(has_name(data, c(variable_col, "estimate", "moe",
-                         "perc_estimate", "perc_moe")))
+    all(has_name(data, c(variable_col, value_col, moe_col)))
   )
 
   if (has_name(data, name_col)) {
@@ -76,25 +79,69 @@ collapse_acs_variables <- function(data,
     data <- dplyr::group_by(data, .data[[label_col]])
   }
 
-  dplyr::summarise(
-    data,
-    "{variable_col}" := list(unique(.data[[variable_col]])),
-    estimate = round(sum(estimate, na.rm = na.rm), digits = digits),
-    moe = round(
-      tidycensus::moe_sum(moe, estimate = estimate, na.rm = na.rm),
-      digits = digits
-    ),
-    perc_estimate = round(sum(perc_estimate, na.rm = na.rm), digits = digits),
-    perc_moe = round(
-      tidycensus::moe_sum(perc_moe, estimate = perc_estimate, na.rm = na.rm),
-      digits = digits
-    ),
-    dplyr::across(
-      -dplyr::any_of(c(name_col, label_col, variable_col, "estimate", "moe")),
-      function(x) {
-        list(unique(x))
-      }
-    ),
-    .groups = "drop"
-  )
+  # TODO: Expose extensive parameter after implementing weighted mean summary
+  extensive <- TRUE
+
+  perc_cols <- paste0("perc_", c(value_col, moe_col))
+
+  # FIXME: Parameterize this code with across to allow for cases when the
+  # perc_cols are not available and avoid this awkward if
+  if (extensive && all(has_name(data, perc_cols))) {
+    data <- dplyr::summarise(
+      data,
+      "{variable_col}" := list(unique(.data[[variable_col]])),
+      "{value_col}" := round(sum(.data[[value_col]], na.rm = na.rm), digits = digits),
+      "{moe_col}" := round(
+        tidycensus::moe_sum(.data[[moe_col]], estimate = .data[[value_col]], na.rm = na.rm),
+        digits = digits
+      ),
+      "{perc_cols[[1]]}" := round(sum(.data[[perc_cols[[1]]]], na.rm = na.rm), digits = digits),
+      "{perc_cols[[2]]}" := round(
+        tidycensus::moe_sum(.data[[perc_cols[[2]]]], estimate = .data[[perc_cols[[1]]]], na.rm = na.rm),
+        digits = digits
+      ),
+      dplyr::across(
+        -dplyr::any_of(c(name_col, label_col, variable_col, value_col, moe_col, perc_cols)),
+        function(x) {
+          list(unique(x))
+        }
+      ),
+      .groups = "drop"
+    )
+  } else if (extensive) {
+    data <- dplyr::summarise(
+      data,
+      "{variable_col}" := list(unique(.data[[variable_col]])),
+      "{value_col}" := round(sum(.data[[value_col]], na.rm = na.rm), digits = digits),
+      "{moe_col}" := round(
+        tidycensus::moe_sum(.data[[moe_col]], estimate = .data[[value_col]], na.rm = na.rm),
+        digits = digits
+      ),
+      dplyr::across(
+        -dplyr::any_of(c(name_col, label_col, variable_col, value_col, moe_col)),
+        function(x) {
+          list(unique(x))
+        }
+      ),
+      .groups = "drop"
+    )
+  } else {
+    data <- dplyr::summarise(
+      data,
+      "{variable_col}" := list(unique(.data[[variable_col]])),
+      # FIXME: This could be a weighted mean if some valid weight is included in
+      # the dataset. As is, these values may be invalid if the relative size of
+      # the collapsed groups is very different.
+      "{value_col}" := round(mean(.data[[value_col]], na.rm = na.rm), digits = digits),
+      dplyr::across(
+        -dplyr::any_of(c(name_col, label_col, variable_col, value_col, moe_col)),
+        function(x) {
+          list(unique(x))
+        }
+      ),
+      .groups = "drop"
+    )
+  }
+
+  data
 }

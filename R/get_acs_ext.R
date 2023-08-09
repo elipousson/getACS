@@ -455,7 +455,7 @@ acs_table_variables <- function(table = NULL,
       year,
       "column",
       table = table,
-      call = error_call,
+      error_call = error_call,
       quiet = TRUE
     )
 
