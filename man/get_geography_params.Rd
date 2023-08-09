@@ -10,6 +10,7 @@ get_geography_params(
   state = NULL,
   county = NULL,
   allow_decennial = FALSE,
+  ...,
   call = caller_env()
 )
 }

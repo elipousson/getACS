@@ -88,6 +88,8 @@ get_acs_table_alert <- function(...) {
 #' @inheritDotParams tidycensus::get_acs
 #' @param label If `TRUE` (default), label the returned ACS data with
 #'   [label_acs_metadata()] before returning the data frame.
+#' @param return_geography If `TRUE` (default), bind geography and any supplied
+#'   county or state columns to the returned data frame.
 #' @inheritParams label_acs_metadata
 #' @inheritParams cli_quiet
 #' @inheritParams rlang::args_error_context
@@ -120,6 +122,7 @@ get_acs_tables <- function(geography,
                            ...,
                            label = TRUE,
                            perc = TRUE,
+                           return_geography = TRUE,
                            geoid_col = "GEOID",
                            quiet = FALSE,
                            call = caller_env()) {
@@ -162,6 +165,14 @@ get_acs_tables <- function(geography,
   )
 
   acs_data <- purrr::list_rbind(acs_list)
+
+  if (return_geography) {
+    acs_data <- vctrs::vec_cbind(
+      acs_data,
+      as.data.frame(do.call(cbind, get_geography_params(geography = geography, year = year, ...))),
+      .error_call = call
+    )
+  }
 
   if (identical(params[["output"]], "wide") && label) {
     cli::cli_warn(
@@ -312,11 +323,15 @@ get_acs_geography <- function(geography,
     )
   }
 
-  vctrs::vec_cbind(
-    acs_data,
-    as.data.frame(do.call(cbind, params)),
-    .error_call = call
-  )
+  # FIXME: Double-check but this should no longer be needed now that
+  # get_acs_tables does this by default
+  # vctrs::vec_cbind(
+  #   acs_data,
+  #   as.data.frame(do.call(cbind, params)),
+  #   .error_call = call
+  # )
+
+  acs_data
 }
 
 #' Get geography parameters
@@ -341,6 +356,7 @@ get_geography_params <- function(geography,
                                  state = NULL,
                                  county = NULL,
                                  allow_decennial = FALSE,
+                                 ...,
                                  call = caller_env()) {
   check_string(geography, allow_empty = FALSE, call = call)
 
