@@ -40,3 +40,23 @@
 #' }
 #' @details <https://www.census.gov/programs-surveys/acs/data/data-tables/table-ids-explained.html>
 "race_iteration"
+
+#' ACS Jam Values for Medians
+#'
+#' Reference table of ACS "jam values" for medians from "Table 5.2. Jam Values
+#' for Medians," *Understanding and Using American Community Survey Data: What
+#' All Data Users Need to Know* (2020). `type` and `units` values are added.
+#' `year` is included to account for the possibility of alternate jam values for
+#' earlier or later years but annual variation in values has not been checked.
+#'
+#' @format A data frame with 20 rows and 6 variables:
+#' \describe{
+#'   \item{`value`}{Estimate value}
+#'   \item{`meaning`}{Meaning of estimate value}
+#'   \item{`use`}{Subjects/tables where jam value is used}
+#'   \item{`type`}{Type (minimum or maximum jam value)}
+#'   \item{`units`}{Units. Note year is for a specific year, years is for duration.}
+#'   \item{`year`}{Year applicable}
+#'}
+#' @details <https://docs.google.com/spreadsheets/d/1YX3NBDkkoDXHs88KDfPS_QoS9-1j_C_q8UAyjPznfzA/edit?usp=sharing>
+"jam_values"
