@@ -2,12 +2,13 @@
 % Please edit documentation in R/join_acs.R
 \name{join_acs_geography_ratio}
 \alias{join_acs_geography_ratio}
-\title{Join parent column titles to ACS data based on parent column ID values}
+\title{Join ACS data from a single reference geography by variable to calculate a
+ratio value based on the reference geography data}
 \usage{
 join_acs_geography_ratio(
   data,
-  column_col = "variable",
-  estimate_col = "estimate",
+  variable_col = "variable",
+  value_col = "estimate",
   moe_col = "moe",
   geography = "county",
   na_matches = "never",
@@ -17,10 +18,7 @@ join_acs_geography_ratio(
 \arguments{
 \item{data}{A data frame with column names matching the supplied parameters.}
 
-\item{column_col}{Variable column name to join as join variable, Default:
-'variable'}
-
-\item{estimate_col, moe_col}{Estimate and margin of error column names,
+\item{value_col, moe_col}{Estimate and margin of error column names,
 Default: 'estimate' and 'moe'}
 
 \item{geography}{Value in geography column to use as comparison values,
@@ -38,6 +36,9 @@ for database sources and to \code{base::merge(incomparables = NA)}.
 \item{digits}{integer indicating the number of decimal places
     (\code{round}) or significant digits (\code{signif}) to be used.
     For \code{round}, negative values are allowed (see \sQuote{Details}).}
+
+\item{column_col}{Variable column name to join as join variable, Default:
+'variable'}
 }
 \value{
 A data frame with new estimate and moe columns prefixed with

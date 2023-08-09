@@ -93,7 +93,8 @@ join_acs_denominator <- function(data,
   )
 }
 
-#' Join parent column titles to ACS data based on parent column ID values
+#' Join ACS data from a single reference geography by variable to calculate a
+#' ratio value based on the reference geography data
 #'
 #' [join_acs_prop()] uses data from [get_acs_geographies()] to support the
 #' calculation of proportions join parent column titles to a data frame of ACS
@@ -102,7 +103,7 @@ join_acs_denominator <- function(data,
 #' @param data A data frame with column names matching the supplied parameters.
 #' @param column_col Variable column name to join as join variable, Default:
 #'   'variable'
-#' @param estimate_col,moe_col Estimate and margin of error column names,
+#' @param value_col,moe_col Estimate and margin of error column names,
 #'   Default: 'estimate' and 'moe'
 #' @param geography Value in geography column to use as comparison values,
 #'   Default: 'county'
@@ -116,24 +117,26 @@ join_acs_denominator <- function(data,
 #' @importFrom dplyr filter select left_join join_by mutate across all_of
 #' @importFrom tidycensus moe_ratio
 join_acs_geography_ratio <- function(data,
-                                     column_col = "variable",
-                                     estimate_col = "estimate",
+                                     variable_col = "variable",
+                                     value_col = "estimate",
                                      moe_col = "moe",
                                      geography = "county",
                                      na_matches = "never",
                                      digits = 2) {
   stopifnot(
-    all(has_name(data, c(column_col, estimate_col, moe_col, "geography")))
+    all(has_name(data, c(variable_col, value_col, moe_col, "geography")))
   )
 
-  geography_estimate_col <- paste0(geography, "_", estimate_col)
+  check_string(geography, allow_empty = FALSE)
+
+  geography_value_col <- paste0(geography, "_", value_col)
   geography_moe_col <- paste0(geography, "_", moe_col)
 
   comparison_data <- data |>
     dplyr::filter(.data[["geography"]] %in% {{ geography }}) |>
     dplyr::select(
-      all_of(column_col),
-      "{geography_estimate_col}" := all_of(estimate_col),
+      all_of(variable_col),
+      "{geography_value_col}" := all_of(value_col),
       "{geography_moe_col}" := all_of(moe_col)
     )
 
@@ -141,40 +144,28 @@ join_acs_geography_ratio <- function(data,
     nrow(comparison_data) > 0
   )
 
-  geography_values <- unique(comparison_data[[geography]])
-
-  if (length(geography_values) > 1) {
-    cli_abort(
-      c(
-        "Calculating a proportion requires the input data include only a
-      single {.val {geography}} value",
-        "{.arg data} values for {.val {geography}} include {.val {geography_values}}"
-      )
-    )
-  }
-
   data <- dplyr::left_join(
     data,
     comparison_data,
-    by = dplyr::join_by({{ column_col }}),
+    by = dplyr::join_by({{ variable_col }}),
     na_matches = na_matches
   )
 
-  ratio_estimate_col <- paste0("ratio_", estimate_col)
+  ratio_value_col <- paste0("ratio_", value_col)
   ratio_moe_col <- paste0("ratio_", moe_col)
 
-  if (any(has_name(data, c(ratio_estimate_col, ratio_moe_col)))) {
+  if (any(has_name(data, c(ratio_value_col, ratio_moe_col)))) {
     cli_warn(
-      "{.arg data} already contains columns named {ratio_estimate_col} or {ratio_moe_col}",
+      "{.arg data} already contains columns named {ratio_value_col} or {ratio_moe_col}",
       "i" = "These values will be over-written by this function."
     )
   }
 
   data <- dplyr::mutate(
     data,
-    "{ratio_estimate_col}" := .data[[estimate_col]] / .data[[geography_estimate_col]],
+    "{ratio_value_col}" := .data[[value_col]] / .data[[geography_value_col]],
     "{ratio_moe_col}" := tidycensus::moe_ratio(
-      .data[[estimate_col]], .data[[geography_estimate_col]],
+      .data[[estimate_col]], .data[[geography_value_col]],
       .data[[moe_col]], .data[[geography_moe_col]]
     ),
     .after = all_of(moe_col)
@@ -183,7 +174,7 @@ join_acs_geography_ratio <- function(data,
   dplyr::mutate(
     data,
     dplyr::across(
-      dplyr::all_of(c(ratio_estimate_col, ratio_moe_col)),
+      dplyr::all_of(c(ratio_value_col, ratio_moe_col)),
       function(x) {
         round(x, digits = digits)
       }
