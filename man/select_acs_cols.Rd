@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{select_acs_cols}
 \alias{select_acs_cols}
-\title{Select columns for a gt table based on ACS data}
+\title{Select columns for a gt table based on ACS data using \code{dplyr::select()}}
 \usage{
 select_acs_cols(
   data,
@@ -35,5 +35,5 @@ columns. Defaults to "denominator"}
 with the text from denominator_start}
 }
 \description{
-Select columns for a gt table based on ACS data
+Select columns for a gt table based on ACS data using \code{dplyr::select()}
 }

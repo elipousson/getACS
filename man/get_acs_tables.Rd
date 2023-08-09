@@ -15,6 +15,7 @@ get_acs_tables(
   ...,
   label = TRUE,
   perc = TRUE,
+  return_geography = TRUE,
   geoid_col = "GEOID",
   quiet = FALSE,
   call = caller_env()
@@ -117,6 +118,9 @@ what is returned by the API directly. Defaults to FALSE.}
 each estimate as a percent share of the denominator value and use
 \code{\link[tidycensus:moe_prop]{tidycensus::moe_prop()}} to calculate a new margin of error for the percent
 estimate.}
+
+\item{return_geography}{If \code{TRUE} (default), bind geography and any supplied
+county or state columns to the returned data frame.}
 
 \item{geoid_col}{A GeoID column name to use if perc is \code{TRUE}, Defaults to
 'GEOID'.}

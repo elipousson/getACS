@@ -1,7 +1,9 @@
-#' Filter American Community Survey data by table, variables, or other attributes
+#' Filter American Community Survey data by table, variables, or other
+#' attributes using `dplyr::filter()`
 #'
-#' A data frame of American Community Survey data enriched with table and column
-#' metadata using the [label_acs_metadata()] function.
+#' [filter_acs()] helps to filter a data frame of American Community Survey data
+#' enriched with table and column metadata using the [label_acs_metadata()]
+#' function using [dplyr::filter()].
 #'
 #' @param data A data frame with a "table_id", "variable", and "column_title"
 #'   columns.
@@ -11,6 +13,8 @@
 #'   (or if data only contains data for a single table), numeric values are
 #'   allowed for vars and drop_vars (e.g. if table is "B14001" and vars is 2
 #'   data is filtered to variable "B14001_002").
+#' @param geography Geography values to filter by.
+#' @param variable_col Variable column name. Defaults to "variable".
 #' @keywords internal
 #' @seealso
 #'  [dplyr::filter()]
@@ -23,7 +27,8 @@ filter_acs <- function(data,
                        column = NULL,
                        vars = NULL,
                        drop_vars = NULL,
-                       geography = NULL) {
+                       geography = NULL,
+                       variable_col = "variable") {
   if (!is_null(geography)) {
     stopifnot(
       has_name(data, "geography")
@@ -45,7 +50,7 @@ filter_acs <- function(data,
 
   if (!is_null(drop_vars)) {
     stopifnot(
-      has_name(data, "variable")
+      has_name(data, variable_col)
     )
 
     if (!is.character(drop_vars)) {
@@ -58,13 +63,13 @@ filter_acs <- function(data,
 
     data <- dplyr::filter(
       data,
-      !(.data[["variable"]] %in% drop_vars)
+      !(.data[[variable_col]] %in% drop_vars)
     )
   }
 
   if (!is_null(vars)) {
     stopifnot(
-      has_name(data, "variable")
+      has_name(data, variable_col)
     )
 
     if (!is.character(vars)) {
@@ -77,7 +82,7 @@ filter_acs <- function(data,
 
     data <- dplyr::filter(
       data,
-      .data[["variable"]] %in% vars
+      .data[[variable_col]] %in% vars
     )
   }
 

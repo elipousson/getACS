@@ -2,7 +2,8 @@
 % Please edit documentation in R/filter_acs.R
 \name{filter_acs}
 \alias{filter_acs}
-\title{Filter American Community Survey data by table, variables, or other attributes}
+\title{Filter American Community Survey data by table, variables, or other
+attributes using \code{dplyr::filter()}}
 \usage{
 filter_acs(
   data,
@@ -11,7 +12,8 @@ filter_acs(
   column = NULL,
   vars = NULL,
   drop_vars = NULL,
-  geography = NULL
+  geography = NULL,
+  variable_col = "variable"
 )
 }
 \arguments{
@@ -26,10 +28,15 @@ columns.}
 (or if data only contains data for a single table), numeric values are
 allowed for vars and drop_vars (e.g. if table is "B14001" and vars is 2
 data is filtered to variable "B14001_002").}
+
+\item{geography}{Geography values to filter by.}
+
+\item{variable_col}{Variable column name. Defaults to "variable".}
 }
 \description{
-A data frame of American Community Survey data enriched with table and column
-metadata using the \code{\link[=label_acs_metadata]{label_acs_metadata()}} function.
+\code{\link[=filter_acs]{filter_acs()}} helps to filter a data frame of American Community Survey data
+enriched with table and column metadata using the \code{\link[=label_acs_metadata]{label_acs_metadata()}}
+function using \code{\link[dplyr:filter]{dplyr::filter()}}.
 }
 \seealso{
 \code{\link[dplyr:filter]{dplyr::filter()}}

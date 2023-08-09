@@ -77,7 +77,7 @@ check_has_name <- function(x,
   cli_abort(msg, call = call)
 }
 
-#' Select columns for a gt table based on ACS data
+#' Select columns for a gt table based on ACS data using `dplyr::select()`
 #'
 #' @inheritParams gt_acs
 #' @param ... Additional parameters passed to [dplyr::select()]
