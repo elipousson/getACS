@@ -21,7 +21,7 @@ reference:
   contents:
   - starts_with("acs_")
   - starts_with("join_acs_")
-  - '`collapse_acs_variables()`'
+  - '`collapse_acs_variables`'
   - '`select_acs_cols`'
   - '`filter_acs`'
 - title: Reference data
