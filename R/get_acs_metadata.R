@@ -100,6 +100,7 @@ get_acs_metadata <- function(survey = "acs5",
 #'   each estimate as a percent share of the denominator value and use
 #'   [tidycensus::moe_prop()] to calculate a new margin of error for the percent
 #'   estimate.
+#' @param variable_col Variable column name. Defaults to "variable"
 #' @inheritParams join_acs_percent
 #' @inheritParams get_acs_metadata
 #' @seealso [join_acs_percent()]
@@ -110,10 +111,11 @@ label_acs_metadata <- function(data,
                                survey = "acs5",
                                year = 2021,
                                perc = TRUE,
-                               geoid_col = "GEOID") {
-  data <- label_acs_table_metadata(data, survey, year)
+                               geoid_col = "GEOID",
+                               variable_col = "variable") {
+  data <- label_acs_table_metadata(data, survey, year, variable_col = variable_col)
 
-  data <- label_acs_column_metadata(data, survey, year)
+  data <- label_acs_column_metadata(data, survey, year, variable_col = variable_col)
 
   if (perc && all(has_name(data, geoid_col))) {
     data <- join_acs_percent(data, geoid_col = geoid_col)
@@ -130,17 +132,18 @@ label_acs_metadata <- function(data,
 #' @importFrom stringr str_detect
 label_acs_table_metadata <- function(data,
                                      survey = "acs5",
-                                     year = 2021) {
+                                     year = 2021,
+                                     variable_col = "variable") {
   stopifnot(
-    has_name(data, "variable")
+    has_name(data, variable_col)
   )
 
   table_metadata <- get_acs_metadata(survey, year, metadata = "table")
 
   data <- dplyr::mutate(
     data,
-    table_id = str_table_id(variable),
-    .after = dplyr::all_of("variable")
+    table_id = str_table_id(.data[[variable_col]]),
+    .after = dplyr::all_of(variable_col)
   )
 
   data <- dplyr::left_join(data, table_metadata, by = dplyr::join_by(table_id))
@@ -187,18 +190,19 @@ join_acs_race_iteration <- function(data) {
 #' @importFrom stringr str_extract str_remove
 label_acs_column_metadata <- function(data,
                                       survey = "acs5",
-                                      year = 2021) {
+                                      year = 2021,
+                                      variable_col = "variable") {
   column_metadata <- get_acs_metadata(survey, year, metadata = "column")
 
   stopifnot(
-    has_name(data, "variable")
+    has_name(data, variable_col)
   )
 
   data <- dplyr::mutate(
     data,
-    table_id = stringr::str_extract(variable, ".+(?=_)"),
-    column_id = stringr::str_remove(variable, "_"),
-    .after = dplyr::all_of("variable")
+    table_id = str_table_id(.data[[variable_col]]),
+    column_id = stringr::str_remove(.data[[variable_col]], "_"),
+    .after = dplyr::all_of(variable_col)
   )
 
   data <- dplyr::left_join(

@@ -19,6 +19,7 @@ make_area_xwalk(
   by = c(TRACTCE20 = "TRACTCE"),
   suffix = c("_block", "_tract"),
   digits = 2,
+  extensive = TRUE,
   add_coverage = TRUE,
   erase_water = FALSE,
   keep_geometry = FALSE,
@@ -29,13 +30,17 @@ make_area_xwalk(
 use_area_xwalk(
   data,
   area_xwalk,
+  geography = "area",
   name_col = "NAME",
   geoid_col = "GEOID",
   suffix = c("_area", ""),
-  weight_col = "HOUSING20",
-  geography = "area",
+  weight_col = "perc_HOUSING20",
+  variable_col = "variable",
+  value_col = "estimate",
+  moe_col = "moe",
   digits = 0,
   perc = TRUE,
+  extensive = TRUE,
   ...
 )
 }
@@ -58,7 +63,11 @@ Can also be a county name or vector of names.}
 
 \item{name_col}{Name column in area.}
 
-\item{weight_col}{Column name to use for weighting}
+\item{weight_col}{Column name in input block_xwalk to use for weighting.
+Generated weight_col used by \code{\link[=use_area_xwalk]{use_area_xwalk()}} should be the same as the
+weight_col for \code{\link[=make_area_xwalk]{make_area_xwalk()}} but include the "perc_" prefix. Defaults
+to "HOUSING20" for \code{\link[=make_block_xwalk]{make_block_xwalk()}} and "perc_HOUSING20" for
+\code{\link[=use_area_xwalk]{use_area_xwalk()}}.}
 
 \item{geoid_col, tract_col}{GeoID for Census tract and Census tract ID column
 in block_xwalk}
@@ -98,6 +107,12 @@ Should be a character vector of length 2.}
 
 \item{digits}{Digits to use for percent share of weight value.}
 
+\item{extensive}{If \code{TRUE} (default) calculate new estimate values as
+weighted sums and re-calculate margin of error with
+\code{\link[tidycensus:moe_sum]{tidycensus::moe_sum()}}. If \code{FALSE}, calculate new estimate values as
+weighted means (appropriate for ACS median variables) and drop the margin
+of error. \code{perc} is also always set to \code{FALSE} if extensive is \code{FALSE}.}
+
 \item{add_coverage}{If \code{TRUE} (default), it is assumed that area does not
 cover the full extent of the block_xwalk and an additional feature is added
 with the difference between the unioned area geometry and unioned
@@ -124,6 +139,11 @@ set to a projected CRS if input area data is in a geographic CRS.}
 \item{geography}{A character string used as general description for area
 geography type. Defaults to "area" but typical values could include
 "neighborhood", "planning district", or "service area".}
+
+\item{variable_col}{Variable column name. Defaults to "variable"}
+
+\item{value_col, moe_col}{Value and margin of error column names (defaults to
+"estimate" and "moe").}
 
 \item{perc}{If \code{TRUE} (default), use the denominator column ID to calculate
 each estimate as a percent share of the denominator value and use

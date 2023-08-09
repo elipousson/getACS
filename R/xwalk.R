@@ -85,7 +85,11 @@ make_block_xwalk <- function(state,
 #'   add_coverage should be set to `TRUE` (default).
 #' @param block_xwalk Block-tract crosswalk sf object. If `NULL`, state is
 #'   required to create a crosswalk using [make_block_xwalk()]
-#' @param weight_col Column name to use for weighting
+#' @param weight_col Column name in input block_xwalk to use for weighting.
+#'   Generated weight_col used by [use_area_xwalk()] should be the same as the
+#'   weight_col for [make_area_xwalk()] but include the "perc_" prefix. Defaults
+#'   to "HOUSING20" for [make_block_xwalk()] and "perc_HOUSING20" for
+#'   [use_area_xwalk()].
 #' @param name_col Name column in area.
 #' @param geoid_col,tract_col GeoID for Census tract and Census tract ID column
 #'   in block_xwalk
@@ -124,6 +128,7 @@ make_area_xwalk <- function(area,
                             by = c("TRACTCE20" = "TRACTCE"),
                             suffix = c("_block", "_tract"),
                             digits = 2,
+                            extensive = TRUE,
                             add_coverage = TRUE,
                             erase_water = FALSE,
                             keep_geometry = FALSE,
@@ -294,6 +299,13 @@ st_make_valid_union <- function(x, is_coverage = TRUE) {
 #' @param geography A character string used as general description for area
 #'   geography type. Defaults to "area" but typical values could include
 #'   "neighborhood", "planning district", or "service area".
+#' @param value_col,moe_col Value and margin of error column names (defaults to
+#'   "estimate" and "moe").
+#' @param extensive If `TRUE` (default) calculate new estimate values as
+#'   weighted sums and re-calculate margin of error with
+#'   [tidycensus::moe_sum()]. If `FALSE`, calculate new estimate values as
+#'   weighted means (appropriate for ACS median variables) and drop the margin
+#'   of error. `perc` is also always set to `FALSE` if extensive is `FALSE`.
 #' @rdname make_area_xwalk
 #' @inheritParams label_acs_metadata
 #' @export
@@ -302,24 +314,28 @@ st_make_valid_union <- function(x, is_coverage = TRUE) {
 #' @importFrom tidycensus moe_sum
 use_area_xwalk <- function(data,
                            area_xwalk,
+                           geography = "area",
                            name_col = "NAME",
                            geoid_col = "GEOID",
                            suffix = c("_area", ""),
-                           weight_col = "HOUSING20",
-                           geography = "area",
+                           weight_col = "perc_HOUSING20",
+                           variable_col = "variable",
+                           value_col = "estimate",
+                           moe_col = "moe",
                            digits = 0,
                            perc = TRUE,
+                           extensive = TRUE,
                            ...) {
   check_data_frame(area_xwalk)
   check_data_frame(data)
-  check_has_name(area_xwalk, c(geoid_col, paste0("perc_", weight_col)))
-  check_has_name(data, c(geoid_col, "variable", "estimate", "moe"))
+  check_has_name(area_xwalk, c(geoid_col, weight_col))
+  check_has_name(data, c(geoid_col, variable_col, value_col, moe_col))
 
   cli::cli_progress_step("Joining {.arg data} to {.arg area_xwalk}")
 
   data <- dplyr::select(
     data,
-    dplyr::all_of(c(geoid_col, "variable", "estimate", "moe"))
+    dplyr::all_of(c(geoid_col, variable_col, value_col, moe_col))
     )
 
   area_data <- dplyr::left_join(
@@ -332,18 +348,34 @@ use_area_xwalk <- function(data,
 
   cli::cli_progress_step("Summarizing {.arg data} by {geography}")
 
-  area_data <- dplyr::summarise(
-    area_data,
-    estimate = round(
-      sum(estimate * .data[[paste0("perc_", weight_col)]], na.rm = TRUE),
+  if (extensive) {
+    area_data <- summarise_weighted_sum(
+      area_data,
+      weight_col = weight_col,
+      variable_col = variable_col,
+      value_col = value_col,
+      moe_col = moe_col,
+      name_col = name_col,
       digits = digits
-    ),
-    moe = round(
-      tidycensus::moe_sum(moe, estimate * .data[[paste0("perc_", weight_col)]]),
+    )
+  } else {
+    area_data <- summarise_weighted_mean(
+      area_data,
+      weight_col = weight_col,
+      variable_col = variable_col,
+      value_col = value_col,
+      moe_col = moe_col,
+      name_col = name_col,
       digits = digits
-    ),
-    .by = dplyr::all_of(c(name_col, "variable"))
-  )
+    )
+
+    if (perc) {
+      perc <- FALSE
+      cli_alert_warning(
+        "{.arg perc} must be {.code FALSE} if {.arg extensive} is {.code FALSE}"
+      )
+    }
+  }
 
   area_data[["geography"]] <- geography
 
@@ -351,3 +383,54 @@ use_area_xwalk <- function(data,
     label_acs_metadata(area_data, perc = perc, geoid_col = name_col)
   )
 }
+
+
+#' @noRd
+summarise_weighted_sum <- function(data,
+                                   weight_col = "perc_HOUSING20",
+                                   name_col = "NAME",
+                                   variable_col = "variable",
+                                   value_col = "estimate",
+                                   moe_col = "moe",
+                                   na.rm = TRUE,
+                                   digits = 2) {
+
+  dplyr::summarise(
+    data,
+    "{value_col}" := round(
+      sum(.data[[value_col]] * .data[[weight_col]], na.rm = na.rm),
+      digits = digits
+    ),
+    "{moe_col}" := round(
+      tidycensus::moe_sum(.data[[moe_col]], .data[[value_col]] * .data[[weight_col]]),
+      digits = digits
+    ),
+    .by = dplyr::all_of(c(name_col, variable_col))
+  )
+}
+
+#' @noRd
+summarise_weighted_mean <- function(data,
+                                    weight_col = "perc_HOUSING20",
+                                    name_col = "NAME",
+                                    variable_col = "variable",
+                                    value_col = "estimate",
+                                    moe_col = "moe",
+                                    na.rm = TRUE,
+                                    digits = 2) {
+  dplyr::summarise(
+    data,
+    "{value_col}" := round(
+      weighted.mean(.data[[value_col]], w = .data[[weight_col]], na.rm = na.rm),
+      digits = digits
+    ),
+    # FIXME: Explore options to calculate an interpolated MOE per this method:
+    # https://github.com/datadesk/census-data-aggregator#approximating-medians
+    # "{moe_col}" := round(
+    #   weighted.mean(.data[[moe_col]], w = data[[paste0("perc_", weight_col)]], na.rm = na.rm),
+    #   digits = digits
+    # ),
+    .by = dplyr::all_of(c(name_col, variable_col))
+  )
+}
+

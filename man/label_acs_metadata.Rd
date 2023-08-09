@@ -12,12 +12,23 @@ label_acs_metadata(
   survey = "acs5",
   year = 2021,
   perc = TRUE,
-  geoid_col = "GEOID"
+  geoid_col = "GEOID",
+  variable_col = "variable"
 )
 
-label_acs_table_metadata(data, survey = "acs5", year = 2021)
+label_acs_table_metadata(
+  data,
+  survey = "acs5",
+  year = 2021,
+  variable_col = "variable"
+)
 
-label_acs_column_metadata(data, survey = "acs5", year = 2021)
+label_acs_column_metadata(
+  data,
+  survey = "acs5",
+  year = 2021,
+  variable_col = "variable"
+)
 }
 \arguments{
 \item{data}{A data frame downloaded with \code{\link[tidycensus:get_acs]{tidycensus::get_acs()}}.}
@@ -33,6 +44,8 @@ estimate.}
 
 \item{geoid_col}{A GeoID column name to use if perc is \code{TRUE}, Defaults to
 'GEOID'.}
+
+\item{variable_col}{Variable column name. Defaults to "variable"}
 }
 \description{
 Label American Community Survey data using table and column metadata from

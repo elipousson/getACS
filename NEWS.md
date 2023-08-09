@@ -1,7 +1,8 @@
 # getACS (development version)
 
-* Add `jam_values` reference data
+* Add `jam_values` reference data.
 * Add `collapse_acs_variables()` helper function.
+* Add `extensive` parameter to `use_area_xwalk()` to support calculation of weighted mean estimates.
 * Fix errors due to invalid geometry in `make_block_xwalk()` and `make_area_xwalk()` functions.
 
 # getACS 0.1.1
