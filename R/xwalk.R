@@ -9,11 +9,14 @@
 #' to use this crosswalk data frame with [make_area_xwalk()].
 #'
 #' @inheritParams tigris::blocks
-#' @inheritParams dplyr::left_join
+#' @param by Specification of join variables in the format of c("block column
+#'   name for tract" = "tract column name"). Passed to [dplyr::left_join()].
 #' @inheritDotParams tigris::blocks
 #' @param keep_zipped_shapefile Passed to [tigris::blocks()] and
 #'   [tigris::tracts()] to keep and re-use the zipped shapefile.
 #' @param crs Coordinate reference system to return.
+#' @param ... Additional parameters passed to [tigris::blocks()] and
+#'   [tigris::tracts()].
 #' @export
 #' @importFrom cli cli_progress_step
 #' @importFrom tigris blocks tracts
@@ -106,6 +109,7 @@ make_block_xwalk <- function(state,
 #'   geometry as the input area.
 #' @param crs Coordinate reference system to use for input data. Recommended to
 #'   set to a projected CRS if input area data is in a geographic CRS.
+#' @param ... Passed to [make_block_xwalk()].
 #' @returns A tibble or a sf object.
 #' @seealso [tidycensus::interpolate_pw()], [areal::aw_interpolate()]
 #' @export
@@ -181,13 +185,24 @@ make_area_xwalk <- function(area,
 
     coverage_name <- tempfile(tmpdir = "")
 
-    area_coverage <- st_make_valid_coverage(block_xwalk, area)
+    area_coverage <- try_fetch(
+      st_make_valid_coverage(block_xwalk, area),
+      error = function(cnd) {
+        cli_abort(
+          c("Valid spatial coverage for the area of {.arg block_xwalk} outside the {.arg area_xwalk} can't be created.",
+            "*" = "Set {.code add_coverage = FALSE} and try again."
+          ),
+          parent = cnd
+        )
+      }
+    )
 
     if (is_empty(area_coverage)) {
       cli_abort(
         c("{.arg area} is not covered by {.arg block_xwalk}",
           "i" = "Supply a {.arg block_xwalk} covering the full geometry of
-          {.arg area} or set {.arg add_coverage} to {.code FALSE}")
+          {.arg area} or set {.arg add_coverage} to {.code FALSE}"
+        )
       )
     }
 
@@ -324,8 +339,7 @@ use_area_xwalk <- function(data,
                            moe_col = "moe",
                            digits = 0,
                            perc = TRUE,
-                           extensive = TRUE,
-                           ...) {
+                           extensive = TRUE) {
   check_data_frame(area_xwalk)
   check_data_frame(data)
   check_has_name(area_xwalk, c(geoid_col, weight_col))
@@ -336,7 +350,7 @@ use_area_xwalk <- function(data,
   data <- dplyr::select(
     data,
     dplyr::all_of(c(geoid_col, variable_col, value_col, moe_col))
-    )
+  )
 
   area_data <- dplyr::left_join(
     area_xwalk,
@@ -394,7 +408,6 @@ summarise_weighted_sum <- function(data,
                                    moe_col = "moe",
                                    na.rm = TRUE,
                                    digits = 2) {
-
   dplyr::summarise(
     data,
     "{value_col}" := round(
@@ -433,4 +446,3 @@ summarise_weighted_mean <- function(data,
     .by = dplyr::all_of(c(name_col, variable_col))
   )
 }
-
