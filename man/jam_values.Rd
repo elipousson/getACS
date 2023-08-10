@@ -20,10 +20,10 @@ jam_values
 }
 \description{
 Reference table of ACS "jam values" for medians from "Table 5.2. Jam Values
-for Medians," \emph{Understanding and Using American Community Survey Data: What
-All Data Users Need to Know} (2020). \code{type} and \code{units} values are added.
-\code{year} is included to account for the possibility of alternate jam values for
-earlier or later years but annual variation in values has not been checked.
+for Medians," \emph{\href{https://www.census.gov/programs-surveys/acs/library/handbooks/general.html}{Understanding and Using American Community Survey Data: What All Data Users Need to Know}}
+(2020). \code{type} and \code{units} values are added. \code{year} is included to account
+for the possibility of alternate jam values for earlier or later years but
+annual variation in values has not been checked.
 }
 \details{
 \url{https://docs.google.com/spreadsheets/d/1YX3NBDkkoDXHs88KDfPS_QoS9-1j_C_q8UAyjPznfzA/edit?usp=sharing}

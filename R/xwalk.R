@@ -11,6 +11,8 @@
 #' @inheritParams tigris::blocks
 #' @param by Specification of join variables in the format of c("block column
 #'   name for tract" = "tract column name"). Passed to [dplyr::left_join()].
+#' @param suffix Suffixes added to the output to disambiguate column names from
+#'   the block and tract data. Unused for 2020 data.
 #' @inheritDotParams tigris::blocks
 #' @param keep_zipped_shapefile Passed to [tigris::blocks()] and
 #'   [tigris::tracts()] to keep and re-use the zipped shapefile.

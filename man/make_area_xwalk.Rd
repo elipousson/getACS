@@ -40,8 +40,7 @@ use_area_xwalk(
   moe_col = "moe",
   digits = 0,
   perc = TRUE,
-  extensive = TRUE,
-  ...
+  extensive = TRUE
 )
 }
 \arguments{
@@ -72,38 +71,11 @@ to "HOUSING20" for \code{\link[=make_block_xwalk]{make_block_xwalk()}} and "perc
 \item{geoid_col, tract_col}{GeoID for Census tract and Census tract ID column
 in block_xwalk}
 
-\item{by}{A join specification created with \code{\link[dplyr:join_by]{join_by()}}, or a character
-vector of variables to join by.
+\item{by}{Specification of join variables in the format of c("block column
+name for tract" = "tract column name"). Passed to \code{\link[dplyr:mutate-joins]{dplyr::left_join()}}.}
 
-If \code{NULL}, the default, \verb{*_join()} will perform a natural join, using all
-variables in common across \code{x} and \code{y}. A message lists the variables so
-that you can check they're correct; suppress the message by supplying \code{by}
-explicitly.
-
-To join on different variables between \code{x} and \code{y}, use a \code{\link[dplyr:join_by]{join_by()}}
-specification. For example, \code{join_by(a == b)} will match \code{x$a} to \code{y$b}.
-
-To join by multiple variables, use a \code{\link[dplyr:join_by]{join_by()}} specification with
-multiple expressions. For example, \code{join_by(a == b, c == d)} will match
-\code{x$a} to \code{y$b} and \code{x$c} to \code{y$d}. If the column names are the same between
-\code{x} and \code{y}, you can shorten this by listing only the variable names, like
-\code{join_by(a, c)}.
-
-\code{\link[dplyr:join_by]{join_by()}} can also be used to perform inequality, rolling, and overlap
-joins. See the documentation at \link[dplyr:join_by]{?join_by} for details on
-these types of joins.
-
-For simple equality joins, you can alternatively specify a character vector
-of variable names to join by. For example, \code{by = c("a", "b")} joins \code{x$a}
-to \code{y$a} and \code{x$b} to \code{y$b}. If variable names differ between \code{x} and \code{y},
-use a named character vector like \code{by = c("x_a" = "y_a", "x_b" = "y_b")}.
-
-To perform a cross-join, generating all combinations of \code{x} and \code{y}, see
-\code{\link[dplyr:cross_join]{cross_join()}}.}
-
-\item{suffix}{If there are non-joined duplicate variables in \code{x} and
-\code{y}, these suffixes will be added to the output to disambiguate them.
-Should be a character vector of length 2.}
+\item{suffix}{Suffixes added to the output to disambiguate column names from
+the block and tract data. Unused for 2020 data.}
 
 \item{digits}{Digits to use for percent share of weight value.}
 
@@ -129,7 +101,7 @@ geometry as the input area.}
 \item{crs}{Coordinate reference system to use for input data. Recommended to
 set to a projected CRS if input area data is in a geographic CRS.}
 
-\item{...}{arguments to be passed to internal function \code{load_tiger}, which is not exported. See Additional Arguments.}
+\item{...}{Passed to \code{\link[=make_block_xwalk]{make_block_xwalk()}}.}
 
 \item{data}{A data frame downloaded with \code{\link[tidycensus:get_acs]{tidycensus::get_acs()}}.}
 
