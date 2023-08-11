@@ -31,8 +31,8 @@ join_acs_percent <- function(data,
     digits = digits
   )
 
-  data |>
-    dplyr::mutate(
+  dplyr::mutate(
+    data,
       perc_estimate = round(estimate / denominator_estimate, digits = digits),
       perc_moe = round(
         tidycensus::moe_prop(
@@ -84,6 +84,10 @@ join_acs_denominator <- function(data,
       denominator_column_title = column_title,
       "{denominator_col}" := dplyr::all_of(column_col)
     )
+
+  if (inherits(denominator_data, "sf")) {
+    denominator_data <- sf::st_drop_geometry(denominator_data)
+  }
 
   dplyr::left_join(
     data,
@@ -144,6 +148,10 @@ join_acs_geography_ratio <- function(data,
     nrow(comparison_data) > 0
   )
 
+  if (inherits(comparison_data, "sf")) {
+    comparison_data <- sf::st_drop_geometry(comparison_data)
+  }
+
   data <- dplyr::left_join(
     data,
     comparison_data,
@@ -165,7 +173,7 @@ join_acs_geography_ratio <- function(data,
     data,
     "{ratio_value_col}" := .data[[value_col]] / .data[[geography_value_col]],
     "{ratio_moe_col}" := tidycensus::moe_ratio(
-      .data[[estimate_col]], .data[[geography_value_col]],
+      .data[[value_col]], .data[[geography_value_col]],
       .data[[moe_col]], .data[[geography_moe_col]]
     ),
     .after = all_of(moe_col)
