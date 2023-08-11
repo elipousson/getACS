@@ -65,6 +65,7 @@ join_acs_denominator <- function(data,
 
   if (nrow(dplyr::filter(
     data,
+    !is.na(.data[[denominator_col]]),
     .data[[denominator_col]] %in% data[[column_col]],
     .data[["indent"]] > 0
   )) > 1) {
@@ -259,6 +260,11 @@ join_tigris_geometry <- function(data,
   )
 
   params[["geography"]] <- NULL
+
+  if (inherits(data, "sf")) {
+    params[["filter_by"]] <- sf::st_bbox(data)
+    data <- sf::st_drop_geometry(data)
+  }
 
   geometry <- switch(geography,
     "tract" = exec(tigris::tracts, !!!params, ..., year = year),
