@@ -40,6 +40,7 @@ areas if that is the case.'><!-- mathjax --><script src="https://cdnjs.cloudflar
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/area_xwalk.html">Interpolating ACS data using an area crosswalk</a>
     <a class="dropdown-item" href="../articles/gt-tables.html">Creating gt tables</a>
     <a class="dropdown-item" href="../articles/introduction.html">Introduction to getACS</a>
   </div>
@@ -94,10 +95,12 @@ areas if that is the case.</p>
 <span>  tract_col <span class="op">=</span> <span class="st">"TRACTCE20"</span>,</span>
 <span>  by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>TRACTCE20 <span class="op">=</span> <span class="st">"TRACTCE"</span><span class="op">)</span>,</span>
 <span>  suffix <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"_block"</span>, <span class="st">"_tract"</span><span class="op">)</span>,</span>
+<span>  placement <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"largest"</span>, <span class="st">"surface"</span>, <span class="st">"centroid"</span><span class="op">)</span>,</span>
 <span>  digits <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>  extensive <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  add_coverage <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  erase_water <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  coverage <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  erase <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  area_threshold <span class="op">=</span> <span class="fl">0.75</span>,</span>
 <span>  keep_geometry <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  crs <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">...</span></span>
@@ -116,8 +119,7 @@ areas if that is the case.</p>
 <span>  moe_col <span class="op">=</span> <span class="st">"moe"</span>,</span>
 <span>  digits <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  perc <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  extensive <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  <span class="va">...</span></span>
+<span>  extensive <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -126,7 +128,7 @@ areas if that is the case.</p>
     <dl><dt>area</dt>
 <dd><p>A sf object with an arbitrary geography overlapping with the
 block_xwalk. Required. If area only partly overlaps with block_xwalk,
-add_coverage should be set to <code>TRUE</code> (default).</p></dd>
+coverage should be set to <code>TRUE</code> (default).</p></dd>
 
 
 <dt>block_xwalk</dt>
@@ -167,34 +169,21 @@ in block_xwalk</p></dd>
 
 
 <dt>by</dt>
-<dd><p>A join specification created with <code><a href="https://dplyr.tidyverse.org/reference/join_by.html" class="external-link">join_by()</a></code>, or a character
-vector of variables to join by.</p>
-<p>If <code>NULL</code>, the default, <code>*_join()</code> will perform a natural join, using all
-variables in common across <code>x</code> and <code>y</code>. A message lists the variables so
-that you can check they're correct; suppress the message by supplying <code>by</code>
-explicitly.</p>
-<p>To join on different variables between <code>x</code> and <code>y</code>, use a <code><a href="https://dplyr.tidyverse.org/reference/join_by.html" class="external-link">join_by()</a></code>
-specification. For example, <code>join_by(a == b)</code> will match <code>x$a</code> to <code>y$b</code>.</p>
-<p>To join by multiple variables, use a <code><a href="https://dplyr.tidyverse.org/reference/join_by.html" class="external-link">join_by()</a></code> specification with
-multiple expressions. For example, <code>join_by(a == b, c == d)</code> will match
-<code>x$a</code> to <code>y$b</code> and <code>x$c</code> to <code>y$d</code>. If the column names are the same between
-<code>x</code> and <code>y</code>, you can shorten this by listing only the variable names, like
-<code>join_by(a, c)</code>.</p>
-<p><code><a href="https://dplyr.tidyverse.org/reference/join_by.html" class="external-link">join_by()</a></code> can also be used to perform inequality, rolling, and overlap
-joins. See the documentation at <a href="https://dplyr.tidyverse.org/reference/join_by.html" class="external-link">?join_by</a> for details on
-these types of joins.</p>
-<p>For simple equality joins, you can alternatively specify a character vector
-of variable names to join by. For example, <code>by = c("a", "b")</code> joins <code>x$a</code>
-to <code>y$a</code> and <code>x$b</code> to <code>y$b</code>. If variable names differ between <code>x</code> and <code>y</code>,
-use a named character vector like <code>by = c("x_a" = "y_a", "x_b" = "y_b")</code>.</p>
-<p>To perform a cross-join, generating all combinations of <code>x</code> and <code>y</code>, see
-<code><a href="https://dplyr.tidyverse.org/reference/cross_join.html" class="external-link">cross_join()</a></code>.</p></dd>
+<dd><p>Specification of join variables in the format of c("block column
+name for tract" = "tract column name"). Passed to <code><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">dplyr::left_join()</a></code>.</p></dd>
 
 
 <dt>suffix</dt>
-<dd><p>If there are non-joined duplicate variables in <code>x</code> and
-<code>y</code>, these suffixes will be added to the output to disambiguate them.
-Should be a character vector of length 2.</p></dd>
+<dd><p>Suffixes added to the output to disambiguate column names from
+the block and tract data. Unused for 2020 data.</p></dd>
+
+
+<dt>placement</dt>
+<dd><p>String with option for joining <code>area</code> and <code>block_xwalk</code>:
+"largest", "surface", or "centroid". "largest" joins the two using
+<code><a href="https://r-spatial.github.io/sf/reference/st_join.html" class="external-link">sf::st_join()</a></code> with largest set to <code>TRUE</code>. "surface" first transforms
+block_xwalk using <code><a href="https://r-spatial.github.io/sf/reference/geos_unary.html" class="external-link">sf::st_point_on_surface()</a></code> and "centroid" uses
+<code><a href="https://r-spatial.github.io/sf/reference/geos_unary.html" class="external-link">sf::st_centroid()</a></code>.</p></dd>
 
 
 <dt>digits</dt>
@@ -209,23 +198,33 @@ weighted means (appropriate for ACS median variables) and drop the margin
 of error. <code>perc</code> is also always set to <code>FALSE</code> if extensive is <code>FALSE</code>.</p></dd>
 
 
-<dt>add_coverage</dt>
-<dd><p>If <code>TRUE</code> (default), it is assumed that area does not
-cover the full extent of the block_xwalk and an additional feature is added
-with the difference between the unioned area geometry and unioned
-block_xwalk geometry. This additional coverage ensures that blocks are
-accurately assigned to this alternate geography but it is excluded from the
-returned data frame.</p></dd>
+<dt>coverage</dt>
+<dd><p>If <code>TRUE</code> (default), it is assumed that area does not cover
+the full extent of the block_xwalk and an additional feature is added with
+the difference between the unioned area geometry and unioned block_xwalk
+geometry. This additional coverage ensures that blocks are accurately
+assigned to this alternate geography but it is excluded from the returned
+data frame. If <code>coverage</code> is <code>TRUE</code> and all features in area overlap with
+block_xwalk, the function issues a warning and then resets coverage to
+<code>FALSE</code>. The reverse option is applied if any features from area do not
+overlap</p></dd>
 
 
-<dt>erase_water</dt>
+<dt>erase</dt>
 <dd><p>If <code>TRUE</code>, apply <code><a href="https://rdrr.io/pkg/tigris/man/erase_water.html" class="external-link">tigris::erase_water()</a></code> to input area and
-block_xwalk before joining. Defaults to <code>FALSE</code>.</p></dd>
+block_xwalk before joining. Defaults to <code>FALSE</code>. If <code>erase</code> is a sf object,
+the geometry of the input sf is erased from area and block_xwalk. This
+option is intended to support erasing open space or other non-developed
+land as well as water areas.</p></dd>
+
+
+<dt>area_threshold</dt>
+<dd><p>The percentile rank cutoff of water areas to use in the erase operation, ranked by size. Defaults to 0.75, representing the water areas in the 75th percentile and up (the largest 25 percent of areas).  This value may need to be modified by the user to achieve optimal results for a given location.</p></dd>
 
 
 <dt>keep_geometry</dt>
 <dd><p>If <code>TRUE</code>, area_xwalk is a sf object with the same
-geometry as the input area.</p></dd>
+geometry as the input area. Defaults to <code>FALSE</code>.</p></dd>
 
 
 <dt>crs</dt>
@@ -234,7 +233,7 @@ set to a projected CRS if input area data is in a geographic CRS.</p></dd>
 
 
 <dt>...</dt>
-<dd><p>arguments to be passed to internal function <code>load_tiger</code>, which is not exported. See Additional Arguments.</p></dd>
+<dd><p>Passed to <code><a href="make_block_xwalk.html">make_block_xwalk()</a></code>.</p></dd>
 
 
 <dt>data</dt>
