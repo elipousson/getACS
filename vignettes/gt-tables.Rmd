@@ -27,7 +27,8 @@ One feature of the `{getACS}` package is support for building tables with the `{
 acs_data <- get_acs_tables(
   geography = "county",
   state = "MD",
-  table = c("B01003", "B15003", "B25003")
+  table = c("B01003", "B15003", "B25003"),
+  quiet = TRUE
 )
 ```
 
@@ -117,6 +118,33 @@ tenure_tbl_data |>
   tab_header(
     tenure_tbl_data$table_title[[1]],
     "Baltimore City, Maryland"
+  )
+```
+
+Helpers such as `join_acs_geography_ratio()` support additional features such as calculating a ratio between an estimate and the estimate for a reference geography:
+
+```{r}
+comparison_data <- get_acs_geographies(
+  geography = c("county", "metropolitan statistical area/micropolitan statistical area", "state"),
+  county = "Baltimore city",
+  state = "MD",
+  msa = "Baltimore-Columbia-Towson, MD Metro Area",
+  table = "B25105"
+)
+
+comparison_data |>
+  join_acs_geography_ratio(
+    geography = "county"
+  ) |>
+  select_acs_cols(
+    name_col = "NAME",
+    perc_est_cols = NULL,
+    column_title_col = NULL,
+    starts_with("ratio_")
+  ) |>
+  gt_acs() |>
+  cols_merge_uncert_ext(
+    c("ratio_estimate", "ratio_moe")
   )
 ```
 

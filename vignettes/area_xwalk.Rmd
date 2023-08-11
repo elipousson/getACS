@@ -1,0 +1,156 @@
+---
+title: "Interpolating ACS data using an area crosswalk"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Interpolating ACS data using an area crosswalk}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(getACS)
+library(ggplot2)
+library(dplyr)
+library(gt)
+
+options(tigris_use_cache = TRUE)
+```
+
+```{r, echo=FALSE}
+getACS:::cli_quiet(TRUE)
+```
+
+To illustrate how to interpolate ACS data to a new geometry using `{getACS}`, we can first download some basic population data:
+
+```{r}
+pop_sf <- get_acs_tables(
+  geography = "tract",
+  state = "Maryland",
+  county = "Baltimore city",
+  table = "B01001",
+  geometry = TRUE,
+  crs = 3857
+)
+
+total_pop_sf <- filter_acs(pop_sf, vars = 1)
+
+total_pop <- sf::st_drop_geometry(total_pop_sf)
+```
+
+We can also download Baltimore City neighborhood boundaries from Maryland iMap to provide an alternate geometry that we are interpolating the data to fit:
+
+```{r}
+# NOTE: These are outdated Neighborhood Statistical Area boundaries as of summer 2023
+area <- sf::read_sf("https://geodata.md.gov/appdata/rest/services/TrainingProgram/MD_BaltimoreCityNeighborhoods/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson")
+
+area <- sf::st_transform(area, crs = sf::st_crs(pop_sf))
+
+area <- select(area, NAME = LABEL)
+```
+
+Interpolating ACS data to a new geometry using `{getACS}` is a multi-step process:
+
+- Create a block-tract crosswalk using `make_block_xwalk()`
+- Create a weighted crosswalk between areas and tracts using `make_area_xwalk()`
+- Use the area crosswalk to aggregate estimate and margin of error values with `use_area_xwalk()`
+
+```{r}
+block_xwalk <- make_block_xwalk(
+  state = "Maryland",
+  county = "Baltimore city"
+)
+
+area_xwalk <- make_area_xwalk(
+  area = area,
+  block_xwalk = block_xwalk,
+  coverage = FALSE,
+  weight_col = "POP20",
+  erase = TRUE
+)
+
+total_pop_xwalk <- use_area_xwalk(
+  total_pop,
+  area_xwalk,
+  weight_col = "perc_POP20"
+)
+
+total_pop_xwalk <- arrange(total_pop_xwalk, NAME)
+```
+
+Note that this method does not require the input data (`total_pop` in this example) to be a sf object. A data frame is all you need. You can also avoid a separate call to `make_block_xwalk()` by supplying a state and county to `make_area_xwalk()`. One limitation is that `use_area_xwalk()` requires a long format data frame and does not support interpolation for values returned by `tidycensus::get_acs()` when `output = "wide"`.
+
+The `tidycensus::interpolate_pw()` function provides very similar functionality. While the block data needs to be prepared separately, a single function can substitute for both  `make_area_xwalk()` and `use_area_xwalk()`. 
+
+```{r}
+blocks <- tigris::blocks("MD", "Baltimore city", year = 2020)
+
+blocks <- sf::st_transform(blocks, crs = 3857)
+
+to <- tigris::erase_water(area)
+
+total_pop_interpolated <- tidycensus::interpolate_pw(
+  from = total_pop_sf,
+  to = area,
+  to_id = "NAME",
+  weights = blocks,
+  weight_column = "POP20",
+  extensive = TRUE
+)
+
+total_pop_interpolated <- select(total_pop_interpolated, NAME, estimate)
+
+total_pop_interpolated <- sf::st_drop_geometry(total_pop_interpolated)
+```
+
+This method works well but there are a few limitations:
+
+- The `from`, `to`, and `weights` parameters must all share the same coordinate reference system unless `crs` is explicitly provided.
+- `tigris::erase_water()` must be applied to input data in advance. For `make_area_xwalk()`, the erase parameter can also be an sf object supporting the option to erase open space or other undeveloped land as well as water areas.
+- All but one specified non-numeric column for `to` is dropped and all numeric values are transformed (even if they aren't an estimate value).
+- The margin of error can be adjusted as a weighted sum or mean but it is not calculated separately using `tidycensus::moe_sum()`.
+
+By default, `make_area_xwalk()` joins the `block_xwalk` and `area` based on which area has the largest overlapping area with each U.S. Census block. This method is slower than the default method for `tidycensus::interpolate_pw`: converting the Census block geometries to a point on surface before joining the two. You can select the latter approach by setting `placement = "surface"` or `placement = "centroid"` for `make_area_xwalk()`.
+
+This difference in spatial joins accounts for the small differences between the interpolated estimates using the two different functions. The following table shows the differences between the estimates returned by each method:
+
+```{r}
+comparison_data <- left_join(
+  select(total_pop_xwalk, name = NAME, estimate),
+  select(total_pop_interpolated, name = NAME, estimate),
+  by = "name",
+  suffix = c("_xwalk", "_interpolated")
+) |>
+  mutate(
+    difference = estimate_xwalk - estimate_interpolated
+  )
+
+comparison_summary <- bind_rows(
+  slice_max(comparison_data, difference, n = 5) |>
+    mutate(
+      category = "`interpolate_pw` estimate is lower"
+    ),
+  slice_min(comparison_data, difference, n = 5) |>
+    mutate(
+      category = "`use_area_xwalk` estimate is lower"
+    )
+)
+
+comparison_summary |>
+  gt(groupname_col = "category") |>
+  tab_header(
+    "10 areas with the largest difference between interpolation methods"
+  )
+```
+
+As you can see, the differences in the estimates are very small.
+
+In summary, I'd recommend the `{getACS}` functions if you want to retain a more accurate margin of error, you like a more verbose function, or you don't want to worry about matching coordinate reference systems in advance.
+
+If you prefer working with wide format data and don't want to transform the shape of your data back and forth with `tidyr::pivot_longer()` and `tidyr::pivot_wider()`, you'd be better off staying with `tidycensus::interpolate_pw()`
