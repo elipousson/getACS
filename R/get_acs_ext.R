@@ -88,7 +88,7 @@ get_acs_table_alert <- function(...) {
 #' @inheritDotParams tidycensus::get_acs
 #' @param label If `TRUE` (default), label the returned ACS data with
 #'   [label_acs_metadata()] before returning the data frame.
-#' @param return_geography If `TRUE` (default), bind geography and any supplied
+#' @param keep_geography If `TRUE` (default), bind geography and any supplied
 #'   county or state columns to the returned data frame.
 #' @inheritParams label_acs_metadata
 #' @inheritParams cli_quiet
