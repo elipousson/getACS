@@ -120,9 +120,10 @@ get_acs_tables <- function(geography,
                            year = 2021,
                            survey = "acs5",
                            ...,
+                           crs = NULL,
                            label = TRUE,
                            perc = TRUE,
-                           return_geography = TRUE,
+                           keep_geography = TRUE,
                            geoid_col = "GEOID",
                            quiet = FALSE,
                            call = caller_env()) {
@@ -166,12 +167,20 @@ get_acs_tables <- function(geography,
 
   acs_data <- purrr::list_rbind(acs_list)
 
-  if (return_geography) {
+  if (keep_geography) {
     acs_data <- vctrs::vec_cbind(
       acs_data,
       as.data.frame(do.call(cbind, get_geography_params(geography = geography, year = year, ...))),
       .error_call = call
     )
+  }
+
+  if (is_true(params[["geometry"]])) {
+    acs_data <- sf::st_as_sf(acs_data)
+
+    if (!is.null(crs)) {
+      acs_data <- sf::st_transform(acs_data, crs = sf::st_crs(crs))
+    }
   }
 
   if (identical(params[["output"]], "wide") && label) {
@@ -238,7 +247,7 @@ get_acs_geographies <- function(geography = c("county", "state"),
   check_character(geography)
   geography <- unique(geography)
 
-  acs_list <- purrr::map(
+  acs_data <- purrr::map(
     seq_along(geography),
     function(i) {
       cli::cli_progress_step(
@@ -263,7 +272,13 @@ get_acs_geographies <- function(geography = c("county", "state"),
     }
   )
 
-  purrr::list_rbind(acs_list)
+  acs_data <- purrr::list_rbind(acs_data)
+
+  if (is_true(list2(...)[["geometry"]])) {
+    acs_data <- sf::st_as_sf(acs_data)
+  }
+
+  acs_data
 }
 
 #' @rdname get_acs_tables
@@ -303,6 +318,7 @@ get_acs_geography <- function(geography,
     !!!params,
     survey = survey,
     ...,
+    keep_geography = FALSE,
     label = label,
     perc = perc,
     geoid_col = geoid_col
@@ -317,19 +333,27 @@ get_acs_geography <- function(geography,
       "Filtering data to {msa}"
     )
 
+    params[["msa"]] <- msa
+
     acs_data <- dplyr::filter(
       acs_data,
       .data[[geoid_col]] %in% msa | .data[["NAME"]] %in% msa
     )
+
+    stopifnot(
+      nrow(acs_data) > 0
+    )
   }
 
-  # FIXME: Double-check but this should no longer be needed now that
-  # get_acs_tables does this by default
-  # vctrs::vec_cbind(
-  #   acs_data,
-  #   as.data.frame(do.call(cbind, params)),
-  #   .error_call = call
-  # )
+  vctrs::vec_cbind(
+    acs_data,
+    as.data.frame(do.call(cbind, params)),
+    .error_call = call
+  )
+
+  if (is_true(list2(...)[["geometry"]])) {
+    acs_data <- sf::st_as_sf(acs_data)
+  }
 
   acs_data
 }
