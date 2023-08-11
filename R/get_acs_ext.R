@@ -345,7 +345,7 @@ get_acs_geography <- function(geography,
     )
   }
 
-  vctrs::vec_cbind(
+  acs_data <- vctrs::vec_cbind(
     acs_data,
     as.data.frame(do.call(cbind, params)),
     .error_call = call
