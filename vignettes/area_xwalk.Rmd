@@ -10,6 +10,7 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
+  eval = FALSE,
   comment = "#>"
 )
 ```
@@ -26,6 +27,8 @@ options(tigris_use_cache = TRUE)
 ```{r, echo=FALSE}
 getACS:::cli_quiet(TRUE)
 ```
+
+Note: this vignette currently is rendered but not executed.
 
 To illustrate how to interpolate ACS data to a new geometry using `{getACS}`, we can first download some basic population data:
 
@@ -86,14 +89,12 @@ total_pop_xwalk <- arrange(total_pop_xwalk, NAME)
 
 Note that this method does not require the input data (`total_pop` in this example) to be a sf object. A data frame is all you need. You can also avoid a separate call to `make_block_xwalk()` by supplying a state and county to `make_area_xwalk()`. One limitation is that `use_area_xwalk()` requires a long format data frame and does not support interpolation for values returned by `tidycensus::get_acs()` when `output = "wide"`.
 
-The `tidycensus::interpolate_pw()` function provides very similar functionality. While the block data needs to be prepared separately, a single function can substitute for both  `make_area_xwalk()` and `use_area_xwalk()`. 
+The `tidycensus::interpolate_pw()` function provides very similar functionality. While     the block data needs to be prepared separately, a single function can substitute for both  `make_area_xwalk()` and `use_area_xwalk()`. 
 
 ```{r}
 blocks <- tigris::blocks("MD", "Baltimore city", year = 2020)
 
 blocks <- sf::st_transform(blocks, crs = 3857)
-
-to <- tigris::erase_water(area)
 
 total_pop_interpolated <- tidycensus::interpolate_pw(
   from = total_pop_sf,
