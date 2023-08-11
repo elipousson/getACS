@@ -58,7 +58,7 @@ filter_acs <- function(data,
         table = table,
         variables = drop_vars,
         data = data
-        )
+      )
     }
 
     data <- dplyr::filter(
@@ -77,7 +77,7 @@ filter_acs <- function(data,
         table = table,
         variables = vars,
         data = data
-        )
+      )
     }
 
     data <- dplyr::filter(

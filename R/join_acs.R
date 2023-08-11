@@ -33,16 +33,16 @@ join_acs_percent <- function(data,
 
   dplyr::mutate(
     data,
-      perc_estimate = round(estimate / denominator_estimate, digits = digits),
-      perc_moe = round(
-        tidycensus::moe_prop(
-          estimate, denominator_estimate,
-          moe, denominator_moe
-        ),
-        digits = digits
+    perc_estimate = round(estimate / denominator_estimate, digits = digits),
+    perc_moe = round(
+      tidycensus::moe_prop(
+        estimate, denominator_estimate,
+        moe, denominator_moe
       ),
-      .after = all_of("moe")
-    )
+      digits = digits
+    ),
+    .after = all_of("moe")
+  )
 }
 
 #' @noRd
