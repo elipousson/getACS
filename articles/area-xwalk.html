@@ -42,7 +42,7 @@
 <li class="active nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/area_xwalk.html">Interpolating ACS data using an area crosswalk</a>
+    <a class="dropdown-item" href="../articles/area-xwalk.html">Interpolating ACS data using an area crosswalk</a>
     <a class="dropdown-item" href="../articles/gt-tables.html">Creating gt tables</a>
     <a class="dropdown-item" href="../articles/introduction.html">Introduction to getACS</a>
   </div>
@@ -77,8 +77,8 @@
       <img src="" class="logo" alt=""><h1>Interpolating ACS data using an area crosswalk</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/elipousson/getACS/blob/HEAD/vignettes/area_xwalk.Rmd" class="external-link"><code>vignettes/area_xwalk.Rmd</code></a></small>
-      <div class="d-none name"><code>area_xwalk.Rmd</code></div>
+      <small class="dont-index">Source: <a href="https://github.com/elipousson/getACS/blob/HEAD/vignettes/area-xwalk.Rmd" class="external-link"><code>vignettes/area-xwalk.Rmd</code></a></small>
+      <div class="d-none name"><code>area-xwalk.Rmd</code></div>
     </div>
 
     
@@ -87,6 +87,14 @@
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://elipousson.github.io/getACS/">getACS</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Attaching package: 'dplyr'</span></span>
+<span><span class="co">#&gt; The following objects are masked from 'package:stats':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     filter, lag</span></span>
+<span><span class="co">#&gt; The following objects are masked from 'package:base':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     intersect, setdiff, setequal, union</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://gt.rstudio.com/" class="external-link">gt</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>tigris_use_cache <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
@@ -238,6 +246,528 @@ by each method:</p>
 <span>  <span class="fu"><a href="https://gt.rstudio.com/reference/tab_header.html" class="external-link">tab_header</a></span><span class="op">(</span></span>
 <span>    <span class="st">"10 areas with the largest difference between interpolation methods"</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
+<div id="nkdoymiaep" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#nkdoymiaep table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#nkdoymiaep thead, #nkdoymiaep tbody, #nkdoymiaep tfoot, #nkdoymiaep tr, #nkdoymiaep td, #nkdoymiaep th {
+  border-style: none;
+}
+
+#nkdoymiaep p {
+  margin: 0;
+  padding: 0;
+}
+
+#nkdoymiaep .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#nkdoymiaep .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#nkdoymiaep .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#nkdoymiaep .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#nkdoymiaep .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#nkdoymiaep .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#nkdoymiaep .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#nkdoymiaep .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#nkdoymiaep .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#nkdoymiaep .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#nkdoymiaep .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#nkdoymiaep .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#nkdoymiaep .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#nkdoymiaep .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#nkdoymiaep .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#nkdoymiaep .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#nkdoymiaep .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#nkdoymiaep .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#nkdoymiaep .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#nkdoymiaep .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#nkdoymiaep .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#nkdoymiaep .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#nkdoymiaep .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#nkdoymiaep .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#nkdoymiaep .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#nkdoymiaep .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#nkdoymiaep .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#nkdoymiaep .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#nkdoymiaep .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#nkdoymiaep .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#nkdoymiaep .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#nkdoymiaep .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#nkdoymiaep .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#nkdoymiaep .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#nkdoymiaep .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#nkdoymiaep .gt_left {
+  text-align: left;
+}
+
+#nkdoymiaep .gt_center {
+  text-align: center;
+}
+
+#nkdoymiaep .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#nkdoymiaep .gt_font_normal {
+  font-weight: normal;
+}
+
+#nkdoymiaep .gt_font_bold {
+  font-weight: bold;
+}
+
+#nkdoymiaep .gt_font_italic {
+  font-style: italic;
+}
+
+#nkdoymiaep .gt_super {
+  font-size: 65%;
+}
+
+#nkdoymiaep .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#nkdoymiaep .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#nkdoymiaep .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#nkdoymiaep .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#nkdoymiaep .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#nkdoymiaep .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#nkdoymiaep .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+<table class="table gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_heading">
+<td colspan="4" class="gt_heading gt_title gt_font_normal gt_bottom_border" style>10 areas with the largest difference between interpolation methods</td>
+    </tr>
+<tr class="gt_col_headings">
+<th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="name">name</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="estimate_xwalk">estimate_xwalk</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="estimate_interpolated">estimate_interpolated</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="difference">difference</th>
+    </tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="gt_group_heading_row">
+<th colspan="4" class="gt_group_heading" scope="colgroup" id="`interpolate_pw` estimate is lower">`interpolate_pw` estimate is lower</th>
+    </tr>
+<tr class="gt_row_group_first">
+<td headers="`interpolate_pw` estimate is lower  name" class="gt_row gt_left">Locust Point Industrial Area</td>
+<td headers="`interpolate_pw` estimate is lower  estimate_xwalk" class="gt_row gt_right">1308</td>
+<td headers="`interpolate_pw` estimate is lower  estimate_interpolated" class="gt_row gt_right">854.4785</td>
+<td headers="`interpolate_pw` estimate is lower  difference" class="gt_row gt_right">453.52148</td>
+</tr>
+<tr>
+<td headers="`interpolate_pw` estimate is lower  name" class="gt_row gt_left">Belair-Edison</td>
+<td headers="`interpolate_pw` estimate is lower  estimate_xwalk" class="gt_row gt_right">16555</td>
+<td headers="`interpolate_pw` estimate is lower  estimate_interpolated" class="gt_row gt_right">16417.1188</td>
+<td headers="`interpolate_pw` estimate is lower  difference" class="gt_row gt_right">137.88118</td>
+</tr>
+<tr>
+<td headers="`interpolate_pw` estimate is lower  name" class="gt_row gt_left">Evergreen</td>
+<td headers="`interpolate_pw` estimate is lower  estimate_xwalk" class="gt_row gt_right">378</td>
+<td headers="`interpolate_pw` estimate is lower  estimate_interpolated" class="gt_row gt_right">312.2668</td>
+<td headers="`interpolate_pw` estimate is lower  difference" class="gt_row gt_right">65.73316</td>
+</tr>
+<tr>
+<td headers="`interpolate_pw` estimate is lower  name" class="gt_row gt_left">New Southwest/Mount Clare</td>
+<td headers="`interpolate_pw` estimate is lower  estimate_xwalk" class="gt_row gt_right">2085</td>
+<td headers="`interpolate_pw` estimate is lower  estimate_interpolated" class="gt_row gt_right">2019.4264</td>
+<td headers="`interpolate_pw` estimate is lower  difference" class="gt_row gt_right">65.57355</td>
+</tr>
+<tr>
+<td headers="`interpolate_pw` estimate is lower  name" class="gt_row gt_left">Canton Industrial Area</td>
+<td headers="`interpolate_pw` estimate is lower  estimate_xwalk" class="gt_row gt_right">939</td>
+<td headers="`interpolate_pw` estimate is lower  estimate_interpolated" class="gt_row gt_right">890.4785</td>
+<td headers="`interpolate_pw` estimate is lower  difference" class="gt_row gt_right">48.52147</td>
+</tr>
+<tr class="gt_group_heading_row">
+<th colspan="4" class="gt_group_heading" scope="colgroup" id="`use_area_xwalk` estimate is lower">`use_area_xwalk` estimate is lower</th>
+    </tr>
+<tr class="gt_row_group_first">
+<td headers="`use_area_xwalk` estimate is lower  name" class="gt_row gt_left">Dickeyville</td>
+<td headers="`use_area_xwalk` estimate is lower  estimate_xwalk" class="gt_row gt_right">166</td>
+<td headers="`use_area_xwalk` estimate is lower  estimate_interpolated" class="gt_row gt_right">860.9389</td>
+<td headers="`use_area_xwalk` estimate is lower  difference" class="gt_row gt_right">-694.93887</td>
+</tr>
+<tr>
+<td headers="`use_area_xwalk` estimate is lower  name" class="gt_row gt_left">Locust Point</td>
+<td headers="`use_area_xwalk` estimate is lower  estimate_xwalk" class="gt_row gt_right">2164</td>
+<td headers="`use_area_xwalk` estimate is lower  estimate_interpolated" class="gt_row gt_right">2610.2818</td>
+<td headers="`use_area_xwalk` estimate is lower  difference" class="gt_row gt_right">-446.28180</td>
+</tr>
+<tr>
+<td headers="`use_area_xwalk` estimate is lower  name" class="gt_row gt_left">Four By Four</td>
+<td headers="`use_area_xwalk` estimate is lower  estimate_xwalk" class="gt_row gt_right">946</td>
+<td headers="`use_area_xwalk` estimate is lower  estimate_interpolated" class="gt_row gt_right">1088.5752</td>
+<td headers="`use_area_xwalk` estimate is lower  difference" class="gt_row gt_right">-142.57518</td>
+</tr>
+<tr>
+<td headers="`use_area_xwalk` estimate is lower  name" class="gt_row gt_left">Roland Park</td>
+<td headers="`use_area_xwalk` estimate is lower  estimate_xwalk" class="gt_row gt_right">5158</td>
+<td headers="`use_area_xwalk` estimate is lower  estimate_interpolated" class="gt_row gt_right">5266.9635</td>
+<td headers="`use_area_xwalk` estimate is lower  difference" class="gt_row gt_right">-108.96351</td>
+</tr>
+<tr>
+<td headers="`use_area_xwalk` estimate is lower  name" class="gt_row gt_left">Carrollton Ridge</td>
+<td headers="`use_area_xwalk` estimate is lower  estimate_xwalk" class="gt_row gt_right">2387</td>
+<td headers="`use_area_xwalk` estimate is lower  estimate_interpolated" class="gt_row gt_right">2451.7020</td>
+<td headers="`use_area_xwalk` estimate is lower  difference" class="gt_row gt_right">-64.70199</td>
+</tr>
+</tbody>
+</table>
+</div>
 <p>As you can see, the differences in the estimates are very small.</p>
 <p>In summary, I’d recommend the <a href="https://elipousson.github.io/getACS/">getACS</a> functions if you
 want to retain a more accurate margin of error, you like a more verbose
