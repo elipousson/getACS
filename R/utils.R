@@ -81,7 +81,7 @@ check_has_name <- function(x,
 #'
 #' @inheritParams gt_acs
 #' @param ... Additional parameters passed to [dplyr::select()]
-#' @param name_col,column_title_col,est_cols,perc_est_cols ACS data column names
+#' @param name_col,column_title_col,value_cols,perc_value_cols ACS data column names
 #'   to select using [tidyselect::any_of()]. Set any parameter to `NULL` to
 #'   avoid selecting columns.
 #' @param denominator_start Passed to [starts_with()] to drop denominator
@@ -95,13 +95,13 @@ select_acs_cols <- function(data,
                             ...,
                             name_col = "NAME",
                             column_title_col = "column_title",
-                            est_cols = c("estimate", "moe"),
-                            perc_est_cols = c("perc_estimate", "perc_moe"),
+                            value_cols = c("estimate", "moe"),
+                            perc_value_cols = c("perc_estimate", "perc_moe"),
                             denominator_start = "denominator",
                             keep_denominator = FALSE) {
   data <- dplyr::select(
     data,
-    any_of(c(name_col, column_title_col, est_cols, perc_est_cols)),
+    any_of(c(name_col, column_title_col, value_cols, perc_value_cols)),
     ...
   )
 
@@ -126,4 +126,47 @@ fct_recode_with_list <- function(x, list = NULL, in_order = TRUE, ordered = NA) 
   }
 
   forcats::fct_inorder(x, ordered = ordered)
+}
+
+#' @noRd
+st_is_predicate <- function(x,
+                            y,
+                            .f_x = sf::st_point_on_surface,
+                            .f_y = sf::st_union,
+                            .predicate = sf::st_intersects) {
+  if (is_function(.f_x)) {
+    x <-suppressWarnings(.f_x(x))
+  }
+
+  if (is_function(.f_y)) {
+    y <- suppressWarnings(.f_y(y))
+  }
+
+  as.logical(.predicate(x, y, sparse = FALSE))
+}
+
+#' @noRd
+st_is_all_predicate <- function(x,
+                                y,
+                                .f_x = sf::st_point_on_surface,
+                                .f_y = sf::st_union,
+                                .predicate = sf::st_intersects) {
+  all(st_is_predicate(x, y, .f_x, .f_y, .predicate = .predicate))
+}
+
+#' @noRd
+#' @importFrom sf st_make_valid st_difference
+st_make_valid_coverage <- function(x, y, is_coverage = TRUE) {
+  sf::st_make_valid(
+    sf::st_difference(
+      st_make_valid_union(x, is_coverage),
+      st_make_valid_union(y, is_coverage)
+    )
+  )
+}
+
+#' @noRd
+#' @importFrom sf st_make_valid st_union
+st_make_valid_union <- function(x, is_coverage = TRUE) {
+  sf::st_make_valid(sf::st_union(x, is_coverage = is_coverage))
 }

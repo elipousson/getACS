@@ -9,8 +9,8 @@ select_acs_cols(
   ...,
   name_col = "NAME",
   column_title_col = "column_title",
-  est_cols = c("estimate", "moe"),
-  perc_est_cols = c("perc_estimate", "perc_moe"),
+  value_cols = c("estimate", "moe"),
+  perc_value_cols = c("perc_estimate", "perc_moe"),
   denominator_start = "denominator",
   keep_denominator = FALSE
 )
@@ -24,7 +24,7 @@ A \code{data.frame} object or a tibble (\code{tbl_df}).}
 
 \item{...}{Additional parameters passed to \code{\link[dplyr:select]{dplyr::select()}}}
 
-\item{name_col, column_title_col, est_cols, perc_est_cols}{ACS data column names
+\item{name_col, column_title_col, value_cols, perc_value_cols}{ACS data column names
 to select using \code{\link[tidyselect:all_of]{tidyselect::any_of()}}. Set any parameter to \code{NULL} to
 avoid selecting columns.}
 
