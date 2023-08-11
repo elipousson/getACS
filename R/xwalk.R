@@ -87,7 +87,7 @@ make_block_xwalk <- function(state,
 #' @inheritParams make_block_xwalk
 #' @param area A sf object with an arbitrary geography overlapping with the
 #'   block_xwalk. Required. If area only partly overlaps with block_xwalk,
-#'   add_coverage should be set to `TRUE` (default).
+#'   coverage should be set to `TRUE` (default).
 #' @param block_xwalk Block-tract crosswalk sf object. If `NULL`, state is
 #'   required to create a crosswalk using [make_block_xwalk()]
 #' @param weight_col Column name in input block_xwalk to use for weighting.
@@ -99,16 +99,28 @@ make_block_xwalk <- function(state,
 #' @param geoid_col,tract_col GeoID for Census tract and Census tract ID column
 #'   in block_xwalk
 #' @param digits Digits to use for percent share of weight value.
-#' @param add_coverage If `TRUE` (default), it is assumed that area does not
-#'   cover the full extent of the block_xwalk and an additional feature is added
-#'   with the difference between the unioned area geometry and unioned
-#'   block_xwalk geometry. This additional coverage ensures that blocks are
-#'   accurately assigned to this alternate geography but it is excluded from the
-#'   returned data frame.
-#' @param erase_water If `TRUE`, apply [tigris::erase_water()] to input area and
-#'   block_xwalk before joining. Defaults to `FALSE`.
+#' @param coverage If `TRUE` (default), it is assumed that area does not cover
+#'   the full extent of the block_xwalk and an additional feature is added with
+#'   the difference between the unioned area geometry and unioned block_xwalk
+#'   geometry. This additional coverage ensures that blocks are accurately
+#'   assigned to this alternate geography but it is excluded from the returned
+#'   data frame. If `coverage` is `TRUE` and all features in area overlap with
+#'   block_xwalk, the function issues a warning and then resets coverage to
+#'   `FALSE`. The reverse option is applied if any features from area do not
+#'   overlap
+#' @param erase If `TRUE`, apply [tigris::erase_water()] to input area and
+#'   block_xwalk before joining. Defaults to `FALSE`. If `erase` is a sf object,
+#'   the geometry of the input sf is erased from area and block_xwalk. This
+#'   option is intended to support erasing open space or other non-developed
+#'   land as well as water areas.
+#' @param placement String with option for joining `area` and `block_xwalk`:
+#'   "largest", "surface", or "centroid". "largest" joins the two using
+#'   [sf::st_join()] with largest set to `TRUE`. "surface" first transforms
+#'   block_xwalk using [sf::st_point_on_surface()] and "centroid" uses
+#'   [sf::st_centroid()].
+#' @inheritParams tigris::erase_water
 #' @param keep_geometry If `TRUE`, area_xwalk is a sf object with the same
-#'   geometry as the input area.
+#'   geometry as the input area. Defaults to `FALSE`.
 #' @param crs Coordinate reference system to use for input data. Recommended to
 #'   set to a projected CRS if input area data is in a geographic CRS.
 #' @param ... Passed to [make_block_xwalk()].
@@ -133,10 +145,12 @@ make_area_xwalk <- function(area,
                             tract_col = "TRACTCE20",
                             by = c("TRACTCE20" = "TRACTCE"),
                             suffix = c("_block", "_tract"),
+                            placement = c("largest", "surface", "centroid"),
                             digits = 2,
                             extensive = TRUE,
-                            add_coverage = TRUE,
-                            erase_water = FALSE,
+                            coverage = TRUE,
+                            erase = FALSE,
+                            area_threshold = 0.75,
                             keep_geometry = FALSE,
                             crs = NULL,
                             ...) {
@@ -166,70 +180,70 @@ make_area_xwalk <- function(area,
 
   area <- sf::st_make_valid(area)
 
+  if (!is.null(crs)) {
+    area <- sf::st_transform(area, crs = crs)
+  }
+
+  block_xwalk <- sf::st_transform(block_xwalk, crs = sf::st_crs(area))
+
   if (keep_geometry) {
     area_geometry <- dplyr::select(area, dplyr::all_of(name_col))
   }
 
-  if (!is.null(crs)) {
-    block_xwalk <- sf::st_transform(block_xwalk, crs = crs)
-    area <- sf::st_transform(area, crs = crs)
-  } else {
-    block_xwalk <- sf::st_transform(block_xwalk, sf::st_crs(area))
+  cli::cli_progress_step("Checking {.arg block_xwalk} and {.arg area} geometry")
+
+  if (coverage && st_is_all_predicate(area, block_xwalk)) {
+    cli::cli_bullets(
+      c(
+        "!" = "All features in {.arg area_xwalk} intersect with {.arg block_xwalk}",
+        "*" = "Setting {.arg coverage} to {.code FALSE} to avoid inaccurate results."
+      )
+    )
+
+    coverage <- FALSE
   }
 
-  if (erase_water) {
-    area <- tigris::erase_water(area)
-    block_xwalk <- tigris::erase_water(block_xwalk)
+  if (!is_false(erase)) {
+    what <- "geometry"
+    if (is_true(erase)) {
+      what <- "water areas"
+    }
+
+    cli::cli_progress_step("Erasing {what} from {.arg area}")
+
+    area <- erase_input_sf(
+      area,
+      erase = erase,
+      area_threshold = area_threshold,
+      year = year
+    )
+
+    cli::cli_progress_step("Erasing {what} from {.arg block_xwalk}")
+
+    block_xwalk <- erase_input_sf(
+      block_xwalk,
+      erase = erase,
+      area_threshold = area_threshold,
+      year = year
+    )
   }
 
-  if (add_coverage) {
+  if (coverage) {
     cli::cli_progress_step("Adding coverage for {.arg block_xwalk}")
 
     coverage_name <- tempfile(tmpdir = "")
 
-    area_coverage <- try_fetch(
-      st_make_valid_coverage(block_xwalk, area),
-      error = function(cnd) {
-        cli_abort(
-          c("Valid spatial coverage for the area of {.arg block_xwalk} outside the {.arg area_xwalk} can't be created.",
-            "*" = "Set {.code add_coverage = FALSE} and try again."
-          ),
-          parent = cnd
-        )
-      }
+    area <- rbind_area_coverage(
+      area = area,
+      coverage_name = coverage_name,
+      name_col = name_col,
+      block_xwalk = block_xwalk
     )
-
-    if (is_empty(area_coverage)) {
-      cli_abort(
-        c("{.arg area} is not covered by {.arg block_xwalk}",
-          "i" = "Supply a {.arg block_xwalk} covering the full geometry of
-          {.arg area} or set {.arg add_coverage} to {.code FALSE}"
-        )
-      )
-    }
-
-    area_coverage <- data.frame(
-      coverage_name,
-      area_coverage
-    )
-
-    area <- vctrs::vec_rbind(
-      area,
-      set_names(area_coverage, c(name_col, "geometry"))
-    )
-
-    area <- sf::st_make_valid(sf::st_as_sf(area))
   }
 
   cli::cli_progress_step("Joining {.arg block_xwalk} to {.arg area}")
 
-  area_xwalk <- suppressWarnings(sf::st_join(
-    block_xwalk,
-    area,
-    left = FALSE,
-    largest = TRUE,
-    suffix = c("_block", "")
-  ))
+  area_xwalk <- use_block_xwalk(block_xwalk, area, placement)
 
   area_xwalk <- sf::st_drop_geometry(area_xwalk)
 
@@ -237,6 +251,86 @@ make_area_xwalk <- function(area,
     "Summarizing {weight_col} by {tract_col} and {name_col}"
   )
 
+  area_xwalk <- summarise_area_weight(
+    area_xwalk = area_xwalk,
+    name_col = name_col,
+    weight_col = weight_col,
+    geoid_col = geoid_col,
+    tract_col = tract_col,
+    digits = digits
+  )
+
+  if (coverage) {
+    area_xwalk <- dplyr::filter(area_xwalk, .data[[name_col]] != coverage_name)
+  }
+
+  if (keep_geometry) {
+    area_xwalk <- dplyr::left_join(area_xwalk, area_geometry, by = name_col)
+    area_xwalk <- sf::st_as_sf(area_xwalk)
+  }
+
+  area_xwalk
+}
+
+#' @noRd
+erase_input_sf <- function(input_sf,
+                           area_threshold = 0.75,
+                           year = NULL,
+                           erase = FALSE,
+                           call = caller_env()) {
+  if (inherits(erase, "sf")) {
+    input_sf <- sf::st_difference(
+      input_sf,
+      sf::st_union(sf::st_transform(erase, crs = sf::st_crs(area)))
+    )
+
+    return(input_sf)
+  }
+
+  check_logical(erase, call = call)
+
+  if (!erase) {
+    return(area)
+  }
+
+  suppressMessages(
+    tigris::erase_water(
+      input_sf,
+      area_threshold = area_threshold,
+      year = year
+    )
+  )
+}
+
+#' @noRd
+use_block_xwalk <- function(block_xwalk,
+                            area,
+                            placement = c("largest", "surface", "centroid"),
+                            error_call = caller_env()) {
+  placement <- arg_match(placement, error_call = error_call)
+
+  if (placement == "surface") {
+    block_xwalk <- suppressWarnings(sf::st_point_on_surface(block_xwalk))
+  } else if (placement == "centroid") {
+    block_xwalk <- suppressWarnings(sf::st_centroid(block_xwalk))
+  }
+
+  suppressWarnings(sf::st_join(
+    block_xwalk,
+    area,
+    left = FALSE,
+    largest = TRUE,
+    suffix = c("_block", "")
+  ))
+}
+
+#' @noRd
+summarise_area_weight <- function(area_xwalk,
+                                  name_col = "NAME",
+                                  weight_col = "HOUSING20",
+                                  geoid_col = "GEOID",
+                                  tract_col = "TRACTCE20",
+                                  digits = 2) {
   area_xwalk <- dplyr::filter(
     area_xwalk,
     .data[[weight_col]] > 0
@@ -266,37 +360,50 @@ make_area_xwalk <- function(area,
     )
   )
 
-  area_xwalk <- dplyr::ungroup(area_xwalk)
-
-  if (add_coverage) {
-    area_xwalk <- dplyr::filter(area_xwalk, .data[[name_col]] != coverage_name)
-  }
-
-  if (keep_geometry) {
-    area_xwalk <- dplyr::left_join(area_xwalk, area_geometry)
-    area_xwalk <- sf::st_as_sf(area_xwalk)
-  }
-
-  area_xwalk
+  dplyr::ungroup(area_xwalk)
 }
 
 #' @noRd
-#' @importFrom sf st_make_valid st_difference
-st_make_valid_coverage <- function(x, y, is_coverage = TRUE) {
-  sf::st_make_valid(
-    sf::st_difference(
-      st_make_valid_union(x, is_coverage),
-      st_make_valid_union(y, is_coverage)
-    )
+rbind_area_coverage <- function(area,
+                                coverage_name,
+                                name_col = "NAME",
+                                block_xwalk,
+                                error_call = caller_env()) {
+  area_coverage <- try_fetch(
+    st_make_valid_coverage(block_xwalk, area),
+    error = function(cnd) {
+      cli_abort(
+        c("Valid spatial coverage for the area of {.arg block_xwalk} outside the {.arg area_xwalk} can't be created.",
+          "*" = "Set {.code coverage = FALSE} and try again."
+        ),
+        parent = cnd,
+        call = error_call
+      )
+    }
   )
-}
 
-#' @noRd
-#' @importFrom sf st_make_valid st_union
-st_make_valid_union <- function(x, is_coverage = TRUE) {
-  sf::st_make_valid(sf::st_union(x, is_coverage = is_coverage))
-}
+  if (is_empty(area_coverage)) {
+    cli_abort(
+      c("{.arg area} is not covered by {.arg block_xwalk}",
+        "i" = "Supply a {.arg block_xwalk} covering the full geometry of
+          {.arg area} or set {.arg coverage} to {.code FALSE}"
+      ),
+      call = error_call
+    )
+  }
 
+  area_coverage <- data.frame(
+    coverage_name,
+    area_coverage
+  )
+
+  area <- vctrs::vec_rbind(
+    area,
+    set_names(area_coverage, c(name_col, "geometry"))
+  )
+
+  sf::st_make_valid(sf::st_as_sf(area))
+}
 
 #' @details Using an area crosswalk
 #'
@@ -399,7 +506,6 @@ use_area_xwalk <- function(data,
     label_acs_metadata(area_data, perc = perc, geoid_col = name_col)
   )
 }
-
 
 #' @noRd
 summarise_weighted_sum <- function(data,

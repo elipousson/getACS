@@ -18,10 +18,12 @@ make_area_xwalk(
   tract_col = "TRACTCE20",
   by = c(TRACTCE20 = "TRACTCE"),
   suffix = c("_block", "_tract"),
+  placement = c("largest", "surface", "centroid"),
   digits = 2,
   extensive = TRUE,
-  add_coverage = TRUE,
-  erase_water = FALSE,
+  coverage = TRUE,
+  erase = FALSE,
+  area_threshold = 0.75,
   keep_geometry = FALSE,
   crs = NULL,
   ...
@@ -46,7 +48,7 @@ use_area_xwalk(
 \arguments{
 \item{area}{A sf object with an arbitrary geography overlapping with the
 block_xwalk. Required. If area only partly overlaps with block_xwalk,
-add_coverage should be set to \code{TRUE} (default).}
+coverage should be set to \code{TRUE} (default).}
 
 \item{block_xwalk}{Block-tract crosswalk sf object. If \code{NULL}, state is
 required to create a crosswalk using \code{\link[=make_block_xwalk]{make_block_xwalk()}}}
@@ -77,6 +79,12 @@ name for tract" = "tract column name"). Passed to \code{\link[dplyr:mutate-joins
 \item{suffix}{Suffixes added to the output to disambiguate column names from
 the block and tract data. Unused for 2020 data.}
 
+\item{placement}{String with option for joining \code{area} and \code{block_xwalk}:
+"largest", "surface", or "centroid". "largest" joins the two using
+\code{\link[sf:st_join]{sf::st_join()}} with largest set to \code{TRUE}. "surface" first transforms
+block_xwalk using \code{\link[sf:geos_unary]{sf::st_point_on_surface()}} and "centroid" uses
+\code{\link[sf:geos_unary]{sf::st_centroid()}}.}
+
 \item{digits}{Digits to use for percent share of weight value.}
 
 \item{extensive}{If \code{TRUE} (default) calculate new estimate values as
@@ -85,18 +93,26 @@ weighted sums and re-calculate margin of error with
 weighted means (appropriate for ACS median variables) and drop the margin
 of error. \code{perc} is also always set to \code{FALSE} if extensive is \code{FALSE}.}
 
-\item{add_coverage}{If \code{TRUE} (default), it is assumed that area does not
-cover the full extent of the block_xwalk and an additional feature is added
-with the difference between the unioned area geometry and unioned
-block_xwalk geometry. This additional coverage ensures that blocks are
-accurately assigned to this alternate geography but it is excluded from the
-returned data frame.}
+\item{coverage}{If \code{TRUE} (default), it is assumed that area does not cover
+the full extent of the block_xwalk and an additional feature is added with
+the difference between the unioned area geometry and unioned block_xwalk
+geometry. This additional coverage ensures that blocks are accurately
+assigned to this alternate geography but it is excluded from the returned
+data frame. If \code{coverage} is \code{TRUE} and all features in area overlap with
+block_xwalk, the function issues a warning and then resets coverage to
+\code{FALSE}. The reverse option is applied if any features from area do not
+overlap}
 
-\item{erase_water}{If \code{TRUE}, apply \code{\link[tigris:erase_water]{tigris::erase_water()}} to input area and
-block_xwalk before joining. Defaults to \code{FALSE}.}
+\item{erase}{If \code{TRUE}, apply \code{\link[tigris:erase_water]{tigris::erase_water()}} to input area and
+block_xwalk before joining. Defaults to \code{FALSE}. If \code{erase} is a sf object,
+the geometry of the input sf is erased from area and block_xwalk. This
+option is intended to support erasing open space or other non-developed
+land as well as water areas.}
+
+\item{area_threshold}{The percentile rank cutoff of water areas to use in the erase operation, ranked by size. Defaults to 0.75, representing the water areas in the 75th percentile and up (the largest 25 percent of areas).  This value may need to be modified by the user to achieve optimal results for a given location.}
 
 \item{keep_geometry}{If \code{TRUE}, area_xwalk is a sf object with the same
-geometry as the input area.}
+geometry as the input area. Defaults to \code{FALSE}.}
 
 \item{crs}{Coordinate reference system to use for input data. Recommended to
 set to a projected CRS if input area data is in a geographic CRS.}

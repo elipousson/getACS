@@ -63,7 +63,8 @@ check_has_name <- function(x,
   has_nm <- all(nm_check)
 
   msg <- c("{.arg {arg}} must have names {.val {nm}}",
-          "i" = "{.arg {arg}} is missing {length(nm[!nm_check])} name{?s}: {.val {nm[!nm_check]}}")
+    "i" = "{.arg {arg}} is missing {length(nm[!nm_check])} name{?s}: {.val {nm[!nm_check]}}"
+  )
 
   if (allow_any) {
     has_nm <- any(nm_check)
@@ -135,7 +136,7 @@ st_is_predicate <- function(x,
                             .f_y = sf::st_union,
                             .predicate = sf::st_intersects) {
   if (is_function(.f_x)) {
-    x <-suppressWarnings(.f_x(x))
+    x <- suppressWarnings(.f_x(x))
   }
 
   if (is_function(.f_y)) {
