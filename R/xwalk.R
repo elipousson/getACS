@@ -281,7 +281,7 @@ erase_input_sf <- function(input_sf,
   if (inherits(erase, "sf")) {
     input_sf <- sf::st_difference(
       input_sf,
-      sf::st_union(sf::st_transform(erase, crs = sf::st_crs(area)))
+      sf::st_union(sf::st_transform(erase, crs = sf::st_crs(input_sf)))
     )
 
     return(input_sf)
@@ -290,7 +290,7 @@ erase_input_sf <- function(input_sf,
   check_logical(erase, call = call)
 
   if (!erase) {
-    return(area)
+    return(input_sf)
   }
 
   suppressMessages(
@@ -531,6 +531,7 @@ summarise_weighted_sum <- function(data,
 }
 
 #' @noRd
+#' @importFrom stats weighted.mean
 summarise_weighted_mean <- function(data,
                                     weight_col = "perc_HOUSING20",
                                     name_col = "NAME",
@@ -542,7 +543,7 @@ summarise_weighted_mean <- function(data,
   dplyr::summarise(
     data,
     "{value_col}" := round(
-      weighted.mean(.data[[value_col]], w = .data[[weight_col]], na.rm = na.rm),
+      stats::weighted.mean(.data[[value_col]], w = .data[[weight_col]], na.rm = na.rm),
       digits = digits
     ),
     # FIXME: Explore options to calculate an interpolated MOE per this method:
