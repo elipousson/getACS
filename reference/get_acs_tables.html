@@ -222,6 +222,11 @@ what is returned by the API directly. Defaults to FALSE.</p></dd>
 </dl></dd>
 
 
+<dt>crs</dt>
+<dd><p>Coordinate reference system to use for returned sf tibble when
+<code>geometry = TRUE</code> is passed to <code><a href="https://walker-data.com/tidycensus/reference/get_acs.html" class="external-link">tidycensus::get_acs()</a></code>. Defaults to <code>NULL</code>.</p></dd>
+
+
 <dt>label</dt>
 <dd><p>If <code>TRUE</code> (default), label the returned ACS data with
 <code><a href="label_acs_metadata.html">label_acs_metadata()</a></code> before returning the data frame.</p></dd>
