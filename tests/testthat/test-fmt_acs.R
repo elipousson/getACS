@@ -9,14 +9,16 @@ test_that("fmt_acs works", {
 
   expect_identical(
     fmt_acs_county(
-      data, state = "Maryland"
+      data,
+      state = "Maryland"
     ),
     comparison
   )
 
   expect_s3_class(
     fmt_acs_county(
-      gt::gt(data), state = "Maryland"
+      gt::gt(data),
+      state = "Maryland"
     ),
     "gt_tbl"
   )

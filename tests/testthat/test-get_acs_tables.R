@@ -24,7 +24,7 @@ test_that("get_acs_tables works", {
       "variable", "column_id",
       "table_id", "estimate",
       "moe", "perc_estimate",
-      "perc_moe", "table_title",
+      "perc_moe", "geography", "county", "state", "table_title",
       "simple_table_title", "subject_area",
       "universe", "denominator_column_id",
       "topics", "line_number",
