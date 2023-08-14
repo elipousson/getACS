@@ -26,6 +26,7 @@ Imports:
     rlang (>= 1.1.0),
     scales,
     sf,
+    stats,
     stringr,
     tidycensus,
     tidyselect,
