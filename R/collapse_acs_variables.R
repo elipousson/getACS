@@ -42,7 +42,6 @@
 #' @rdname collapse_acs_variables
 #' @export
 #' @importFrom dplyr group_by mutate all_of summarise across any_of
-#' @importFrom forcats fct_inorder fct_collapse
 #' @importFrom tidycensus moe_sum
 collapse_acs_variables <- function(data,
                                    ...,
@@ -57,6 +56,8 @@ collapse_acs_variables <- function(data,
   stopifnot(
     all(has_name(data, c(variable_col, value_col, moe_col)))
   )
+
+  check_installed("forcats")
 
   if (has_name(data, name_col)) {
     data <- dplyr::group_by(data, .data[[name_col]])
