@@ -2,14 +2,28 @@
 % Please edit documentation in R/acs_table.R
 \name{acs_table_race_iteration}
 \alias{acs_table_race_iteration}
-\title{Append race iteration codes to a table ID}
+\title{Append a set of race iteration codes to an ACS table ID}
 \usage{
 acs_table_race_iteration(table, codes = NULL, error_call = caller_env())
 }
 \arguments{
 \item{table}{Table ID.}
+
+\item{error_call}{The execution environment of a currently
+running function, e.g. \code{caller_env()}. The function will be
+mentioned in error messages as the source of the error. See the
+\code{call} argument of \code{\link[rlang:abort]{abort()}} for more information.}
+
+\item{code}{Character vector of race iteration codes to return. Defaults to
+\code{c("", race_iteration[["code"]])}.}
+}
+\value{
+A character vector of variable ID values for a single table.
 }
 \description{
-Append race iteration codes to a table ID
+\code{\link[=acs_table_race_iteration]{acs_table_race_iteration()}} uses the \code{race_iteration} reference data to
+create or validate race iteration codes and create race iteration table IDs.
 }
-\keyword{internal}
+\seealso{
+\code{\link[=acs_table_variables]{acs_table_variables()}}
+}

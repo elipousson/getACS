@@ -1,30 +1,44 @@
-
-#' Append race iteration codes to a table ID
+#' Append a set of race iteration codes to an ACS table ID
 #'
-#' @param table Table ID.
+#' [acs_table_race_iteration()] uses the `race_iteration` reference data to
+#' create or validate race iteration codes and create race iteration table IDs.
+#'
 #' @name acs_table_race_iteration
-#' @keywords internal
+#' @param table Table ID.
+#' @param code Character vector of race iteration codes to return. Defaults to
+#'   `c("", race_iteration[["code"]])`.
+#' @inheritParams rlang::args_error_context
+#' @returns A character vector of variable ID values for a single table.
+#' @seealso [acs_table_variables()]
 #' @export
 acs_table_race_iteration <- function(table,
                                      codes = NULL,
                                      error_call = caller_env()) {
   check_string(table, call = error_call)
-  codes <- codes %||% c("", race_iteration[["code"]])
+
+  code_options <- c("", race_iteration[["code"]])
+
+  if (is.null(codes)) {
+    codes <- code_options
+  } else {
+    codes <- arg_match(codes, code_options, error_call = error_call)
+  }
+
   check_character(codes, call = error_call)
 
   paste0(table, codes)
 }
 
-#' Convert a table ID into a set of variable ID using a numeric vector for
-#' variables
+#' Convert an ACS table ID to a set of variable ID values
 #'
-#' [acs_table_variables()] supports the creation of variable ID values based on
+#' [acs_table_variables()] helps to make a vector of variable ID values based on
 #' a table ID string. The returned variable IDs use the format returned by
 #' [tidycensus::get_acs()], e.g. "{table_id}_{line_number}" where the
 #' line_number is a width 3 string prefixed by "0". If variables is `NULL`, the
 #' function calls [get_acs_metadata()] with `metadata = "column"` and returns
 #' all available variables for the table for the supplied year and survey.
 #'
+#' @name acs_table_variables
 #' @param table A table ID string.
 #' @param data If data is provided and table is `NULL`, table is set based on
 #'   the unique values in the "table_id" column of data. If data contains more
@@ -34,8 +48,9 @@ acs_table_race_iteration <- function(table,
 #' @inheritParams get_acs_metadata
 #' @inheritParams stringr::str_pad
 #' @inheritParams rlang::args_error_context
-#' @name acs_table_variables
-#' @returns A character vector of variable ID values.
+#' @inheritParams rlang::args_error_context
+#' @returns A character vector of variable ID values for a single table.
+#' @seealso [acs_table_race_iteration()]
 #' @export
 #' @importFrom stringr str_pad
 acs_table_variables <- function(table = NULL,

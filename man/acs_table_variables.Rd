@@ -2,8 +2,7 @@
 % Please edit documentation in R/acs_table.R
 \name{acs_table_variables}
 \alias{acs_table_variables}
-\title{Convert a table ID into a set of variable ID using a numeric vector for
-variables}
+\title{Convert an ACS table ID to a set of variable ID values}
 \usage{
 acs_table_variables(
   table = NULL,
@@ -37,13 +36,16 @@ mentioned in error messages as the source of the error. See the
 \code{call} argument of \code{\link[rlang:abort]{abort()}} for more information.}
 }
 \value{
-A character vector of variable ID values.
+A character vector of variable ID values for a single table.
 }
 \description{
-\code{\link[=acs_table_variables]{acs_table_variables()}} supports the creation of variable ID values based on
+\code{\link[=acs_table_variables]{acs_table_variables()}} helps to make a vector of variable ID values based on
 a table ID string. The returned variable IDs use the format returned by
 \code{\link[tidycensus:get_acs]{tidycensus::get_acs()}}, e.g. "{table_id}_{line_number}" where the
 line_number is a width 3 string prefixed by "0". If variables is \code{NULL}, the
 function calls \code{\link[=get_acs_metadata]{get_acs_metadata()}} with \code{metadata = "column"} and returns
 all available variables for the table for the supplied year and survey.
+}
+\seealso{
+\code{\link[=acs_table_race_iteration]{acs_table_race_iteration()}}
 }
