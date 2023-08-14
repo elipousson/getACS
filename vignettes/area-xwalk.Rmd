@@ -27,8 +27,6 @@ options(tigris_use_cache = TRUE)
 getACS:::cli_quiet(TRUE)
 ```
 
-Note: this vignette currently is rendered but not executed.
-
 To illustrate how to interpolate ACS data to a new geometry using `{getACS}`, we can first download some basic population data:
 
 ```{r}
@@ -149,7 +147,7 @@ comparison_summary |>
   )
 ```
 
-As you can see, the differences in the estimates are very small.
+As you can see, the differences in the estimates are very small. Most of these areas are adjacent to large water or open space areas suggesting that any differences could be mitigated by erasing the non-populated geometry from both the blocks and area data before interpolating estimates.
 
 In summary, I'd recommend the `{getACS}` functions if you want to retain a more accurate margin of error, you like a more verbose function, or you don't want to worry about matching coordinate reference systems in advance.
 
