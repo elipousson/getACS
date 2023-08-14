@@ -18,6 +18,9 @@ join_acs_geography_ratio(
 \arguments{
 \item{data}{A data frame with column names matching the supplied parameters.}
 
+\item{variable_col}{Variable column name to join as join variable, Default:
+'variable'}
+
 \item{value_col, moe_col}{Estimate and margin of error column names,
 Default: 'estimate' and 'moe'}
 
@@ -36,18 +39,15 @@ for database sources and to \code{base::merge(incomparables = NA)}.
 \item{digits}{integer indicating the number of decimal places
     (\code{round}) or significant digits (\code{signif}) to be used.
     For \code{round}, negative values are allowed (see \sQuote{Details}).}
-
-\item{column_col}{Variable column name to join as join variable, Default:
-'variable'}
 }
 \value{
 A data frame with new estimate and moe columns prefixed with
 "ratio_".
 }
 \description{
-\code{\link[=join_acs_prop]{join_acs_prop()}} uses data from \code{\link[=get_acs_geographies]{get_acs_geographies()}} to support the
-calculation of proportions join parent column titles to a data frame of ACS
-data.
+\code{\link[=join_acs_geography_ratio]{join_acs_geography_ratio()}} uses data from \code{\link[=get_acs_geographies]{get_acs_geographies()}} to
+support the calculation of proportions join parent column titles to a data
+frame of ACS data.
 }
 \seealso{
 \code{\link[tidycensus:moe_ratio]{tidycensus::moe_ratio()}}

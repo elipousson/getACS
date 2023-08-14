@@ -38,9 +38,7 @@ column added to the returned data frame.}
 
 \item{na.rm}{Passed to \code{\link[=sum]{sum()}}, Default: \code{TRUE}}
 
-\item{digits}{Passed to \code{\link[=digits]{digits()}}, Default: 2}
-
-\item{column_title_col}{Column title column name, Default: 'column_title'}
+\item{digits}{Passed to \code{\link[=round]{round()}}, Default: 2}
 }
 \description{
 \code{\link[=collapse_acs_variables]{collapse_acs_variables()}} uses \code{\link[forcats:fct_collapse]{forcats::fct_collapse()}} to aggregated

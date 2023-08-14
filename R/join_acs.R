@@ -9,7 +9,10 @@
 #' "denominator_column_id", "estimate", and "moe".
 #' @param geoid_col A GeoID column name to use if perc is `TRUE`, Defaults to
 #'   'GEOID'.
-#' @param denominator_col "denominator_column_id"
+#' @param column_id_col Column ID column name from Census Reporter metadata.
+#'   Defaults to "column_id"
+#' @param denominator_col Denominator column ID name from Census Reporter
+#'   metadata. Defaults to "denominator_column_id"
 #' @inheritParams base::round
 #' @inheritParams dplyr::left_join
 #' @seealso [tidycensus::moe_prop()], [camiller::calc_shares()]
@@ -18,14 +21,14 @@
 #' @importFrom tidycensus moe_prop
 join_acs_percent <- function(data,
                              geoid_col = "GEOID",
-                             column_col = "column_id",
+                             column_id_col = "column_id",
                              denominator_col = "denominator_column_id",
                              na_matches = "never",
                              digits = 2) {
   data <- join_acs_denominator(
     data = data,
     geoid_col = geoid_col,
-    column_col = column_col,
+    column_id_col = column_id_col,
     denominator_col = denominator_col,
     na_matches = na_matches,
     digits = digits
@@ -48,13 +51,13 @@ join_acs_percent <- function(data,
 #' @noRd
 join_acs_denominator <- function(data,
                                  geoid_col = "GEOID",
-                                 column_col = "column_id",
+                                 column_id_col = "column_id",
                                  denominator_col = "denominator_column_id",
                                  na_matches = "never",
                                  digits = 2) {
   stopifnot(
     all(has_name(data, c(
-      geoid_col, column_col, "column_title",
+      geoid_col, column_id_col, "column_title",
       denominator_col, "estimate"
     )))
   )
@@ -66,7 +69,7 @@ join_acs_denominator <- function(data,
   if (nrow(dplyr::filter(
     data,
     !is.na(.data[[denominator_col]]),
-    .data[[denominator_col]] %in% data[[column_col]],
+    .data[[denominator_col]] %in% data[[column_id_col]],
     .data[["indent"]] > 0
   )) > 1) {
     cli_alert_warning(
@@ -77,7 +80,7 @@ join_acs_denominator <- function(data,
   }
 
   denominator_data <- data |>
-    dplyr::filter(column_id %in% data[[denominator_col]]) |>
+    dplyr::filter(.data[[column_id_col]] %in% data[[denominator_col]]) |>
     dplyr::select(
       {{ geoid_col }},
       denominator_estimate = estimate,
@@ -101,12 +104,12 @@ join_acs_denominator <- function(data,
 #' Join ACS data from a single reference geography by variable to calculate a
 #' ratio value based on the reference geography data
 #'
-#' [join_acs_prop()] uses data from [get_acs_geographies()] to support the
-#' calculation of proportions join parent column titles to a data frame of ACS
-#' data.
+#' [join_acs_geography_ratio()] uses data from [get_acs_geographies()] to
+#' support the calculation of proportions join parent column titles to a data
+#' frame of ACS data.
 #'
 #' @param data A data frame with column names matching the supplied parameters.
-#' @param column_col Variable column name to join as join variable, Default:
+#' @param variable_col Variable column name to join as join variable, Default:
 #'   'variable'
 #' @param value_col,moe_col Estimate and margin of error column names,
 #'   Default: 'estimate' and 'moe'

@@ -112,6 +112,9 @@ tidycensus or the Census API. Copy to the API call into a browser and see
 what is returned by the API directly. Defaults to FALSE.}
   }}
 
+\item{crs}{Coordinate reference system to use for returned sf tibble when
+\code{geometry = TRUE} is passed to \code{\link[tidycensus:get_acs]{tidycensus::get_acs()}}. Defaults to \code{NULL}.}
+
 \item{label}{If \code{TRUE} (default), label the returned ACS data with
 \code{\link[=label_acs_metadata]{label_acs_metadata()}} before returning the data frame.}
 

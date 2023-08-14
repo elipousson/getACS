@@ -28,6 +28,13 @@ than one table_id value, the function will error}
 \item{survey}{Survey, "acs5", "acs3", or "acs1".}
 
 \item{year}{Sample year (between 2006 and 2021).}
+
+\item{width}{Minimum width of padded strings.}
+
+\item{error_call}{The execution environment of a currently
+running function, e.g. \code{caller_env()}. The function will be
+mentioned in error messages as the source of the error. See the
+\code{call} argument of \code{\link[rlang:abort]{abort()}} for more information.}
 }
 \value{
 A character vector of variable ID values.

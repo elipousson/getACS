@@ -9,13 +9,12 @@
 #' @inheritParams forcats::fct_collapse
 #' @param name_col Name column name, Default: 'NAME'
 #' @param variable_col Variable column name, Default: 'variable'
-#' @param column_title_col Column title column name, Default: 'column_title'
 #' @param label_col Label column name, Default: 'label'. Label is a factor
 #'   column added to the returned data frame.
 #' @param value_col,moe_col Value and margin of error column names (default to
 #'   "estimate" and "moe").
 #' @param na.rm Passed to [sum()], Default: `TRUE`
-#' @param digits Passed to [digits()], Default: 2
+#' @param digits Passed to [round()], Default: 2
 #' @examples
 #' \dontrun{
 #' if (interactive()) {

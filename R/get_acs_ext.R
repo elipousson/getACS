@@ -86,6 +86,8 @@ get_acs_table_alert <- function(...) {
 #' @param table A character vector of tables.
 #' @inheritParams tidycensus::get_acs
 #' @inheritDotParams tidycensus::get_acs
+#' @param crs Coordinate reference system to use for returned sf tibble when
+#'   `geometry = TRUE` is passed to [tidycensus::get_acs()]. Defaults to `NULL`.
 #' @param label If `TRUE` (default), label the returned ACS data with
 #'   [label_acs_metadata()] before returning the data frame.
 #' @param keep_geography If `TRUE` (default), bind geography and any supplied
@@ -485,6 +487,8 @@ acs_table_race_iteration <- function(table,
 #' @param variables A numeric vector corresponding to the line number of the
 #'   variables.
 #' @inheritParams get_acs_metadata
+#' @inheritParams stringr::str_pad
+#' @inheritParams rlang::args_error_context
 #' @name acs_table_variables
 #' @returns A character vector of variable ID values.
 #' @export
