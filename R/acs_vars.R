@@ -7,10 +7,12 @@
 #' results.
 #'
 #' @inheritParams label_acs_table_metadata
+#' @inheritParams tidycensus::load_variables
 #' @param geography_levels Ordered vector of geography levels used to convert
 #'   the geography column returned by [tidycensus::load_variables()] into a
 #'   factor. Default: c("block", "block group", "tract", "county", "state",
 #'   "us")
+#' @param table Table ID to return.
 #' @inheritParams filter_acs
 #' @returns A data frame with ACS variables definitions.
 #' @seealso
