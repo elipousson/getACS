@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_acs_ts.R
 \name{get_acs_ts}
 \alias{get_acs_ts}
-\title{Get multiple years, tables, and geographies of ACS data}
+\title{Get multiple years of ACS data for time series analysis}
 \usage{
 get_acs_ts(
   geography,
@@ -37,10 +37,11 @@ access. Defaults to FALSE; if TRUE, only needs to be called once per
 dataset.  If variables dataset is already cached via the
 \code{load_variables} function, this can be bypassed.}
 
-\item{year}{If length 1, the function uses \code{\link[=acs_survey_ts]{acs_survey_ts()}} to get data for
-all comparable survey years back to the start of the ACS. If length is
-greater than 1, return the selected years even if those years may not be
-valid to compare.}
+\item{year}{A numeric vector of years. If length 1, the function uses
+\code{\link[=acs_survey_ts]{acs_survey_ts()}} to get data for all comparable survey years back to the
+start of the ACS. This is the recommended approach for using
+\code{\link[=get_acs_ts]{get_acs_ts()}}. If length is greater than 1, return the selected years even
+if those years may not be valid to compare.}
 
 \item{state}{An optional vector of states for which you are requesting data.
 State names, postal codes, and FIPS codes are accepted. Defaults to NULL.}
@@ -58,6 +59,17 @@ expressed as "acs1", "acs3", and "acs5". The default selection is "acs5."}
 unchanged. If \code{TRUE}, set \code{cli.default_handler} to \link{suppressMessages}
 temporarily with \code{\link[rlang:local_options]{rlang::local_options()}}}
 }
+\value{
+A data frame or sf object.
+}
 \description{
-Get multiple years, tables, and geographies of ACS data
+\code{\link[=get_acs_ts]{get_acs_ts()}} is a variant on \code{\link[=get_acs_geographies]{get_acs_geographies()}} that supports
+downloading data for multiple years in addition to multiple tables or
+multiple geographies. The year is appended as an additional column in the
+returned data frame. The intended use is to provide the latest year needed
+and the function will download data for all non-overlapping survey periods.
+For example, 2021 ACS data using the 5-year sample can be compared to 5-year
+data from 2016 and 2011. Not all variables can be compared across different
+years and caution is recommended when using ACS data for time series
+analysis.
 }
