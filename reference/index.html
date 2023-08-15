@@ -71,7 +71,7 @@
           
           <code><a href="get_acs_ts.html">get_acs_ts()</a></code> 
         </dt>
-        <dd>Get multiple years, tables, and geographies of ACS data</dd>
+        <dd>Get multiple years of ACS data for time series analysis</dd>
       </dl><dl><dt>
           
           <code><a href="vec_get_acs.html">vec_get_acs()</a></code> 
@@ -114,8 +114,7 @@ Census tracts and non-Census geographic areas</dd>
           
           <code><a href="gt_acs.html">gt_acs()</a></code> 
         </dt>
-        <dd>Format American Community Survey estimate and percent estimate columns for a
-gt table</dd>
+        <dd>Format ACS estimate and percent estimate columns for a gt table</dd>
       </dl><dl><dt>
           
           <code><a href="tab_acs_source_note.html">tab_acs_source_note()</a></code> 
@@ -158,7 +157,7 @@ gt table</dd>
         </dt>
         <dd>Scales for plotting ACS data with ggplot2</dd>
       </dl></div><div class="section level2">
-      <h2 id="additional-utility-functions-for-acs-data-frames">Additional utility functions for ACS data frames<a class="anchor" aria-label="anchor" href="#additional-utility-functions-for-acs-data-frames"></a></h2>
+      <h2 id="additional-utility-functions-for-acs-data">Additional utility functions for ACS data<a class="anchor" aria-label="anchor" href="#additional-utility-functions-for-acs-data"></a></h2>
       
       
 
@@ -175,10 +174,14 @@ gt table</dd>
         <dd>Assorted helpers for ACS survey types and labels</dd>
       </dl><dl><dt>
           
+          <code><a href="acs_table_race_iteration.html">acs_table_race_iteration()</a></code> 
+        </dt>
+        <dd>Append a set of race iteration codes to an ACS table ID</dd>
+      </dl><dl><dt>
+          
           <code><a href="acs_table_variables.html">acs_table_variables()</a></code> 
         </dt>
-        <dd>Convert a table ID into a set of variable ID using a numeric vector for
-variables</dd>
+        <dd>Convert an ACS table ID to a set of variable ID values</dd>
       </dl><dl><dt>
           
           <code><a href="join_acs_geography_ratio.html">join_acs_geography_ratio()</a></code> 
@@ -204,13 +207,18 @@ ratio value based on the reference geography data</dd>
           
           <code><a href="select_acs_cols.html">select_acs_cols()</a></code> 
         </dt>
-        <dd>Select columns for a gt table based on ACS data using <code><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">dplyr::select()</a></code></dd>
+        <dd>Select columns from an ACS data frame using <code><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">dplyr::select()</a></code></dd>
       </dl><dl><dt>
           
           <code><a href="filter_acs.html">filter_acs()</a></code> 
         </dt>
-        <dd>Filter American Community Survey data by table, variables, or other
-attributes using <code><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">dplyr::filter()</a></code></dd>
+        <dd>Filter ACS data by table ID, variables, or other attributes using
+<code><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">dplyr::filter()</a></code></dd>
+      </dl><dl><dt>
+          
+          <code><a href="load_acs_vars.html">load_acs_vars()</a></code> 
+        </dt>
+        <dd>Load ACS variables with <code><a href="https://walker-data.com/tidycensus/reference/load_variables.html" class="external-link">tidycensus::load_variables()</a></code></dd>
       </dl></div><div class="section level2">
       <h2 id="reference-data">Reference data<a class="anchor" aria-label="anchor" href="#reference-data"></a></h2>
       
