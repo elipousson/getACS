@@ -4,9 +4,9 @@
 #' create or validate race iteration codes and create race iteration table IDs.
 #'
 #' @name acs_table_race_iteration
-#' @param table Table ID.
-#' @param code Character vector of race iteration codes to return. Defaults to
-#'   `c("", race_iteration[["code"]])`.
+#' @param table An ACS table ID string.
+#' @param codes Character vector of race iteration codes to return. If `NULL`
+#'   (default), codes is set to `c("", race_iteration[["code"]])`.
 #' @inheritParams rlang::args_error_context
 #' @returns A character vector of variable ID values for a single table.
 #' @seealso [acs_table_variables()]
@@ -36,17 +36,21 @@ acs_table_race_iteration <- function(table,
 #' [tidycensus::get_acs()], e.g. "{table_id}_{line_number}" where the
 #' line_number is a width 3 string prefixed by "0". If variables is `NULL`, the
 #' function calls [get_acs_metadata()] with `metadata = "column"` and returns
-#' all available variables for the table for the supplied year and survey.
+#' all available variables for the table for the supplied year and survey. Note
+#' that the `sep` and `width` parameters should *not* be changed if you are
+#' working with data from the `{tidycensus}` package.
 #'
 #' @name acs_table_variables
-#' @param table A table ID string.
+#' @param table An ACS table ID string.
 #' @param data If data is provided and table is `NULL`, table is set based on
 #'   the unique values in the "table_id" column of data. If data contains more
 #'   than one table_id value, the function will error
 #' @param variables A numeric vector corresponding to the line number of the
 #'   variables.
+#' @param sep A separator character between the table ID string and variable ID
+#'   values.
+#' @param width Variable ID suffix width.
 #' @inheritParams get_acs_metadata
-#' @inheritParams stringr::str_pad
 #' @inheritParams rlang::args_error_context
 #' @inheritParams rlang::args_error_context
 #' @returns A character vector of variable ID values for a single table.
@@ -58,6 +62,7 @@ acs_table_variables <- function(table = NULL,
                                 data = NULL,
                                 survey = "acs5",
                                 year = 2021,
+                                sep = "_",
                                 width = 3,
                                 error_call = caller_env()) {
   if (is.data.frame(data) && is.null(table)) {
@@ -80,5 +85,5 @@ acs_table_variables <- function(table = NULL,
     variables <- table_metadata[["line_number"]]
   }
 
-  paste0(table, "_", stringr::str_pad(variables, width = width, pad = "0"))
+  paste0(table, sep, stringr::str_pad(variables, width = width, pad = "0"))
 }

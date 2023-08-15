@@ -2,8 +2,8 @@
 % Please edit documentation in R/filter_acs.R
 \name{filter_acs}
 \alias{filter_acs}
-\title{Filter American Community Survey data by table, variables, or other
-attributes using \code{dplyr::filter()}}
+\title{Filter ACS data by table ID, variables, or other attributes using
+\code{dplyr::filter()}}
 \usage{
 filter_acs(
   data,

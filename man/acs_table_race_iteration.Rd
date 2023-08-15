@@ -7,15 +7,15 @@
 acs_table_race_iteration(table, codes = NULL, error_call = caller_env())
 }
 \arguments{
-\item{table}{Table ID.}
+\item{table}{An ACS table ID string.}
+
+\item{codes}{Character vector of race iteration codes to return. If \code{NULL}
+(default), codes is set to \code{c("", race_iteration[["code"]])}.}
 
 \item{error_call}{The execution environment of a currently
 running function, e.g. \code{caller_env()}. The function will be
 mentioned in error messages as the source of the error. See the
 \code{call} argument of \code{\link[rlang:abort]{abort()}} for more information.}
-
-\item{code}{Character vector of race iteration codes to return. Defaults to
-\code{c("", race_iteration[["code"]])}.}
 }
 \value{
 A character vector of variable ID values for a single table.

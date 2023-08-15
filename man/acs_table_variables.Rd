@@ -10,12 +10,13 @@ acs_table_variables(
   data = NULL,
   survey = "acs5",
   year = 2021,
+  sep = "_",
   width = 3,
   error_call = caller_env()
 )
 }
 \arguments{
-\item{table}{A table ID string.}
+\item{table}{An ACS table ID string.}
 
 \item{variables}{A numeric vector corresponding to the line number of the
 variables.}
@@ -28,7 +29,10 @@ than one table_id value, the function will error}
 
 \item{year}{Sample year (between 2006 and 2021).}
 
-\item{width}{Minimum width of padded strings.}
+\item{sep}{A separator character between the table ID string and variable ID
+values.}
+
+\item{width}{Variable ID suffix width.}
 
 \item{error_call}{The execution environment of a currently
 running function, e.g. \code{caller_env()}. The function will be
@@ -44,7 +48,9 @@ a table ID string. The returned variable IDs use the format returned by
 \code{\link[tidycensus:get_acs]{tidycensus::get_acs()}}, e.g. "{table_id}_{line_number}" where the
 line_number is a width 3 string prefixed by "0". If variables is \code{NULL}, the
 function calls \code{\link[=get_acs_metadata]{get_acs_metadata()}} with \code{metadata = "column"} and returns
-all available variables for the table for the supplied year and survey.
+all available variables for the table for the supplied year and survey. Note
+that the \code{sep} and \code{width} parameters should \emph{not} be changed if you are
+working with data from the \code{{tidycensus}} package.
 }
 \seealso{
 \code{\link[=acs_table_race_iteration]{acs_table_race_iteration()}}

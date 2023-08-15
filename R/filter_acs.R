@@ -1,5 +1,5 @@
-#' Filter American Community Survey data by table, variables, or other
-#' attributes using `dplyr::filter()`
+#' Filter ACS data by table ID, variables, or other attributes using
+#' `dplyr::filter()`
 #'
 #' [filter_acs()] helps to filter a data frame of American Community Survey data
 #' enriched with table and column metadata using the [label_acs_metadata()]

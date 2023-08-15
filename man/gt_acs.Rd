@@ -2,8 +2,7 @@
 % Please edit documentation in R/gt.R
 \name{gt_acs}
 \alias{gt_acs}
-\title{Format American Community Survey estimate and percent estimate columns for a
-gt table}
+\title{Format ACS estimate and percent estimate columns for a gt table}
 \usage{
 gt_acs(
   data,

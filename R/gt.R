@@ -249,8 +249,7 @@ cols_label_ext <- function(gt_object,
   )
 }
 
-#' Format American Community Survey estimate and percent estimate columns for a
-#' gt table
+#' Format ACS estimate and percent estimate columns for a gt table
 #'
 #' Create or format a gt table with an estimate and margin of error and
 #' (optionally) percent estimate and margin of error value. Use in combination
