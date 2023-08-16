@@ -17,7 +17,9 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 
-[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Project Status: WIP -- Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Project Status: WIP -- Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
 
 <!-- badges: end -->
 
@@ -100,11 +102,16 @@ For more information on working with Census data in R [read the book *Analyzing 
 
 ## Related projects
 
-### Related R packages
+### Related R packages and analysis projects
 
 -   [{easycensus}](https://github.com/CoryMcCartan/easycensus): Quickly Extract and Marginalize U.S. Census Tables
 -   [{cwi}](https://ct-data-haven.github.io/cwi/): Functions to speed up and standardize Census ACS data analysis for multiple staff people at DataHaven, preview trends and patterns, and get data in more layperson-friendly
 -   [{camiller}](https://camille-s.github.io/camiller/): A set of convenience functions, functions for working with ACS data via `{tidycensus}`
+-   [{psrccensus}](https://psrc.github.io/psrccensus/): A set of tools developed for PSRC (Puget Sound Regional Council) staff to pull, process, and visualize Census Data for geographies in the Central Puget Sound Region.
+-   [{CTPPr}](https://github.com/Westat-Transportation/CTPPr): A R package for loading and working with the US Census CTPP survey data.
+-   [{lehdr}](https://github.com/jamgreen/lehdr): a package to grab LEHD data in support of city and regional planning economic and transportation analysis
+-   [{mapreliability}](https://github.com/austensen/mapreliability): A R package for map classification reliability calculator
+-   [Studying Neighborhoods With Uncertain Census Data](https://github.com/geoss/acs_demographic_clusters): Code to create and visualize demographic clusters for the US with data from the American Community Survey
 
 ### Related Python libraries
 

@@ -1,8 +1,8 @@
 ---
-title: "Creating gt tables"
+title: "2. Creating gt tables"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Creating gt tables}
+  %\VignetteIndexEntry{2. Creating gt tables}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

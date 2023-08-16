@@ -1,8 +1,8 @@
 ---
-title: "Introduction to getACS"
+title: "1. Introduction to getACS"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Introduction to getACS}
+  %\VignetteIndexEntry{1. Introduction to getACS}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

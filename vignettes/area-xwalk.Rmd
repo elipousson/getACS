@@ -1,8 +1,8 @@
 ---
-title: "Interpolating ACS data using an area crosswalk"
+title: "3. Interpolating ACS data using an area crosswalk"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Interpolating ACS data using an area crosswalk}
+  %\VignetteIndexEntry{3. Interpolating ACS data using an area crosswalk}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
