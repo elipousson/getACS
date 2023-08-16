@@ -86,7 +86,7 @@ join_acs_denominator <- function(data,
       denominator_estimate = estimate,
       denominator_moe = moe,
       denominator_column_title = column_title,
-      "{denominator_col}" := dplyr::all_of(column_col)
+      "{denominator_col}" := dplyr::all_of(column_id_col)
     )
 
   if (inherits(denominator_data, "sf")) {
