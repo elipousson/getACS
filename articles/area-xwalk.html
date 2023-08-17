@@ -118,12 +118,11 @@ data:</p>
 Maryland iMap to provide an alternate geometry that we are interpolating
 the data to fit:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># NOTE: These are outdated Neighborhood Statistical Area boundaries as of summer 2023</span></span>
-<span><span class="va">area</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">read_sf</a></span><span class="op">(</span><span class="st">"https://geodata.md.gov/appdata/rest/services/TrainingProgram/MD_BaltimoreCityNeighborhoods/FeatureServer/0/query?outFields=*&amp;where=1%3D1&amp;f=geojson"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">area</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">read_sf</a></span><span class="op">(</span><span class="st">"https://services1.arcgis.com/UWYHeuuJISiGmgXx/arcgis/rest/services/Neighborhood/FeatureServer/0/query?outFields=*&amp;where=1%3D1&amp;f=geojson"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">area</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span><span class="va">area</span>, crs <span class="op">=</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs</a></span><span class="op">(</span><span class="va">pop_sf</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">area</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">area</span>, NAME <span class="op">=</span> <span class="va">LABEL</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">area</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">area</span>, NAME <span class="op">=</span> <span class="va">Name</span><span class="op">)</span></span></code></pre></div>
 <p>Interpolating ACS data to a new geometry using <a href="https://elipousson.github.io/getACS/">getACS</a>
 is a multi-step process:</p>
 <ul>
@@ -245,23 +244,23 @@ by each method:</p>
 <span>  <span class="fu"><a href="https://gt.rstudio.com/reference/tab_header.html" class="external-link">tab_header</a></span><span class="op">(</span></span>
 <span>    <span class="st">"10 areas with the largest difference between interpolation methods"</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<div id="zfigrdnauj" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#zfigrdnauj table {
+<div id="hstzxsyers" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#hstzxsyers table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#zfigrdnauj thead, #zfigrdnauj tbody, #zfigrdnauj tfoot, #zfigrdnauj tr, #zfigrdnauj td, #zfigrdnauj th {
+#hstzxsyers thead, #hstzxsyers tbody, #hstzxsyers tfoot, #hstzxsyers tr, #hstzxsyers td, #hstzxsyers th {
   border-style: none;
 }
 
-#zfigrdnauj p {
+#hstzxsyers p {
   margin: 0;
   padding: 0;
 }
 
-#zfigrdnauj .gt_table {
+#hstzxsyers .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -287,12 +286,12 @@ by each method:</p>
   border-left-color: #D3D3D3;
 }
 
-#zfigrdnauj .gt_caption {
+#hstzxsyers .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#zfigrdnauj .gt_title {
+#hstzxsyers .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -304,7 +303,7 @@ by each method:</p>
   border-bottom-width: 0;
 }
 
-#zfigrdnauj .gt_subtitle {
+#hstzxsyers .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -316,7 +315,7 @@ by each method:</p>
   border-top-width: 0;
 }
 
-#zfigrdnauj .gt_heading {
+#hstzxsyers .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -328,13 +327,13 @@ by each method:</p>
   border-right-color: #D3D3D3;
 }
 
-#zfigrdnauj .gt_bottom_border {
+#hstzxsyers .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#zfigrdnauj .gt_col_headings {
+#hstzxsyers .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -349,7 +348,7 @@ by each method:</p>
   border-right-color: #D3D3D3;
 }
 
-#zfigrdnauj .gt_col_heading {
+#hstzxsyers .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -369,7 +368,7 @@ by each method:</p>
   overflow-x: hidden;
 }
 
-#zfigrdnauj .gt_column_spanner_outer {
+#hstzxsyers .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -381,15 +380,15 @@ by each method:</p>
   padding-right: 4px;
 }
 
-#zfigrdnauj .gt_column_spanner_outer:first-child {
+#hstzxsyers .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#zfigrdnauj .gt_column_spanner_outer:last-child {
+#hstzxsyers .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#zfigrdnauj .gt_column_spanner {
+#hstzxsyers .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -401,11 +400,11 @@ by each method:</p>
   width: 100%;
 }
 
-#zfigrdnauj .gt_spanner_row {
+#hstzxsyers .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#zfigrdnauj .gt_group_heading {
+#hstzxsyers .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -431,7 +430,7 @@ by each method:</p>
   text-align: left;
 }
 
-#zfigrdnauj .gt_empty_group_heading {
+#hstzxsyers .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -446,15 +445,15 @@ by each method:</p>
   vertical-align: middle;
 }
 
-#zfigrdnauj .gt_from_md > :first-child {
+#hstzxsyers .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#zfigrdnauj .gt_from_md > :last-child {
+#hstzxsyers .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#zfigrdnauj .gt_row {
+#hstzxsyers .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -473,7 +472,7 @@ by each method:</p>
   overflow-x: hidden;
 }
 
-#zfigrdnauj .gt_stub {
+#hstzxsyers .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -486,7 +485,7 @@ by each method:</p>
   padding-right: 5px;
 }
 
-#zfigrdnauj .gt_stub_row_group {
+#hstzxsyers .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -500,15 +499,15 @@ by each method:</p>
   vertical-align: top;
 }
 
-#zfigrdnauj .gt_row_group_first td {
+#hstzxsyers .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#zfigrdnauj .gt_row_group_first th {
+#hstzxsyers .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#zfigrdnauj .gt_summary_row {
+#hstzxsyers .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -518,16 +517,16 @@ by each method:</p>
   padding-right: 5px;
 }
 
-#zfigrdnauj .gt_first_summary_row {
+#hstzxsyers .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#zfigrdnauj .gt_first_summary_row.thick {
+#hstzxsyers .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#zfigrdnauj .gt_last_summary_row {
+#hstzxsyers .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -537,7 +536,7 @@ by each method:</p>
   border-bottom-color: #D3D3D3;
 }
 
-#zfigrdnauj .gt_grand_summary_row {
+#hstzxsyers .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -547,7 +546,7 @@ by each method:</p>
   padding-right: 5px;
 }
 
-#zfigrdnauj .gt_first_grand_summary_row {
+#hstzxsyers .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -557,7 +556,7 @@ by each method:</p>
   border-top-color: #D3D3D3;
 }
 
-#zfigrdnauj .gt_last_grand_summary_row_top {
+#hstzxsyers .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -567,11 +566,11 @@ by each method:</p>
   border-bottom-color: #D3D3D3;
 }
 
-#zfigrdnauj .gt_striped {
+#hstzxsyers .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#zfigrdnauj .gt_table_body {
+#hstzxsyers .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -580,7 +579,7 @@ by each method:</p>
   border-bottom-color: #D3D3D3;
 }
 
-#zfigrdnauj .gt_footnotes {
+#hstzxsyers .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -594,7 +593,7 @@ by each method:</p>
   border-right-color: #D3D3D3;
 }
 
-#zfigrdnauj .gt_footnote {
+#hstzxsyers .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -603,7 +602,7 @@ by each method:</p>
   padding-right: 5px;
 }
 
-#zfigrdnauj .gt_sourcenotes {
+#hstzxsyers .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -617,7 +616,7 @@ by each method:</p>
   border-right-color: #D3D3D3;
 }
 
-#zfigrdnauj .gt_sourcenote {
+#hstzxsyers .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -625,63 +624,63 @@ by each method:</p>
   padding-right: 5px;
 }
 
-#zfigrdnauj .gt_left {
+#hstzxsyers .gt_left {
   text-align: left;
 }
 
-#zfigrdnauj .gt_center {
+#hstzxsyers .gt_center {
   text-align: center;
 }
 
-#zfigrdnauj .gt_right {
+#hstzxsyers .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#zfigrdnauj .gt_font_normal {
+#hstzxsyers .gt_font_normal {
   font-weight: normal;
 }
 
-#zfigrdnauj .gt_font_bold {
+#hstzxsyers .gt_font_bold {
   font-weight: bold;
 }
 
-#zfigrdnauj .gt_font_italic {
+#hstzxsyers .gt_font_italic {
   font-style: italic;
 }
 
-#zfigrdnauj .gt_super {
+#hstzxsyers .gt_super {
   font-size: 65%;
 }
 
-#zfigrdnauj .gt_footnote_marks {
+#hstzxsyers .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#zfigrdnauj .gt_asterisk {
+#hstzxsyers .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#zfigrdnauj .gt_indent_1 {
+#hstzxsyers .gt_indent_1 {
   text-indent: 5px;
 }
 
-#zfigrdnauj .gt_indent_2 {
+#hstzxsyers .gt_indent_2 {
   text-indent: 10px;
 }
 
-#zfigrdnauj .gt_indent_3 {
+#hstzxsyers .gt_indent_3 {
   text-indent: 15px;
 }
 
-#zfigrdnauj .gt_indent_4 {
+#hstzxsyers .gt_indent_4 {
   text-indent: 20px;
 }
 
-#zfigrdnauj .gt_indent_5 {
+#hstzxsyers .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -702,34 +701,34 @@ by each method:</p>
 <th colspan="4" class="gt_group_heading" scope="colgroup" id="`interpolate_pw` estimate is lower">`interpolate_pw` estimate is lower</th>
     </tr>
 <tr class="gt_row_group_first">
-<td headers="`interpolate_pw` estimate is lower  name" class="gt_row gt_left">Locust Point Industrial Area</td>
-<td headers="`interpolate_pw` estimate is lower  estimate_xwalk" class="gt_row gt_right">1308</td>
-<td headers="`interpolate_pw` estimate is lower  estimate_interpolated" class="gt_row gt_right">854.4785</td>
-<td headers="`interpolate_pw` estimate is lower  difference" class="gt_row gt_right">453.52148</td>
-</tr>
-<tr>
-<td headers="`interpolate_pw` estimate is lower  name" class="gt_row gt_left">Belair-Edison</td>
-<td headers="`interpolate_pw` estimate is lower  estimate_xwalk" class="gt_row gt_right">16555</td>
-<td headers="`interpolate_pw` estimate is lower  estimate_interpolated" class="gt_row gt_right">16417.1188</td>
-<td headers="`interpolate_pw` estimate is lower  difference" class="gt_row gt_right">137.88118</td>
-</tr>
-<tr>
 <td headers="`interpolate_pw` estimate is lower  name" class="gt_row gt_left">Evergreen</td>
 <td headers="`interpolate_pw` estimate is lower  estimate_xwalk" class="gt_row gt_right">378</td>
 <td headers="`interpolate_pw` estimate is lower  estimate_interpolated" class="gt_row gt_right">312.2668</td>
 <td headers="`interpolate_pw` estimate is lower  difference" class="gt_row gt_right">65.73316</td>
 </tr>
 <tr>
-<td headers="`interpolate_pw` estimate is lower  name" class="gt_row gt_left">New Southwest/Mount Clare</td>
-<td headers="`interpolate_pw` estimate is lower  estimate_xwalk" class="gt_row gt_right">2085</td>
-<td headers="`interpolate_pw` estimate is lower  estimate_interpolated" class="gt_row gt_right">2019.4264</td>
-<td headers="`interpolate_pw` estimate is lower  difference" class="gt_row gt_right">65.57355</td>
+<td headers="`interpolate_pw` estimate is lower  name" class="gt_row gt_left">Dorchester</td>
+<td headers="`interpolate_pw` estimate is lower  estimate_xwalk" class="gt_row gt_right">1971</td>
+<td headers="`interpolate_pw` estimate is lower  estimate_interpolated" class="gt_row gt_right">1928.2805</td>
+<td headers="`interpolate_pw` estimate is lower  difference" class="gt_row gt_right">42.71949</td>
 </tr>
 <tr>
-<td headers="`interpolate_pw` estimate is lower  name" class="gt_row gt_left">Canton Industrial Area</td>
-<td headers="`interpolate_pw` estimate is lower  estimate_xwalk" class="gt_row gt_right">939</td>
-<td headers="`interpolate_pw` estimate is lower  estimate_interpolated" class="gt_row gt_right">890.4785</td>
-<td headers="`interpolate_pw` estimate is lower  difference" class="gt_row gt_right">48.52147</td>
+<td headers="`interpolate_pw` estimate is lower  name" class="gt_row gt_left">West Arlington</td>
+<td headers="`interpolate_pw` estimate is lower  estimate_xwalk" class="gt_row gt_right">2234</td>
+<td headers="`interpolate_pw` estimate is lower  estimate_interpolated" class="gt_row gt_right">2196.9446</td>
+<td headers="`interpolate_pw` estimate is lower  difference" class="gt_row gt_right">37.05536</td>
+</tr>
+<tr>
+<td headers="`interpolate_pw` estimate is lower  name" class="gt_row gt_left">Patterson Park Neighborhood</td>
+<td headers="`interpolate_pw` estimate is lower  estimate_xwalk" class="gt_row gt_right">4647</td>
+<td headers="`interpolate_pw` estimate is lower  estimate_interpolated" class="gt_row gt_right">4611.3527</td>
+<td headers="`interpolate_pw` estimate is lower  difference" class="gt_row gt_right">35.64733</td>
+</tr>
+<tr>
+<td headers="`interpolate_pw` estimate is lower  name" class="gt_row gt_left">Wilson Park</td>
+<td headers="`interpolate_pw` estimate is lower  estimate_xwalk" class="gt_row gt_right">1278</td>
+<td headers="`interpolate_pw` estimate is lower  estimate_interpolated" class="gt_row gt_right">1243.1536</td>
+<td headers="`interpolate_pw` estimate is lower  difference" class="gt_row gt_right">34.84645</td>
 </tr>
 <tr class="gt_group_heading_row">
 <th colspan="4" class="gt_group_heading" scope="colgroup" id="`use_area_xwalk` estimate is lower">`use_area_xwalk` estimate is lower</th>
@@ -741,28 +740,28 @@ by each method:</p>
 <td headers="`use_area_xwalk` estimate is lower  difference" class="gt_row gt_right">-694.93887</td>
 </tr>
 <tr>
-<td headers="`use_area_xwalk` estimate is lower  name" class="gt_row gt_left">Locust Point</td>
-<td headers="`use_area_xwalk` estimate is lower  estimate_xwalk" class="gt_row gt_right">2164</td>
-<td headers="`use_area_xwalk` estimate is lower  estimate_interpolated" class="gt_row gt_right">2610.2818</td>
-<td headers="`use_area_xwalk` estimate is lower  difference" class="gt_row gt_right">-446.28180</td>
-</tr>
-<tr>
-<td headers="`use_area_xwalk` estimate is lower  name" class="gt_row gt_left">Four By Four</td>
-<td headers="`use_area_xwalk` estimate is lower  estimate_xwalk" class="gt_row gt_right">946</td>
-<td headers="`use_area_xwalk` estimate is lower  estimate_interpolated" class="gt_row gt_right">1088.5752</td>
-<td headers="`use_area_xwalk` estimate is lower  difference" class="gt_row gt_right">-142.57518</td>
-</tr>
-<tr>
 <td headers="`use_area_xwalk` estimate is lower  name" class="gt_row gt_left">Roland Park</td>
 <td headers="`use_area_xwalk` estimate is lower  estimate_xwalk" class="gt_row gt_right">5158</td>
 <td headers="`use_area_xwalk` estimate is lower  estimate_interpolated" class="gt_row gt_right">5266.9635</td>
 <td headers="`use_area_xwalk` estimate is lower  difference" class="gt_row gt_right">-108.96351</td>
 </tr>
 <tr>
-<td headers="`use_area_xwalk` estimate is lower  name" class="gt_row gt_left">Carrollton Ridge</td>
-<td headers="`use_area_xwalk` estimate is lower  estimate_xwalk" class="gt_row gt_right">2387</td>
-<td headers="`use_area_xwalk` estimate is lower  estimate_interpolated" class="gt_row gt_right">2451.7020</td>
-<td headers="`use_area_xwalk` estimate is lower  difference" class="gt_row gt_right">-64.70199</td>
+<td headers="`use_area_xwalk` estimate is lower  name" class="gt_row gt_left">Fairmount</td>
+<td headers="`use_area_xwalk` estimate is lower  estimate_xwalk" class="gt_row gt_right">259</td>
+<td headers="`use_area_xwalk` estimate is lower  estimate_interpolated" class="gt_row gt_right">301.3271</td>
+<td headers="`use_area_xwalk` estimate is lower  difference" class="gt_row gt_right">-42.32712</td>
+</tr>
+<tr>
+<td headers="`use_area_xwalk` estimate is lower  name" class="gt_row gt_left">Forest Park</td>
+<td headers="`use_area_xwalk` estimate is lower  estimate_xwalk" class="gt_row gt_right">1319</td>
+<td headers="`use_area_xwalk` estimate is lower  estimate_interpolated" class="gt_row gt_right">1361.1731</td>
+<td headers="`use_area_xwalk` estimate is lower  difference" class="gt_row gt_right">-42.17305</td>
+</tr>
+<tr>
+<td headers="`use_area_xwalk` estimate is lower  name" class="gt_row gt_left">Morgan State University</td>
+<td headers="`use_area_xwalk` estimate is lower  estimate_xwalk" class="gt_row gt_right">1929</td>
+<td headers="`use_area_xwalk` estimate is lower  estimate_interpolated" class="gt_row gt_right">1967.7397</td>
+<td headers="`use_area_xwalk` estimate is lower  difference" class="gt_row gt_right">-38.73971</td>
 </tr>
 </tbody>
 </table>
