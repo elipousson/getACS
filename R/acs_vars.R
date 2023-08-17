@@ -25,8 +25,10 @@ load_acs_vars <- function(year = 2021,
                           survey = "acs5",
                           cache = TRUE,
                           variable_col = "variable",
-                          geography_levels = c("block", "block group", "tract",
-                                               "county", "state", "us"),
+                          geography_levels = c(
+                            "block", "block group", "tract",
+                            "county", "state", "us"
+                          ),
                           table = NULL,
                           vars = NULL,
                           drop_vars = NULL) {
@@ -50,7 +52,7 @@ load_acs_vars <- function(year = 2021,
         .data[["geography"]],
         levels = geography_levels,
         ordered = TRUE
-        )
+      )
     )
   }
 

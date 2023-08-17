@@ -59,6 +59,6 @@
 #'   \item{`type`}{Type (minimum or maximum jam value)}
 #'   \item{`units`}{Units. Note year is for a specific year, years is for duration.}
 #'   \item{`year`}{Year applicable}
-#'}
+#' }
 #' @details <https://docs.google.com/spreadsheets/d/1YX3NBDkkoDXHs88KDfPS_QoS9-1j_C_q8UAyjPznfzA/edit?usp=sharing>
 "jam_values"
