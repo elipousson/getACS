@@ -77,6 +77,18 @@ commute_tbl <- gt_acs(
 as_raw_html(commute_tbl)
 ```
 
+The `gt_acs_compare()` function also allows side-by-side comparison of geographies:
+
+```{r}
+commute_tbl_compare <- gt_acs_compare(
+  tbl_data,
+  column_title_label = "Commute time",
+  table = "B08134"
+)
+
+as_raw_html(commute_tbl_compare)
+```
+
 The package also includes several simple functions to support creating plots with the `{ggplot2}` package:
 
 ```{r}
