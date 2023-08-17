@@ -2,10 +2,12 @@
 % Please edit documentation in R/gt.R
 \name{gt_acs}
 \alias{gt_acs}
-\title{Format ACS estimate and percent estimate columns for a gt table}
+\title{Create a gt table with formatted ACS estimate and percent estimate columns}
 \usage{
 gt_acs(
   data,
+  rownames_to_stub = FALSE,
+  row_group_as_column = FALSE,
   ...,
   est_cols = c("estimate", "moe"),
   est_col_label = "Est.",
@@ -22,6 +24,7 @@ gt_acs(
   source_note = NULL,
   append_note = FALSE,
   drop_geometry = TRUE,
+  hide_na_cols = TRUE,
   survey = "acs5",
   year = 2021,
   table = NULL,
@@ -35,6 +38,22 @@ gt_acs(
 \verb{obj:<data.frame>|obj:<tbl_df>} // \strong{required}
 
 A \code{data.frame} object or a tibble (\code{tbl_df}).}
+
+\item{rownames_to_stub}{\emph{Use data frame row labels in the stub}
+
+\verb{scalar<logical>} // \emph{default:} \code{FALSE}
+
+An option to take rownames from the input \code{data} table (should they be
+available) as row labels in the display table stub.}
+
+\item{row_group_as_column}{\emph{Mode for displaying row group labels in the stub}
+
+\verb{scalar<logical>} // \emph{default:} \code{FALSE}
+
+An option that alters the display of row group labels. By default this is
+\code{FALSE} and row group labels will appear in dedicated rows above their
+respective groups of rows. If \code{TRUE} row group labels will occupy a
+secondary column in the table stub.}
 
 \item{...}{Additional parameters passed to \code{\link[gt:fmt_number]{gt::fmt_number()}} by
 \code{\link[=fmt_acs_estimate]{fmt_acs_estimate()}} or to \code{\link[gt:fmt_percent]{gt::fmt_percent()}} by \code{\link[=fmt_acs_percent]{fmt_acs_percent()}}.}
@@ -82,6 +101,9 @@ ACS label.}
 
 \item{drop_geometry}{If \code{TRUE} (default) and data is an sf object, drop
 geometry before turning the data frame into a table.}
+
+\item{hide_na_cols}{If \code{TRUE} (default), hide columns where all values are
+\code{NA}.}
 
 \item{survey}{ACS survey, "acs5", "acs3", or "acs1".}
 
