@@ -249,7 +249,7 @@ cols_label_ext <- function(gt_object,
   )
 }
 
-#' Format ACS estimate and percent estimate columns for a gt table
+#' Create a gt table with formatted ACS estimate and percent estimate columns
 #'
 #' Create or format a gt table with an estimate and margin of error and
 #' (optionally) percent estimate and margin of error value. Use in combination
@@ -272,6 +272,8 @@ cols_label_ext <- function(gt_object,
 #' @param name_col,name_col_label Place name column and label. name_col_label
 #'   can be a string or a named vector (similar to column_title_label). name_col
 #'   defaults to "NAME"
+#' @param hide_na_cols If `TRUE` (default), hide columns where all values are
+#'   `NA`.
 #' @param drop_geometry If `TRUE` (default) and data is an sf object, drop
 #'   geometry before turning the data frame into a table.
 #' @inheritParams tab_acs_source_note
@@ -301,6 +303,8 @@ cols_label_ext <- function(gt_object,
 #' @importFrom gt gt tab_spanner cols_label
 #' @importFrom sf st_drop_geometry
 gt_acs <- function(data,
+                   rownames_to_stub = FALSE,
+                   row_group_as_column = FALSE,
                    ...,
                    est_cols = c("estimate", "moe"),
                    est_col_label = "Est.",
@@ -317,6 +321,7 @@ gt_acs <- function(data,
                    source_note = NULL,
                    append_note = FALSE,
                    drop_geometry = TRUE,
+                   hide_na_cols = TRUE,
                    survey = "acs5",
                    year = 2021,
                    table = NULL,
@@ -329,14 +334,19 @@ gt_acs <- function(data,
   }
 
   if (!inherits(data, "gt_tbl")) {
-    gt_object <- gt::gt(data, ...)
+    gt_object <- gt::gt(
+      data,
+      rownames_to_stub = rownames_to_stub,
+      row_group_as_column = row_group_as_column,
+      ...
+    )
   }
 
   if (identical(column_title_label, "from_table")) {
     metadata <- get_acs_metadata(survey, year, table = table)
 
     if (has_length(unique(metadata[["simple_table_title"]]), 1)) {
-      column_title_label <- metadata[["simple_table_title"]]
+      column_title_label <- unique(metadata[["simple_table_title"]])
     }
   }
 
@@ -372,6 +382,10 @@ gt_acs <- function(data,
         spanner = perc_spanner
       )
     }
+  }
+
+  if (hide_na_cols) {
+    gt_object <- cols_hide_na(gt_object)
   }
 
   if (!is_null(combined_spanner)) {
@@ -422,75 +436,4 @@ gt_acs <- function(data,
     prefix = prefix,
     end = end
   )
-}
-
-
-#' @noRd
-gt_acs_bind_geographies <- function(data,
-                                    names = NULL,
-                                    name_labels = NULL,
-                                    table = NULL,
-                                    name_col = "name",
-                                    column_title_col = "column_title",
-                                    column_title_label = NULL,
-                                    est_col_label = "Households",
-                                    perc_col_label = "% of total",
-                                    source_note = NULL) {
-  stopifnot(
-    has_name(data, name_col)
-  )
-
-  names <- names %||% unique(data[[name_col]])
-
-  stopifnot(
-    length(names) > 1
-  )
-
-  names_df <- data.frame()
-  col_names <- list()
-
-  for (i in seq_along(names)) {
-    bind_names_df <- filter_acs(
-      data,
-      table = table,
-      .data[[name_col]] == names[[i]]
-    )
-
-    if (i > 1) {
-      column_title_col <- NULL
-    }
-
-    bind_names_df <- select_acs_cols(
-      data = data,
-      name_col = NULL,
-      column_title_col = column_title_col
-    )
-
-    col_names[[i]] <- paste0(names[[i]], "_", names(bind_names_df))
-
-    names_df <- purrr::list_rbind(
-      list(
-        names_df,
-        set_names(bind_names_df, col_names[[i]])
-      )
-    )
-  }
-
-  # for (i in seq_along(names)) {
-  #
-  #   paste0(names[[i]], names(bind_names_df))))
-  #
-  #   tbls[[i]] <- getACS::gt_acs(
-  #     nm_data,
-  #     est_col_label = est_col_label,
-  #     perc_col_label = perc_col_label,
-  #     combined_spanner = nm,
-  #     table = table,
-  #     source_note = source_note,
-  #     column_title_label = column_title_label
-  #   )
-  # }
-  #
-
-  names_df
 }
