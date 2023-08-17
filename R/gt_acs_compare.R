@@ -20,6 +20,10 @@
 #' @inheritDotParams gt_acs -perc_cols -est_spanner -perc_spanner
 #'   -combined_spanner -decimals
 #' @export
+#' @importFrom dplyr group_by group_rows group_keys ungroup select any_of all_of
+#' @importFrom vctrs vec_chop vec_cbind
+#' @importFrom purrr map2 list_cbind
+#' @importFrom gt cols_label fmt_number fmt_percent cols_merge_uncert tab_spanner_delim
 gt_acs_compare <- function(data,
                            .by = name_col,
                            name_col = "NAME",
@@ -48,7 +52,7 @@ gt_acs_compare <- function(data,
     function(geo_data, geo_nm) {
       geo_data <- dplyr::ungroup(geo_data)
 
-      geo_data <- rename_with(
+      geo_data <- dplyr::rename_with(
         geo_data,
         function(col_nm) {
           paste0(geo_nm, "_", col_nm)
