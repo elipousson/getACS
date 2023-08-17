@@ -11,7 +11,7 @@ reference:
   - starts_with("make_")
 - title: Format gt tables and ACS data frames
   contents:
-  - '`gt_acs`'
+  - starts_with("gt_acs")
   - starts_with("tab_")
   - starts_with("fmt_acs")
 - title: Apply labels and scales to ggplot2 plots
