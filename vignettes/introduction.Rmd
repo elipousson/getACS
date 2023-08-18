@@ -78,9 +78,22 @@ multigeo_acs_data |>
   select_acs_cols(column_title_col = NULL) |>
   gt_acs(
     rowname_col = "NAME",
-    est_col_label = "Population"
+    est_col_label = "Population",
+    table = "B01003"
   ) |>
   fmt_acs_county(state = "Maryland")
+```
+
+The `fmt_acs_county()` function can work with both `gt_tbl` and data frame inputs (although support for data frames may be moved into a seprate function in the future). The `gt_acs_compare()` helps to transform the input data frame and place columns for different geographies or named areas in a side-by-side configuration:
+
+```{r}
+multigeo_acs_data |>
+  fmt_acs_county(state = "Maryland") |> 
+  gt_acs_compare(
+    column_title_col = NULL,
+    value_col_label = "Population",
+    table = "B01003"
+  )
 ```
 
 ## Using `get_acs_ts()`
