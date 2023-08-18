@@ -31,7 +31,8 @@ Imports:
     tidycensus,
     tidyselect,
     tigris,
-    vctrs
+    vctrs,
+    withr
 Suggests: 
     forcats,
     readr,

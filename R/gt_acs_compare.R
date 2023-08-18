@@ -20,10 +20,10 @@
 #' @inheritDotParams gt_acs -perc_cols -est_spanner -perc_spanner
 #'   -combined_spanner -decimals
 #' @export
-#' @importFrom dplyr group_by group_rows group_keys ungroup select any_of all_of
-#' @importFrom vctrs vec_chop vec_cbind
-#' @importFrom purrr map2 list_cbind
-#' @importFrom gt cols_label fmt_number fmt_percent cols_merge_uncert tab_spanner_delim
+#' @importFrom withr with_environment
+#' @importFrom rlang current_env
+#' @importFrom gt cols_label fmt_number fmt_percent cols_merge_uncert
+#'   tab_spanner_delim
 gt_acs_compare <- function(data,
                            .by = name_col,
                            name_col = "NAME",
@@ -37,76 +37,48 @@ gt_acs_compare <- function(data,
                            decimals = 0,
                            return_gt = TRUE,
                            ...) {
-  check_name(.by)
-
-  grouped_data <- dplyr::group_by(data, .data[[.by]])
-
-  geography_data <- vctrs::vec_chop(
-    grouped_data,
-    indices = dplyr::group_rows(grouped_data)
+  acs_data_compare <- cbind_grouped_acs_data(
+    data = data,
+    .by = .by,
+    name_col = name_col,
+    value_cols = value_cols,
+    perc_value_cols = perc_value_cols,
+    column_title_col = column_title_col,
+    variable_col = variable_col,
+    drop_cols = drop_cols,
+    call = call
   )
-
-  geography_data <- purrr::map2(
-    geography_data,
-    dplyr::group_keys(grouped_data)[[.by]],
-    function(geo_data, geo_nm) {
-      geo_data <- dplyr::ungroup(geo_data)
-
-      geo_data <- dplyr::rename_with(
-        geo_data,
-        function(col_nm) {
-          paste0(geo_nm, "_", col_nm)
-        },
-        any_of(c(ends_with(value_cols), ends_with(perc_value_cols)))
-      )
-
-      geo_data <- dplyr::select(geo_data, -dplyr::any_of(drop_cols))
-
-      select_acs_cols(
-        geo_data,
-        name_col = NULL,
-        column_title_col = NULL,
-        value_cols = paste0(geo_nm, "_", value_cols),
-        perc_value_cols = paste0(geo_nm, "_", perc_value_cols),
-        denominator_start = "denominator",
-        keep_denominator = FALSE
-      )
-    }
-  )
-
-  geography_data <-
-    vctrs::vec_cbind(
-      dplyr::select(
-        data,
-        dplyr::all_of(column_title_col)
-        )[seq(nrow(geography_data[[1]])), ],
-      purrr::list_cbind(geography_data)
-    )
 
   if (!return_gt) {
     return(geography_data)
   }
 
-  geography_data |>
-    gt_acs(
-      est_cols = NULL,
-      perc_cols = NULL,
-      est_spanner = NULL,
-      perc_spanner = NULL,
-      combined_spanner = NULL,
-      name_col = NULL,
-      name_col_label = NULL,
-      ...
-    ) |>
-    gt::cols_label(
-      .list = list2(
-        # FIXME: Figure out how to do this with variables
-        # ends_with(value_cols[[1]]) ~ "Est.",
-        # ends_with(perc_value_cols[[1]]) ~ "% share"
-        ends_with("estimate") ~ "Est.",
-        ends_with("perc_estimate") ~ "% share"
+  acs_data_tbl <- gt_acs(
+    acs_data_compare,
+    est_cols = NULL,
+    perc_cols = NULL,
+    est_spanner = NULL,
+    perc_spanner = NULL,
+    combined_spanner = NULL,
+    name_col = NULL,
+    name_col_label = NULL,
+    ...
+  )
+
+  acs_data_tbl <- withr::with_environment(
+    env = rlang::current_env(),
+    {
+      gt::cols_label(
+        acs_data_tbl,
+        .list = list2(
+          ends_with(value_cols[[1]]) ~ value_col_label,
+          ends_with(perc_value_cols) ~ perc_value_col_label
+        )
       )
-    ) |>
+    }
+  )
+
+  acs_data_tbl <- acs_data_tbl |>
     gt::fmt_number(
       columns = ends_with(value_cols),
       decimals = decimals
@@ -122,11 +94,75 @@ gt_acs_compare <- function(data,
     gt::cols_merge_uncert(
       col_val = ends_with(perc_value_cols[[1]]),
       col_uncert = ends_with(perc_value_cols[[2]])
-    ) |>
-    gt::tab_spanner_delim(
-      delim = "_",
-      columns = -any_of(column_title_col),
-      split = "first",
-      limit = 1
     )
+
+  gt::tab_spanner_delim(
+    acs_data_tbl,
+    delim = "_",
+    columns = -any_of(column_title_col),
+    split = "first",
+    limit = 1
+  )
+}
+
+
+#' @noRd
+#' @importFrom dplyr group_by group_rows group_keys ungroup rename_with select
+#'   any_of all_of ends_with any_of
+#' @importFrom vctrs vec_chop vec_cbind
+#' @importFrom purrr map2 list_cbind
+cbind_grouped_acs_data <- function(data,
+                                   .by = name_col,
+                                   name_col = "NAME",
+                                   value_cols = c("estimate", "moe"),
+                                   perc_value_cols = c("perc_estimate", "perc_moe"),
+                                   column_title_col = "column_title",
+                                   variable_col = "variable",
+                                   drop_cols = c(name_col, variable_col, "GEOID"),
+                                   call = caller_env()) {
+  check_name(.by, call = call)
+
+  grouped_acs_data <- dplyr::group_by(data, .data[[.by]])
+
+  acs_data_list <- vctrs::vec_chop(
+    grouped_acs_data,
+    indices = dplyr::group_rows(grouped_acs_data)
+  )
+
+  acs_data_list <- purrr::map2(
+    acs_data_list,
+    dplyr::group_keys(grouped_acs_data)[[.by]],
+    function(acs_data, group_nm) {
+      acs_data <- dplyr::ungroup(acs_data)
+
+      acs_data <- dplyr::rename_with(
+        acs_data,
+        function(nm) {
+          paste0(group_nm, "_", nm)
+        },
+        any_of(c(ends_with(value_cols), ends_with(perc_value_cols)))
+      )
+
+      acs_data <- dplyr::select(acs_data, -dplyr::any_of(drop_cols))
+
+      select_acs_cols(
+        acs_data,
+        name_col = NULL,
+        column_title_col = NULL,
+        value_cols = paste0(group_nm, "_", value_cols),
+        perc_value_cols = paste0(group_nm, "_", perc_value_cols),
+        denominator_start = "denominator",
+        keep_denominator = FALSE
+      )
+    }
+  )
+
+  vctrs::vec_cbind(
+    dplyr::select(
+      data,
+      dplyr::all_of(column_title_col)
+    )[seq(nrow(acs_data_list[[1]])), ],
+    purrr::list_cbind(acs_data_list),
+    .error_call = call
+  )
 }
