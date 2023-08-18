@@ -1,6 +1,7 @@
 # getACS (development version)
 
 * Add `collapse_acs_variables()` helper function.
+* Add `gt_acs_compare()` function.
 * Add `load_acs_vars()` function as wrapper for `tidycensus::load_variables()`.
 * Add `jam_values` reference data.
 * Add `extensive` parameter to `use_area_xwalk()` to support calculation of weighted mean estimates.
