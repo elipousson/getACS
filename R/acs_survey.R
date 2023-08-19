@@ -1,3 +1,40 @@
+#' Get minimum year for a given survey sample
+#'
+#' @noRd
+acs_sample_min_year <- function(sample = "5",
+                                min_year = NULL,
+                                ...) {
+  min_year %||%
+    switch(sample,
+      "1" = 2005,
+      "3" = 2007,
+      "5" = 2009
+    )
+}
+
+#' Check if survey and year parameter are valid in combination
+#'
+#' @noRd
+check_acs_survey <- function(survey = "acs5",
+                             year = 2021,
+                             min_year = NULL,
+                             ...,
+                             call = caller_env()) {
+  survey <- acs_survey_match(survey, error_call = call)
+
+  check_number_whole(year, call = call)
+
+  min_year <- acs_sample_min_year(acs_survey_sample(survey), min_year)
+
+  if (year < min_year) {
+    cli_abort(
+      "{.arg year} must be equal to or greater than the minimum release year
+      {min_year} for {.arg survey} {survey}",
+      call = call
+    )
+  }
+}
+
 #' Assorted helpers for ACS survey types and labels
 #'
 #' These simple functions allow validating ACS survey options, getting
@@ -15,8 +52,6 @@
 #' acs_survey_label_table(table = c("B19013", "B01003"))
 #' @name acs_survey
 NULL
-
-
 
 #' @rdname acs_survey
 #' @name acs_survey_match
@@ -45,22 +80,7 @@ acs_survey_sample <- function(survey = "acs5") {
 acs_survey_ts <- function(survey = "acs5",
                           year = 2021,
                           call = caller_env()) {
-  sample <- acs_survey_sample(survey)
-  check_number_whole(year, call = call)
-
-  min_year <- switch(sample,
-    "1" = 2005,
-    "3" = 2007,
-    "5" = 2009
-  )
-
-  if (year < min_year) {
-    cli_abort(
-      "{.arg year} must be equal to or greater than the minimum release year
-      {min_year} for {.arg survey} {survey}",
-      call = call
-    )
-  }
+  check_acs_survey(survey, year, call = call)
 
   if (identical(year, 2005)) {
     return(year)
@@ -76,8 +96,10 @@ acs_survey_ts <- function(survey = "acs5",
     {.url {comparison_url}}")
   )
 
-  years <- year
+  sample <- acs_survey_sample(survey)
+  min_year <- acs_sample_min_year(sample)
   sample <- as.integer(sample)
+  years <- year
 
   while (min(years) %% min_year >= sample) {
     years <- c(years, min(years) - sample)
