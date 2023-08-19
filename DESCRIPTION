@@ -29,6 +29,7 @@ Imports:
     stats,
     stringr,
     tidycensus,
+    tidyr,
     tidyselect,
     tigris,
     vctrs,
