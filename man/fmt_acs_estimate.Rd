@@ -53,7 +53,8 @@ must be a length 2 character vector.}
 \code{\link[=cols_label_ext]{cols_label_ext()}}}
 
 \item{spanner}{If \code{NULL}, gt table is passed to \code{\link[=cols_merge_uncert_ext]{cols_merge_uncert_ext()}}. If
-not \code{NULL}, spanner is passed to the label parameter of \code{\link[gt:tab_spanner]{gt::tab_spanner()}}.}
+not \code{NULL}, spanner is passed to the label parameter of
+\code{\link[gt:tab_spanner]{gt::tab_spanner()}}.}
 
 \item{decimals}{\emph{Number of decimal places}
 

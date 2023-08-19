@@ -1,7 +1,99 @@
+#' Variant of `gt::cols_label()` for ACS
+#'
+#' @param value_col Value column name. Defaults to "estimate"
+#' @param value_label Value column label. Defaults to "Est.".
+#' @param moe_col Margin of error column name. Defaults to "moe"
+#' @param moe_label Margin of error column label. Defaults to "MOE".
+#' @inheritParams acs_perc_cols
+#' @param perc_value_label,perc_moe_label Percent value and margin of error
+#'   column labels.
+#' @param variable_col Variable column name. Defaults to "variable". Dropped
+#'   from table by default.
+#' @param column_title_col,column_title_label Column title column name and
+#'   label. Defaults to  "column_title" and `NULL`.
+#' @param .col_fn tidyselect function to use with column names. Defaults to
+#'   [tidyselect::starts_with],
+#' @inheritParams withr::with_environment
+#' @keywords internal
+#' @export
+acs_cols_label <- function(data,
+                           value_col = "estimate",
+                           value_label = "Est.",
+                           moe_col = "moe",
+                           moe_label = "MOE",
+                           perc_prefix = "perc",
+                           perc_sep = "_",
+                           perc_value_label = "% share",
+                           perc_moe_label = "% MOE",
+                           column_title_col = "column_title",
+                           column_title_label = NULL,
+                           env = NULL,
+                           .col_fn = starts_with) {
+  perc_cols <- acs_perc_cols(value_col, moe_col, perc_prefix, perc_sep)
+  perc_value_col <- perc_cols[[1]]
+  perc_moe_col <- perc_cols[[2]]
+
+  data <- .cols_label_ext(
+    data,
+    columns = value_col,
+    label = value_label,
+    env = env,
+    .col_fn = .col_fn
+  )
+
+  data <- .cols_label_ext(
+    data,
+    columns = moe_col,
+    label = moe_label,
+    env = env,
+    .col_fn = .col_fn
+  )
+
+  data <- .cols_label_ext(
+    data,
+    columns = perc_value_col,
+    label = perc_value_label,
+    env = env,
+    .col_fn = .col_fn
+  )
+
+  data <- .cols_label_ext(
+    data,
+    columns = perc_moe_col,
+    label = perc_moe_label,
+    env = env,
+    .col_fn = .col_fn
+  )
+
+  # env <- env %||% current_env()
+  # data <- withr::with_environment(
+  #   env = env,
+  #   {
+  #     gt::cols_label(
+  #       data,
+  #       .list = list2(
+  #         .fn(value_col) ~ value_label,
+  #         .fn(moe_col) ~ moe_label,
+  #         .fn(perc_value_col) ~ perc_value_label,
+  #         .fn(perc_moe_col) ~ perc_moe_label
+  #       )
+  #     )
+  #   }
+  # )
+
+  .cols_label_ext(
+    data,
+    columns = column_title_col,
+    label = column_title_label,
+    env = env,
+    .col_fn = .col_fn
+  )
+}
+
 #' Hide columns where all values are NA
 #'
 #' @noRd
-cols_hide_na <- function(data, columns) {
+.cols_hide_na <- function(data, columns = NULL) {
   all_is_na_data <- dplyr::select(
     data[["_data"]],
     where(
@@ -17,6 +109,85 @@ cols_hide_na <- function(data, columns) {
 
   gt::cols_hide(
     data = data,
-    columns = dplyr::any_of(names(all_is_na_data))
+    columns = columns %||% any_of(names(all_is_na_data))
   )
+}
+
+#' Extended version of `gt::cols_label()`
+#'
+#' @noRd
+.cols_label_ext <- function(data,
+                            columns = NULL,
+                            label = NULL,
+                            .col_fn = starts_with,
+                            env = NULL,
+                            ...) {
+  if (is_null(label)) {
+    return(data)
+  }
+
+  # if (!is_named(label) && is_string(label) && is_string(columns)) {
+  #   label <- set_names(columns, nm = label)
+  # }
+
+  if (is_named(label)) {
+    data <- gt::cols_label(
+      data,
+      .list = label,
+      ...
+    )
+
+    return(data)
+  }
+
+
+  withr::with_environment(
+    env = env %||% current_env(),
+    {
+      gt::cols_label(
+        data,
+        .list = list2(
+          .col_fn(columns) ~ label
+        ),
+        ...
+      )
+    }
+  )
+}
+
+#' Create a table with `gt::gt()`
+#'
+#' @inheritParams gt::gt
+#' @param drop_geometry If `TRUE` (default) and data is an sf object, drop
+#'   geometry before turning the data frame into a table.
+#' @keywords internal
+#' @importFrom sf st_drop_geometry
+#' @importFrom gt gt
+.gt_ext <- function(data,
+                    rownames_to_stub = FALSE,
+                    row_group_as_column = FALSE,
+                    ...,
+                    drop_geometry = TRUE,
+                    hide_na_cols = TRUE) {
+  if (inherits(data, "gt_tbl")) {
+    return(gt)
+  }
+
+  if (drop_geometry && inherits(data, "sf")) {
+    data <- sf::st_drop_geometry(data)
+  }
+
+  gt_object <- gt::gt(
+    data,
+    rownames_to_stub = rownames_to_stub,
+    row_group_as_column = row_group_as_column,
+    ...
+  )
+
+
+  if (hide_na_cols) {
+    gt_object <- .cols_hide_na(gt_object)
+  }
+
+  gt_object
 }

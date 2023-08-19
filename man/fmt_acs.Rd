@@ -11,7 +11,7 @@ fmt_acs_county(
   pattern = ", {state}",
   replacement = "",
   name_col = "NAME",
-  columns = dplyr::all_of(name_col),
+  columns = all_of(name_col),
   ...
 )
 
@@ -20,7 +20,7 @@ fmt_acs_minutes(
   pattern = "[:space:]minutes$",
   replacement = "",
   column_title_col = "column_title",
-  columns = dplyr::all_of(column_title_col),
+  columns = all_of(column_title_col),
   ...
 )
 }

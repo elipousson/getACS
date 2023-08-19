@@ -27,7 +27,7 @@ fmt_acs_county <- function(data,
                            pattern = ", {state}",
                            replacement = "",
                            name_col = "NAME",
-                           columns = dplyr::all_of(name_col),
+                           columns = all_of(name_col),
                            ...) {
   pattern <- glue(pattern)
 
@@ -49,7 +49,7 @@ fmt_acs_minutes <- function(data,
                             pattern = "[:space:]minutes$",
                             replacement = "",
                             column_title_col = "column_title",
-                            columns = dplyr::all_of(column_title_col),
+                            columns = all_of(column_title_col),
                             ...) {
   fmt_str_replace(
     data = data,
@@ -66,7 +66,7 @@ fmt_str_replace <- function(data,
                             pattern,
                             replacement,
                             col = "NAME",
-                            columns = dplyr::all_of(col),
+                            columns = all_of(col),
                             ...) {
   if (inherits(data, "gt_tbl")) {
     gt::fmt(

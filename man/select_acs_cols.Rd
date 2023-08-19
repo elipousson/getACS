@@ -24,9 +24,9 @@ A \code{data.frame} object or a tibble (\code{tbl_df}).}
 
 \item{...}{Additional parameters passed to \code{\link[dplyr:select]{dplyr::select()}}}
 
-\item{name_col, column_title_col, value_cols, perc_value_cols}{ACS data column names
-to select using \code{\link[tidyselect:all_of]{tidyselect::any_of()}}. Set any parameter to \code{NULL} to
-avoid selecting columns.}
+\item{name_col, column_title_col, value_cols, perc_value_cols}{ACS data column
+names to select using \code{\link[tidyselect:all_of]{tidyselect::any_of()}}. Set any parameter to \code{NULL}
+to avoid selecting columns.}
 
 \item{denominator_start}{Passed to \code{\link[=starts_with]{starts_with()}} to drop denominator
 columns. Defaults to "denominator"}
@@ -35,8 +35,12 @@ columns. Defaults to "denominator"}
 with the text from denominator_start}
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+}
+\details{
 \code{\link[=select_acs_cols]{select_acs_cols()}} is a wrapper for \code{\link[dplyr:select]{dplyr::select()}} designed to select the
 appropriate columns for a gt table created with \code{\link[=gt_acs]{gt_acs()}}. Set any named
 parameter to \code{NULL} to drop the respective column or use the additional \code{...}
 parameter to modify the selection.
 }
+\keyword{internal}

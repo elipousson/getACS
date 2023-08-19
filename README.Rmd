@@ -65,7 +65,7 @@ The package also includes utility functions for filtering data and selecting col
 
 ```{r}
 tbl_data <- filter_acs(acs_data, indent == 1, line_number <= 10)
-tbl_data <- select_acs_cols(tbl_data)
+tbl_data <- select_acs(tbl_data)
 
 commute_tbl <- gt_acs(
   tbl_data,
@@ -81,7 +81,7 @@ The `gt_acs_compare()` function also allows side-by-side comparison of geographi
 
 ```{r}
 commute_tbl_compare <- gt_acs_compare(
-  tbl_data,
+  data = tbl_data,
   column_title_label = "Commute time",
   table = "B08134"
 )
@@ -93,7 +93,7 @@ The package also includes several simple functions to support creating plots wit
 
 ```{r}
 plot_data <- filter_acs(acs_data, indent == 1, line_number > 10)
-plot_data <- select_acs_cols(plot_data)
+plot_data <- select_acs(plot_data)
 
 plot_data |>
   fmt_acs_county(state = "Maryland") |>

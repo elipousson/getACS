@@ -1,8 +1,18 @@
-#' @noRd
+#' Create `perc` value and moe column names with prefix and separator
+#'
+#' @param perc_prefix Prefix string for percent value columns.
+#' @param perc_sep Separator string between `perc_prefix` and the `value_col`
+#'   and `moe_col` strings.
+#' @keywords internal
 acs_perc_cols <- function(value_col = "estimate",
                           moe_col = "moe",
                           perc_prefix = "perc",
                           perc_sep = "_") {
+  # FIXME: I'm not so sure about this as a design pattern
+  if (is.null(perc_prefix)) {
+    return(NULL)
+  }
+
   paste0(perc_prefix, perc_sep, c(value_col, moe_col))
 }
 
@@ -12,7 +22,10 @@ acs_perc_cols <- function(value_col = "estimate",
 #' an ACS data frame into a wide format by changing the value of the
 #' `names_from` parameter.
 #'
-#' @inheritParams select_acs_cols
+#' @param name_col Name column. Defaults to "NAME". Ignored if names_from is not
+#'   set to name_col.
+#' @inheritParams acs_perc_cols
+#' @inheritParams acs_cols_label
 #' @inheritParams tidyr::pivot_wider
 #' @inheritDotParams tidyr::pivot_wider
 #' @export

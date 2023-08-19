@@ -40,7 +40,7 @@
 #'  [forcats::fct_collapse()], [camiller::add_grps()]
 #' @rdname collapse_acs_variables
 #' @export
-#' @importFrom dplyr group_by mutate all_of summarise across any_of
+#' @importFrom dplyr group_by mutate summarise across
 #' @importFrom tidycensus moe_sum
 collapse_acs_variables <- function(data,
                                    ...,
@@ -70,7 +70,7 @@ collapse_acs_variables <- function(data,
       ...,
       other_level = other_level
     ),
-    .after = dplyr::all_of(variable_col)
+    .after = all_of(variable_col)
   )
 
   if (has_name(data, name_col)) {
@@ -101,7 +101,7 @@ collapse_acs_variables <- function(data,
         digits = digits
       ),
       dplyr::across(
-        -dplyr::any_of(c(name_col, label_col, variable_col, value_col, moe_col, perc_cols)),
+        -any_of(c(name_col, label_col, variable_col, value_col, moe_col, perc_cols)),
         function(x) {
           list(unique(x))
         }
@@ -118,7 +118,7 @@ collapse_acs_variables <- function(data,
         digits = digits
       ),
       dplyr::across(
-        -dplyr::any_of(c(name_col, label_col, variable_col, value_col, moe_col)),
+        -any_of(c(name_col, label_col, variable_col, value_col, moe_col)),
         function(x) {
           list(unique(x))
         }
@@ -134,7 +134,7 @@ collapse_acs_variables <- function(data,
       # the collapsed groups is very different.
       "{value_col}" := round(mean(.data[[value_col]], na.rm = na.rm), digits = digits),
       dplyr::across(
-        -dplyr::any_of(c(name_col, label_col, variable_col, value_col, moe_col)),
+        -any_of(c(name_col, label_col, variable_col, value_col, moe_col)),
         function(x) {
           list(unique(x))
         }

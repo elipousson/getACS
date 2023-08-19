@@ -127,8 +127,8 @@ make_block_xwalk <- function(state,
 #' @returns A tibble or a sf object.
 #' @seealso [tidycensus::interpolate_pw()], [areal::aw_interpolate()]
 #' @export
-#' @importFrom dplyr select all_of filter group_by summarise across mutate
-#'   ungroup left_join
+#' @importFrom dplyr select filter group_by summarise across mutate ungroup
+#'   left_join
 #' @importFrom tigris erase_water
 #' @importFrom cli cli_progress_step
 #' @importFrom vctrs vec_rbind
@@ -187,7 +187,7 @@ make_area_xwalk <- function(area,
   block_xwalk <- sf::st_transform(block_xwalk, crs = sf::st_crs(area))
 
   if (keep_geometry) {
-    area_geometry <- dplyr::select(area, dplyr::all_of(name_col))
+    area_geometry <- dplyr::select(area, all_of(name_col))
   }
 
   cli::cli_progress_step("Checking {.arg block_xwalk} and {.arg area} geometry")
@@ -344,7 +344,7 @@ summarise_area_weight <- function(area_xwalk,
   area_xwalk <- dplyr::summarise(
     area_xwalk,
     dplyr::across(
-      dplyr::all_of(weight_col),
+      all_of(weight_col),
       function(x) {
         sum(x, na.rm = TRUE)
       }
@@ -458,7 +458,7 @@ use_area_xwalk <- function(data,
 
   data <- dplyr::select(
     data,
-    dplyr::all_of(c(geoid_col, variable_col, value_col, moe_col))
+    all_of(c(geoid_col, variable_col, value_col, moe_col))
   )
 
   area_data <- dplyr::left_join(
@@ -526,7 +526,7 @@ summarise_weighted_sum <- function(data,
       tidycensus::moe_sum(.data[[moe_col]], .data[[value_col]] * .data[[weight_col]]),
       digits = digits
     ),
-    .by = dplyr::all_of(c(name_col, variable_col))
+    .by = all_of(c(name_col, variable_col))
   )
 }
 
@@ -552,6 +552,6 @@ summarise_weighted_mean <- function(data,
     #   weighted.mean(.data[[moe_col]], w = data[[paste0("perc_", weight_col)]], na.rm = na.rm),
     #   digits = digits
     # ),
-    .by = dplyr::all_of(c(name_col, variable_col))
+    .by = all_of(c(name_col, variable_col))
   )
 }

@@ -21,11 +21,19 @@ acs_pivot_wider(
 )
 }
 \arguments{
-\item{data}{\emph{Input data table}
+\item{data}{A data frame to pivot.}
 
-\verb{obj:<data.frame>|obj:<tbl_df>} // \strong{required}
+\item{name_col}{Name column. Defaults to "NAME". Ignored if names_from is not
+set to name_col.}
 
-A \code{data.frame} object or a tibble (\code{tbl_df}).}
+\item{value_col}{Value column name. Defaults to "estimate"}
+
+\item{moe_col}{Margin of error column name. Defaults to "moe"}
+
+\item{perc_prefix}{Prefix string for percent value columns.}
+
+\item{perc_sep}{Separator string between \code{perc_prefix} and the \code{value_col}
+and \code{moe_col} strings.}
 
 \item{names_from, values_from}{<\code{\link[tidyr:tidyr_tidy_select]{tidy-select}}> A pair of
 arguments describing which column (or columns) to get the name of the

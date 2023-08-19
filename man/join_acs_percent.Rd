@@ -14,8 +14,8 @@ join_acs_percent(
 )
 }
 \arguments{
-\item{data}{A data frame with column names including "column_id", "column_title",
-"denominator_column_id", "estimate", and "moe".}
+\item{data}{A data frame with column names including "column_id",
+"column_title", "denominator_column_id", "estimate", and "moe".}
 
 \item{geoid_col}{A GeoID column name to use if perc is \code{TRUE}, Defaults to
 'GEOID'.}

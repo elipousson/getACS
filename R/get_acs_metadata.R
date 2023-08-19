@@ -1,3 +1,14 @@
+#' @noRd
+acs_cache_dir <- function(pkg = "getACS") {
+  cache_dir <- rappdirs::user_cache_dir(pkg)
+
+  if (!dir.exists(cache_dir)) {
+    dir.create(cache_dir)
+  }
+
+  cache_dir
+}
+
 #' Get table or column metadata from Census Reporter project
 #'
 #' Read precomputed U.S. Census table or column metadata files from the  [Census
@@ -21,33 +32,29 @@ get_acs_metadata <- function(survey = "acs5",
                              show_col_types = FALSE,
                              quiet = FALSE,
                              error_call = caller_env()) {
-  stopifnot(
-    (year >= 2006) && (year <= 2021)
-  )
-
-  survey <- tolower(survey)
-  survey <- acs_survey_match(survey, error_call = error_call)
   sample <- acs_survey_sample(survey)
 
-  metadata <- arg_match0(metadata, c("table", "column"))
+  check_acs_survey(survey, year, sample, call = error_call)
+
+  metadata <- arg_match0(
+    metadata,
+    c("table", "column"),
+    error_call = error_call
+  )
+
   filename <- glue("census_{metadata}_metadata.csv")
   folder <- glue("acs{year}_{sample}yr")
-  cache_dir <- rappdirs::user_cache_dir("getACS")
+  cache_path <- file.path(acs_cache_dir(), glue("{folder}_{filename}"))
+  acs_label <- acs_survey_label(survey, year)
 
-  if (!dir.exists(cache_dir)) {
-    dir.create(cache_dir)
-  }
-
-  cache_path <- file.path(cache_dir, glue("{folder}_{filename}"))
+  msg <- "Downloading {metadata} metadata for {acs_label}"
+  base_url <- "https://raw.githubusercontent.com/censusreporter/census-table-metadata/master/precomputed"
+  file <- paste0(c(base_url, folder, filename), collapse = "/")
 
   if (file.exists(cache_path)) {
-    msg <- "Reading cached {metadata} metadata for {acs_survey_label(survey, year)}"
+    msg <- "Reading cached {metadata} metadata for {acs_label}"
     file <- cache_path
     cache_data <- FALSE
-  } else {
-    msg <- "Downloading {metadata} metadata for {acs_survey_label(survey, year)}"
-    base_url <- "https://raw.githubusercontent.com/censusreporter/census-table-metadata/master/precomputed"
-    file <- paste0(c(base_url, folder, filename), collapse = "/")
   }
 
   check_installed("readr", call = error_call)
@@ -81,7 +88,12 @@ get_acs_metadata <- function(survey = "acs5",
     "Filtering {metadata} metadata to table ID {.val {table}}"
   )
 
-  table <- arg_match(table, data[["table_id"]], multiple = TRUE, error_call = error_call)
+  table <- arg_match(
+    table,
+    data[["table_id"]],
+    multiple = TRUE,
+    error_call = error_call
+  )
 
   vctrs::vec_slice(
     data,
@@ -143,7 +155,7 @@ label_acs_table_metadata <- function(data,
   data <- dplyr::mutate(
     data,
     table_id = str_table_id(.data[[variable_col]]),
-    .after = dplyr::all_of(variable_col)
+    .after = all_of(variable_col)
   )
 
   data <- dplyr::left_join(data, table_metadata, by = dplyr::join_by(table_id))
@@ -202,7 +214,7 @@ label_acs_column_metadata <- function(data,
     data,
     table_id = str_table_id(.data[[variable_col]]),
     column_id = stringr::str_remove(.data[[variable_col]], "_"),
-    .after = dplyr::all_of(variable_col)
+    .after = all_of(variable_col)
   )
 
   data <- dplyr::left_join(

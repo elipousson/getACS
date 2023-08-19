@@ -42,15 +42,15 @@ pop_tbl_data <- acs_data |>
   slice_max(estimate, n = 5)
 ```
 
-Then, you can use `select_acs_cols()` to select the estimate, percent estimate, name, and column title columns. In this example, setting `column_title_col` and `perc_est_cols` to `NULL` drops those columns from the data frame:
+Then, you can use `select_acs()` to select the estimate, percent estimate, name, and column title columns. In this example, setting `column_title_col` and `perc_est_cols` to `NULL` drops those columns from the data frame:
 
 ```{r}
 pop_tbl_data <- pop_tbl_data |>
-  select_acs_cols(
-    est_cols = "estimate",
-    name_col = "NAME",
-    column_title_col = NULL,
-    perc_est_cols = NULL
+  select_acs(
+    .value_col = "estimate",
+    .name_col = "NAME",
+    .column_title_col = NULL,
+    .perc_prefix = NULL
   )
 ```
 
@@ -60,10 +60,10 @@ The main table building function is `gt_acs()` which is a wrapper for `gt::gt()`
 pop_tbl_data |>
   gt_acs(
     table = "B01003",
-    est_cols = "estimate",
-    est_col_label = "Population",
-    name_col_label = "County"
-  ) |>
+    value_label = "Population",
+    name_label = "County",
+    perc_prefix = NULL
+  ) #|>
   fmt_acs_county(
     state = "Maryland",
     pattern = "(County|), {state}"

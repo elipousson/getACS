@@ -5,8 +5,8 @@
 #' percent share of the denominator value. [tidycensus::moe_prop()] is used to
 #' calculate the margin of error for the percentage.
 #'
-#' @param data A data frame with column names including "column_id", "column_title",
-#' "denominator_column_id", "estimate", and "moe".
+#' @param data A data frame with column names including "column_id",
+#'   "column_title", "denominator_column_id", "estimate", and "moe".
 #' @param geoid_col A GeoID column name to use if perc is `TRUE`, Defaults to
 #'   'GEOID'.
 #' @param column_id_col Column ID column name from Census Reporter metadata.
@@ -51,25 +51,32 @@ join_acs_percent <- function(data,
 #' @noRd
 join_acs_denominator <- function(data,
                                  geoid_col = "GEOID",
+                                 value_col = "estimate",
+                                 moe_col = "moe",
                                  column_id_col = "column_id",
-                                 denominator_col = "denominator_column_id",
+                                 column_title_col = "column_title",
+                                 denominator_col = NULL,
+                                 denominator_prefix = "denominator_",
                                  na_matches = "never",
                                  digits = 2) {
+  denominator_id_col <- denominator_col %||%
+    paste0(denominator_prefix, column_id_col)
+
   stopifnot(
     all(has_name(data, c(
-      geoid_col, column_id_col, "column_title",
-      denominator_col, "estimate"
+      geoid_col, column_id_col, column_title_col,
+      denominator_id_col, value_col
     )))
   )
 
-  if (!has_name(data, "moe")) {
-    data[["moe"]] <- NA_integer_
+  if (!has_name(data, moe_col)) {
+    data[[moe_col]] <- NA_integer_
   }
 
   if (nrow(dplyr::filter(
     data,
-    !is.na(.data[[denominator_col]]),
-    .data[[denominator_col]] %in% data[[column_id_col]],
+    !is.na(.data[[denominator_id_col]]),
+    .data[[denominator_id_col]] %in% data[[column_id_col]],
     .data[["indent"]] > 0
   )) > 1) {
     cli_alert_warning(
@@ -80,13 +87,15 @@ join_acs_denominator <- function(data,
   }
 
   denominator_data <- data |>
-    dplyr::filter(.data[[column_id_col]] %in% data[[denominator_col]]) |>
+    dplyr::filter(.data[[column_id_col]] %in% data[[denominator_id_col]])
+
+  denominator_data <- denominator_data |>
     dplyr::select(
       {{ geoid_col }},
-      denominator_estimate = estimate,
-      denominator_moe = moe,
-      denominator_column_title = column_title,
-      "{denominator_col}" := dplyr::all_of(column_id_col)
+      "{denominator_prefix}{value_col}" := all_of(value_col),
+      "{denominator_prefix}{moe_col}" := all_of(moe_col),
+      "{denominator_prefix}{column_title_col}" := all_of(column_title_col),
+      "{denominator_id_col}" := all_of(column_id_col)
     )
 
   if (inherits(denominator_data, "sf")) {
@@ -96,7 +105,7 @@ join_acs_denominator <- function(data,
   dplyr::left_join(
     data,
     denominator_data,
-    by = dplyr::join_by({{ geoid_col }}, {{ denominator_col }}),
+    by = dplyr::join_by({{ geoid_col }}, {{ denominator_id_col }}),
     na_matches = na_matches
   )
 }
@@ -168,7 +177,8 @@ join_acs_geography_ratio <- function(data,
 
   if (any(has_name(data, c(ratio_value_col, ratio_moe_col)))) {
     cli_warn(
-      "{.arg data} already contains columns named {ratio_value_col} or {ratio_moe_col}",
+      "{.arg data} already contains columns named {ratio_value_col}
+      or {ratio_moe_col}",
       "i" = "These values will be over-written by this function."
     )
   }
@@ -186,7 +196,7 @@ join_acs_geography_ratio <- function(data,
   dplyr::mutate(
     data,
     dplyr::across(
-      dplyr::all_of(c(ratio_value_col, ratio_moe_col)),
+      all_of(c(ratio_value_col, ratio_moe_col)),
       function(x) {
         round(x, digits = digits)
       }

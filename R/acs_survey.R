@@ -17,14 +17,17 @@ acs_sample_min_year <- function(sample = "5",
 #' @noRd
 check_acs_survey <- function(survey = "acs5",
                              year = 2021,
+                             sample = NULL,
                              min_year = NULL,
                              ...,
                              call = caller_env()) {
-  survey <- acs_survey_match(survey, error_call = call)
-
   check_number_whole(year, call = call)
 
-  min_year <- acs_sample_min_year(acs_survey_sample(survey), min_year)
+  survey <- acs_survey_match(survey, error_call = call)
+
+  sample <- sample %||% acs_survey_sample(survey)
+
+  min_year <- acs_sample_min_year(sample, min_year)
 
   if (year < min_year) {
     cli_abort(
