@@ -89,10 +89,11 @@ The `fmt_acs_county()` function can work with both `gt_tbl` and data frame input
 
 ```{r}
 multigeo_acs_data |>
-  select_acs(.column_title_col = NULL) |> 
+  select_acs() |> 
   fmt_acs_county(state = "Maryland") |> 
   gt_acs_compare(
-    value_label = "Population",
+    value_label = "",
+    column_title_label = "",
     table = "B01003"
   )
 ```
@@ -115,7 +116,8 @@ acs_ts_data <- get_acs_ts(
   state = "MD",
   survey = "acs5",
   year = 2021,
-  table = "B01003"
+  table = "B01003",
+  quiet = TRUE
 )
 
 glimpse(acs_ts_data)
@@ -131,7 +133,7 @@ acs_ts_data |>
   fmt_acs_county(state = "Maryland") |> 
   ggplot(aes(x = year, y = estimate, color = NAME)) +
   geom_point(size = 2) +
-  geom_line(size = 1) +
+  geom_line(linewidth = 1) +
   scale_y_acs_estimate("Population", limits = c(0, 1000000)) +
   scale_x_acs_ts(survey = "acs5", year = 2021) +
   scale_color_brewer(type = "qual", palette = 3) +

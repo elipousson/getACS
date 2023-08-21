@@ -38,7 +38,7 @@ get_acs_metadata <- function(survey = "acs5",
 
   metadata <- arg_match0(
     metadata,
-    c("table", "column"),
+    values = c("table", "column"),
     error_call = error_call
   )
 
@@ -90,14 +90,14 @@ get_acs_metadata <- function(survey = "acs5",
 
   table <- arg_match(
     table,
-    data[["table_id"]],
+    values = data[["table_id"]],
     multiple = TRUE,
     error_call = error_call
   )
 
   vctrs::vec_slice(
     data,
-    vctrs::vec_in(
+    i = vctrs::vec_in(
       data[["table_id"]],
       table
     )

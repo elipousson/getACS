@@ -19,16 +19,16 @@ gt_acs_compare(
   perc_moe_label = "\% MOE",
   column_title_label = NULL,
   names_from = name_col,
-  values_from = any_of(c(value_col, moe_col, paste0(perc_prefix, perc_sep, c(value_col,
-    moe_col)))),
+  values_from = NULL,
   names_vary = "slowest",
   names_glue = NULL,
+  names_sep = "_",
+  decimals = 0,
+  currency_value = FALSE,
+  merge_moe = TRUE,
   split = "last",
   limit = 1,
-  names_sep = "_",
   reverse = TRUE,
-  decimals = 0,
-  merge_moe = TRUE,
   source_note = NULL,
   append_note = FALSE,
   hide_na_cols = TRUE,
@@ -37,6 +37,7 @@ gt_acs_compare(
   table = NULL,
   prefix = "Source: ",
   end = ".",
+  use_md = FALSE,
   ...
 )
 }
@@ -55,8 +56,8 @@ set to name_col.}
 \item{perc_sep}{Separator string between \code{perc_prefix} and the \code{value_col}
 and \code{moe_col} strings.}
 
-\item{variable_col}{Variable column name. Defaults to "variable". Dropped
-from table by default.}
+\item{variable_col}{Variable column name. Defaults to "variable". Typically,
+dropped from table by default.}
 
 \item{column_title_col, column_title_label}{Column title column name and
 label. Defaults to  "column_title" and \code{NULL}.}
@@ -65,8 +66,9 @@ label. Defaults to  "column_title" and \code{NULL}.}
 
 \item{moe_label}{Margin of error column label. Defaults to "MOE".}
 
-\item{perc_value_label, perc_moe_label}{Percent value and margin of error
-column labels.}
+\item{perc_value_label}{Percent value column label.}
+
+\item{perc_moe_label}{Percent margin of error column label.}
 
 \item{names_from, values_from}{<\code{\link[tidyr:tidyr_tidy_select]{tidy-select}}> A pair of
 arguments describing which column (or columns) to get the name of the
@@ -89,6 +91,27 @@ naming scheme of the form: \verb{value1_name1, value2_name1, value1_name2, value
 \item{names_glue}{Instead of \code{names_sep} and \code{names_prefix}, you can supply
 a glue specification that uses the \code{names_from} columns (and special
 \code{.value}) to create custom column names.}
+
+\item{names_sep}{If \code{names_from} or \code{values_from} contains multiple
+variables, this will be used to join their values together into a single
+string to use as a column name.}
+
+\item{decimals}{\emph{Number of decimal places}
+
+\code{scalar<numeric|integer>(val>=0)} // \emph{default:} \code{2}
+
+This corresponds to the exact number of decimal places to use. A value
+such as \code{2.34} can, for example, be formatted with \code{0} decimal places and
+it would result in \code{"2"}. With \code{4} decimal places, the formatted value
+becomes \code{"2.3400"}. The trailing zeros can be removed with
+\code{drop_trailing_zeros = TRUE}. If you always need \code{decimals = 0}, the
+\code{\link[gt:fmt_integer]{fmt_integer()}} function should be considered.}
+
+\item{currency_value}{If \code{TRUE}, use \code{\link[gt:fmt_currency]{gt::fmt_currency()}} to format value
+columns instead of \code{\link[gt:fmt_number]{gt::fmt_number()}}.}
+
+\item{merge_moe}{If \code{TRUE}, use \code{\link[gt:cols_merge_uncert]{gt::cols_merge_uncert()}} to merge the
+value_col and moe_col and the percent value and margin of error columns.}
 
 \item{split}{\emph{Splitting side}
 
@@ -114,29 +137,11 @@ iteration given by \code{limit}. This works in tandem with \code{split} since we
 adjust the number of splits from either the right side (\code{split = "last"})
 or left side (\code{split = "first"}) of the column name.}
 
-\item{names_sep}{If \code{names_from} or \code{values_from} contains multiple
-variables, this will be used to join their values together into a single
-string to use as a column name.}
-
 \item{reverse}{\emph{Reverse vector of split names}
 
 \verb{scalar<logical>} // \emph{default:} \code{FALSE}
 
 Should the order of split names be reversed? By default, this is \code{FALSE}.}
-
-\item{decimals}{\emph{Number of decimal places}
-
-\code{scalar<numeric|integer>(val>=0)} // \emph{default:} \code{2}
-
-This corresponds to the exact number of decimal places to use. A value
-such as \code{2.34} can, for example, be formatted with \code{0} decimal places and
-it would result in \code{"2"}. With \code{4} decimal places, the formatted value
-becomes \code{"2.3400"}. The trailing zeros can be removed with
-\code{drop_trailing_zeros = TRUE}. If you always need \code{decimals = 0}, the
-\code{\link[gt:fmt_integer]{fmt_integer()}} function should be considered.}
-
-\item{merge_moe}{If \code{TRUE}, use \code{\link[gt:cols_merge_uncert]{gt::cols_merge_uncert()}} to merge the
-value_col and moe_col and the percent value and margin of error columns.}
 
 \item{source_note}{\emph{Source note text}
 
@@ -150,6 +155,9 @@ in the text.}
 data label. If \code{FALSE}, any supplied source_note will be used instead of an
 ACS label.}
 
+\item{hide_na_cols}{If \code{TRUE} (default), hide any columns with all \code{NA}
+values using \code{\link[gt:cols_hide]{gt::cols_hide()}}.}
+
 \item{survey}{ACS survey, "acs5", "acs3", or "acs1".}
 
 \item{year}{Based on the year and survey, \code{\link[=acs_survey_ts]{acs_survey_ts()}} returns a vector
@@ -162,10 +170,12 @@ of years for non-overlapping ACS samples to allow comparison.}
 \item{end}{A character string appended to the end of the full label. Defaults
 to ".".}
 
+\item{use_md}{If \code{TRUE}, pass source_note to \code{\link[gt:md]{gt::md()}} first.}
+
 \item{...}{Additional arguments passed on to methods.}
 }
 \description{
-\code{\link[=gt_acs_compare]{gt_acs_compare()}} is a variant of \code{\link[=gt_acs]{gt_acs()}} that uses \code{\link[=acs_pivot_wider]{acs_pivot_wider()}}
+\code{\link[=gt_acs_compare]{gt_acs_compare()}} is a variant of \code{\link[=gt_acs]{gt_acs()}} that uses \code{\link[=pivot_acs_wider]{pivot_acs_wider()}}
 to support comparisons of multiple named areas or multiple geographies
 side-by-side in a combined gt table.
 }

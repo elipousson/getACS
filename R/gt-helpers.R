@@ -5,10 +5,10 @@
 #' @param moe_col Margin of error column name. Defaults to "moe"
 #' @param moe_label Margin of error column label. Defaults to "MOE".
 #' @inheritParams acs_perc_cols
-#' @param perc_value_label,perc_moe_label Percent value and margin of error
-#'   column labels.
-#' @param variable_col Variable column name. Defaults to "variable". Dropped
-#'   from table by default.
+#' @param perc_value_label Percent value column label.
+#' @param perc_moe_label Percent margin of error column label.
+#' @param variable_col Variable column name. Defaults to "variable". Typically,
+#'   dropped from table by default.
 #' @param column_title_col,column_title_label Column title column name and
 #'   label. Defaults to  "column_title" and `NULL`.
 #' @param .col_fn tidyselect function to use with column names. Defaults to
@@ -16,7 +16,8 @@
 #' @inheritParams withr::with_environment
 #' @keywords internal
 #' @export
-acs_cols_label <- function(data,
+#' @importFrom tidyselect starts_with
+cols_acs_label <- function(data,
                            value_col = "estimate",
                            value_label = "Est.",
                            moe_col = "moe",
@@ -25,13 +26,20 @@ acs_cols_label <- function(data,
                            perc_sep = "_",
                            perc_value_label = "% share",
                            perc_moe_label = "% MOE",
+                           name_col = "NAME",
+                           name_label = NULL,
                            column_title_col = "column_title",
                            column_title_label = NULL,
                            env = NULL,
                            .col_fn = starts_with) {
   perc_cols <- acs_perc_cols(value_col, moe_col, perc_prefix, perc_sep)
-  perc_value_col <- perc_cols[[1]]
-  perc_moe_col <- perc_cols[[2]]
+
+  perc_value_col <- NULL
+  perc_moe_col <- NULL
+  if (!is.null(perc_cols)) {
+    perc_value_col <- perc_cols[[1]]
+    perc_moe_col <- perc_cols[[2]]
+  }
 
   data <- .cols_label_ext(
     data,
@@ -65,21 +73,13 @@ acs_cols_label <- function(data,
     .col_fn = .col_fn
   )
 
-  # env <- env %||% current_env()
-  # data <- withr::with_environment(
-  #   env = env,
-  #   {
-  #     gt::cols_label(
-  #       data,
-  #       .list = list2(
-  #         .fn(value_col) ~ value_label,
-  #         .fn(moe_col) ~ moe_label,
-  #         .fn(perc_value_col) ~ perc_value_label,
-  #         .fn(perc_moe_col) ~ perc_moe_label
-  #       )
-  #     )
-  #   }
-  # )
+  data <- .cols_label_ext(
+    data,
+    columns = name_col,
+    label = name_label,
+    env = env,
+    .col_fn = .col_fn
+  )
 
   .cols_label_ext(
     data,
@@ -122,7 +122,7 @@ acs_cols_label <- function(data,
                             .col_fn = starts_with,
                             env = NULL,
                             ...) {
-  if (is_null(label)) {
+  if (is_null(label) || is_null(columns)) {
     return(data)
   }
 

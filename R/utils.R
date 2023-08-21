@@ -35,7 +35,10 @@ cli_quiet <- function(quiet = FALSE,
 
 
 #' @noRd
-check_sf <- function(x, allow_null = FALSE, arg = caller_arg(x), call = caller_env()) {
+check_sf <- function(x,
+                     allow_null = FALSE,
+                     arg = caller_arg(x),
+                     call = caller_env()) {
   if (inherits(x, "sf")) {
     return(invisible(NULL))
   }
@@ -82,7 +85,10 @@ check_has_name <- function(x,
 #'
 #' @keywords internal
 #' @export
-fct_recode_with_list <- function(x, list = NULL, in_order = TRUE, ordered = NA) {
+fct_recode_with_list <- function(x,
+                                 list = NULL,
+                                 in_order = TRUE,
+                                 ordered = NA) {
   check_installed("forcats")
 
   x <- forcats::fct_recode(x, !!!list)

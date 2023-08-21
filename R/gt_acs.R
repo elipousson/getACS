@@ -18,8 +18,12 @@
 #' @param name_col,name_label Place name column and label. name_label
 #'   can be a string or a named vector (similar to column_title_label). name_col
 #'   defaults to "NAME"
+#' @param est_spanner,perc_spanner Spanner labels for estimate and percent
+#'   estimate columns.
+#' @param est_cols,perc_cols Deprecated. Estimate and percent estimate columns.
 #' @inheritParams fmt_acs_estimate
 #' @inheritParams tab_acs_source_note
+#' @inheritParams cols_acs_label
 #' @param hide_na_cols If `TRUE` (default), hide columns where all values are
 #'   `NA`.
 #' @family gt table
@@ -69,6 +73,7 @@ gt_acs <- function(data,
                    append_note = FALSE,
                    drop_geometry = TRUE,
                    hide_na_cols = TRUE,
+                   currency_value = FALSE,
                    survey = "acs5",
                    year = 2021,
                    table = NULL,
@@ -84,7 +89,8 @@ gt_acs <- function(data,
   )
 
   est_cols <- est_cols %||% c(value_col, moe_col)
-  perc_cols <- perc_cols %||% acs_perc_cols(value_col, moe_col, perc_prefix, perc_sep)
+  perc_cols <- perc_cols %||%
+    acs_perc_cols(value_col, moe_col, perc_prefix, perc_sep)
 
   if (identical(column_title_label, "from_table")) {
     metadata <- get_acs_metadata(survey, year, table = table)
@@ -94,27 +100,36 @@ gt_acs <- function(data,
     }
   }
 
-  if (!is_null(est_cols)) {
-    gt_object <- fmt_acs_estimate(
-      gt_object,
-      columns = est_cols,
-      col_labels = value_label,
-      decimals = decimals,
-      spanner = est_spanner
-    )
-  }
+  gt_object <- fmt_acs_values(
+    gt_object,
+    value_col = value_col,
+    moe_col = moe_col,
+    perc_prefix = perc_prefix,
+    perc_sep = perc_sep,
+    currency_value = currency_value
+  )
 
-  if (!is_null(perc_cols)) {
-    gt_object <- fmt_acs_percent(
-      gt_object,
-      columns = perc_cols,
-      col_labels = perc_col_label,
-      decimals = decimals,
-      spanner = perc_spanner
-    )
-  }
+  # if (!is_null(est_cols)) {
+  #   gt_object <- fmt_acs_estimate(
+  #     gt_object,
+  #     columns = est_cols,
+  #     col_labels = value_label,
+  #     decimals = decimals,
+  #     spanner = est_spanner
+  #   )
+  # }
+  #
+  # if (!is_null(perc_cols)) {
+  #   gt_object <- fmt_acs_percent(
+  #     gt_object,
+  #     columns = perc_cols,
+  #     col_labels = perc_col_label,
+  #     decimals = decimals,
+  #     spanner = perc_spanner
+  #   )
+  # }
 
-  gt_object <- acs_cols_label(
+  gt_object <- cols_acs_label(
     gt_object,
     value_col = value_col,
     value_label = value_label,
@@ -123,7 +138,9 @@ gt_acs <- function(data,
     perc_sep = perc_sep,
     perc_value_label = perc_value_label,
     column_title_col = column_title_col,
-    column_title_label = column_title_label
+    column_title_label = column_title_label,
+    name_col = name_col,
+    name_label = name_label
   )
 
   if (!is_null(combined_spanner)) {
@@ -133,18 +150,6 @@ gt_acs <- function(data,
       columns = any_of(c(est_cols, perc_cols))
     )
   }
-
-  # gt_object <- .cols_label_ext(
-  #   gt_object,
-  #   columns = column_title_col,
-  #   label = column_title_label
-  # )
-  #
-  #   gt_object <- .cols_label_ext(
-  #     gt_object,
-  #     columns = any_of(name_col),
-  #     label = name_label
-  #   )
 
   tab_acs_source_note(
     gt_object = gt_object,
@@ -160,17 +165,18 @@ gt_acs <- function(data,
 
 #' Create a gt table with values compared by name, geography, or variable
 #'
-#' [gt_acs_compare()] is a variant of [gt_acs()] that uses [acs_pivot_wider()]
+#' [gt_acs_compare()] is a variant of [gt_acs()] that uses [pivot_acs_wider()]
 #' to support comparisons of multiple named areas or multiple geographies
 #' side-by-side in a combined gt table.
 #'
-#' @inheritParams acs_pivot_wider
-#' @inheritParams acs_cols_label
+#' @inheritParams pivot_acs_wider
+#' @inheritParams cols_acs_label
 #' @inheritParams select_acs
-#' @inheritParams acs_cols_label
-#' @inheritParams acs_fmt_values
-#' @inheritParams acs_tab_spanner_delim
+#' @inheritParams fmt_acs_values
+#' @inheritParams tab_acs_spanner_delim
 #' @inheritParams tab_acs_source_note
+#' @param hide_na_cols If `TRUE` (default), hide any columns with all `NA`
+#'   values using [gt::cols_hide()].
 #' @name gt_acs_compare
 #' @export
 #' @importFrom withr with_environment
@@ -191,20 +197,16 @@ gt_acs_compare <- function(data,
                            perc_moe_label = "% MOE",
                            column_title_label = NULL,
                            names_from = name_col,
-                           values_from = any_of(
-                             c(
-                               value_col, moe_col,
-                               paste0(perc_prefix, perc_sep, c(value_col, moe_col))
-                             )
-                           ),
+                           values_from = NULL,
                            names_vary = "slowest",
                            names_glue = NULL,
+                           names_sep = "_",
+                           decimals = 0,
+                           currency_value = FALSE,
+                           merge_moe = TRUE,
                            split = "last",
                            limit = 1,
-                           names_sep = "_",
                            reverse = TRUE,
-                           decimals = 0,
-                           merge_moe = TRUE,
                            source_note = NULL,
                            append_note = FALSE,
                            hide_na_cols = TRUE,
@@ -213,8 +215,9 @@ gt_acs_compare <- function(data,
                            table = NULL,
                            prefix = "Source: ",
                            end = ".",
+                           use_md = FALSE,
                            ...) {
-  data <- acs_pivot_wider(
+  data <- pivot_acs_wider(
     data,
     name_col = name_col,
     value_col = value_col,
@@ -229,7 +232,7 @@ gt_acs_compare <- function(data,
 
   gt_object <- .gt_ext(data, ...)
 
-  gt_object <- acs_cols_label(
+  gt_object <- cols_acs_label(
     gt_object,
     value_col = value_col,
     moe_col = moe_col,
@@ -243,25 +246,29 @@ gt_acs_compare <- function(data,
     column_title_label = column_title_label
   )
 
-  gt_object <- acs_fmt_values(
+  gt_object <- fmt_acs_values(
     gt_object,
     value_col = value_col,
     moe_col = moe_col,
     perc_prefix = perc_prefix,
     decimals = decimals,
     perc_sep = perc_sep,
-    merge_moe = merge_moe
+    merge_moe = merge_moe,
+    currency_value = currency_value
   )
 
   gt_object <- .cols_hide_na(gt_object)
 
-  gt_object <- acs_tab_spanner_delim(
+  gt_object <- tab_acs_spanner_delim(
     gt_object,
     column_title_col = column_title_col,
     value_col = value_col,
     moe_col = moe_col,
     perc_prefix = perc_prefix,
-    delim = names_sep
+    delim = names_sep,
+    split = split,
+    limit = limit,
+    reverse = reverse
   )
 
   tab_acs_source_note(
@@ -272,6 +279,7 @@ gt_acs_compare <- function(data,
     year = year,
     table = table,
     prefix = prefix,
-    end = end
+    end = end,
+    use_md = use_md
   )
 }

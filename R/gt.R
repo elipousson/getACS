@@ -1,7 +1,7 @@
 #' Apply formatting to value and percent value columns using `gt::fmt_number()`
 #' and `gt::fmt_percent()`
 #'
-#' [acs_fmt_values()] is a wrapper for [gt::fmt_number()], [gt::fmt_percent()],
+#' [fmt_acs_values()] is a wrapper for [gt::fmt_number()], [gt::fmt_percent()],
 #' and [gt::cols_merge_uncert()].
 #'
 #' @inheritParams acs_perc_cols
@@ -9,10 +9,14 @@
 #' @inheritParams gt::fmt_percent
 #' @param merge_moe If `TRUE`, use [gt::cols_merge_uncert()] to merge the
 #'   value_col and moe_col and the percent value and margin of error columns.
+#' @param currency_value If `TRUE`, use [gt::fmt_currency()] to format value
+#'   columns instead of [gt::fmt_number()].
+#' @param ... Additional parameters passed to [gt::fmt_currency()] if
+#'   `currency_value = TRUE`
 #' @param .cols_fn tidyselect function used to select columns to format and
 #'   merge. Defaults to [tidyselect::starts_with]
 #' @keywords internal
-acs_fmt_values <- function(data,
+fmt_acs_values <- function(data,
                            value_col = "estimate",
                            moe_col = "moe",
                            perc_prefix = "perc",
@@ -22,35 +26,77 @@ acs_fmt_values <- function(data,
                            accounting = FALSE,
                            scale_by = 1,
                            merge_moe = TRUE,
+                           currency_value = FALSE,
+                           ...,
                            .cols_fn = starts_with) {
   perc_cols <- acs_perc_cols(value_col, moe_col, perc_prefix, perc_sep)
 
-  data <- data |>
-    gt::fmt_number(
-      columns = .cols_fn(c(value_col, moe_col)),
-      use_seps = use_seps,
-      accounting = accounting,
-      scale_by = scale_by,
-      decimals = decimals
-    ) |>
-    gt::fmt_percent(
-      columns = .cols_fn(perc_cols),
-      decimals = decimals
-    )
+  if (ncol(dplyr::select(data[["_data"]], .cols_fn(perc_cols))) == 0) {
+    perc_cols <- NULL
+  }
 
-    if (!merge_moe) {
-      return(data)
+  if (ncol(dplyr::select(data[["_data"]], .cols_fn(value_col))) == 0) {
+    value_col <- NULL
+  }
+
+  if (!is.null(value_col)) {
+    if (currency_value) {
+      data <- gt::fmt_currency(
+        data,
+        columns = .cols_fn(c(value_col, moe_col)),
+        decimals = decimals,
+        ...
+      )
+    } else {
+      data <- gt::fmt_number(
+        data,
+        columns = .cols_fn(c(value_col, moe_col)),
+        use_seps = use_seps,
+        accounting = accounting,
+        scale_by = scale_by,
+        decimals = decimals
+      )
     }
+  }
 
-  data |>
-    gt::cols_merge_uncert(
+  if (!is.null(perc_cols)) {
+    if (currency_value) {
+      data <- gt::fmt_currency(
+        data,
+        columns = .cols_fn(perc_cols),
+        decimals = decimals,
+        ...
+      )
+    } else {
+      data <- gt::fmt_percent(
+        data,
+        columns = .cols_fn(perc_cols),
+        decimals = decimals
+      )
+    }
+  }
+
+  if (!merge_moe) {
+    return(data)
+  }
+
+  if (!is.null(value_col)) {
+    data <- gt::cols_merge_uncert(
+      data,
       col_val = .cols_fn(value_col),
       col_uncert = .cols_fn(moe_col)
-    ) |>
-    gt::cols_merge_uncert(
+    )
+  }
+
+  if (!is.null(perc_cols)) {
+    data <- gt::cols_merge_uncert(
+      data,
       col_val = .cols_fn(perc_cols[[1]]),
       col_uncert = .cols_fn(perc_cols[[2]])
     )
+  }
+
+  data
 }
 
 #' Create new spanners using `gt::tab_spanner_delim()`
@@ -58,7 +104,7 @@ acs_fmt_values <- function(data,
 #' @inheritParams gt::tab_spanner_delim
 #' @keywords internal
 #' @export
-acs_tab_spanner_delim <- function(data,
+tab_acs_spanner_delim <- function(data,
                                   column_title_col = "column_title",
                                   value_col = "estimate",
                                   moe_col = "moe",
@@ -132,8 +178,7 @@ tab_acs_source_note <- function(gt_object,
     prefix = prefix,
     table = table,
     table_label = table_label,
-    end = end,
-    ...
+    end = end
   )
 
   if (use_md) {
@@ -144,10 +189,12 @@ tab_acs_source_note <- function(gt_object,
     return(gt_object)
   }
 
-  gt::tab_source_note(
+  gt_object <- gt::tab_source_note(
     gt_object,
     source_note = source_note
   )
+
+  gt_object
 }
 
 #' Merge columns to a value-with-uncertainty column

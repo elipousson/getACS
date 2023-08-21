@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(getACS)
-library(dplyr)
+library(tidyverse)
 library(gt)
 ```
 
@@ -63,7 +63,7 @@ pop_tbl_data |>
     value_label = "Population",
     name_label = "County",
     perc_prefix = NULL
-  ) #|>
+  ) |>
   fmt_acs_county(
     state = "Maryland",
     pattern = "(County|), {state}"
@@ -86,12 +86,12 @@ Similarly, `gt_acs()` returns a `gt_tbl` object so it can be combined with other
 
 ```{r}
 edu_tbl_data |>
-  select_acs_cols(name_col = NULL) |>
+  select_acs(.name_col = NULL) |>
   gt_acs(
-    table = edu_tbl_data$table_id[[1]],
+    table = edu_tbl_data$table_id,
     column_title_label = "Education",
-    est_col_label = "Estimate",
-    perc_col_label = "% of total"
+    value_label = "Estimate",
+    perc_value_label = "% of total"
   ) |>
   tab_header(
     edu_tbl_data$table_title[[1]],
@@ -109,10 +109,10 @@ tenure_tbl_data <- acs_data |>
   )
 
 tenure_tbl_data |>
-  select_acs_cols(name_col = NULL) |>
+  select_acs(.name_col = NULL) |>
   gt_acs(
     rowname_col = "column_title",
-    est_col_label = "Units",
+    value_label = "Units",
     table = tenure_tbl_data$table_id[[1]]
   ) |>
   tab_header(
@@ -121,7 +121,7 @@ tenure_tbl_data |>
   )
 ```
 
-Helpers such as `join_acs_geography_ratio()` support additional features such as calculating a ratio between an estimate and the estimate for a reference geography:
+Helpers such as `pivot_acs_wider()` can also be helpful even without the `gt_acs_compare()` variant:
 
 ```{r}
 comparison_data <- get_acs_geographies(
@@ -129,22 +129,26 @@ comparison_data <- get_acs_geographies(
   county = "Baltimore city",
   state = "MD",
   msa = "Baltimore-Columbia-Towson, MD Metro Area",
-  table = "B25105"
+  table = "B25105",
+  quiet = TRUE
 )
 
 comparison_data |>
-  join_acs_geography_ratio(
-    geography = "county"
+  select_acs(
+    .name_col = "NAME",
+    .perc_prefix = NULL
   ) |>
-  select_acs_cols(
-    name_col = "NAME",
-    perc_est_cols = NULL,
-    column_title_col = NULL,
-    starts_with("ratio_")
+  pivot_acs_wider() |>
+  gt_acs(
+    value_label = NULL,
+    column_title_label = "",
+    currency_value = TRUE
   ) |>
-  gt_acs() |>
-  cols_merge_uncert_ext(
-    c("ratio_estimate", "ratio_moe")
+  cols_label_with(
+    fn = function(x) {
+      str_remove(x, "^estimate_")
+    }
   )
 ```
+
 

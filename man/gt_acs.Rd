@@ -27,6 +27,7 @@ gt_acs(
   append_note = FALSE,
   drop_geometry = TRUE,
   hide_na_cols = TRUE,
+  currency_value = FALSE,
   survey = "acs5",
   year = 2021,
   table = NULL,
@@ -62,6 +63,10 @@ secondary column in the table stub.}
 \item{...}{Additional parameters passed to \code{\link[gt:fmt_number]{gt::fmt_number()}} by
 \code{\link[=fmt_acs_estimate]{fmt_acs_estimate()}} or to \code{\link[gt:fmt_percent]{gt::fmt_percent()}} by \code{\link[=fmt_acs_percent]{fmt_acs_percent()}}.}
 
+\item{value_col}{Value column name. Defaults to "estimate"}
+
+\item{moe_col}{Margin of error column name. Defaults to "moe"}
+
 \item{perc_prefix}{Prefix string for percent value columns.}
 
 \item{perc_sep}{Separator string between \code{perc_prefix} and the \code{value_col}
@@ -74,6 +79,13 @@ column_title_label can also be a named vector in the format of \code{c("label" =
 \item{name_col, name_label}{Place name column and label. name_label
 can be a string or a named vector (similar to column_title_label). name_col
 defaults to "NAME"}
+
+\item{perc_value_label}{Percent value column label.}
+
+\item{value_label}{Value column label. Defaults to "Est.".}
+
+\item{est_spanner, perc_spanner}{Spanner labels for estimate and percent
+estimate columns.}
 
 \item{combined_spanner}{If not \code{NULL}, combined_spanner is passed to label
 parameter of \code{\link[gt:tab_spanner]{gt::tab_spanner()}} using the value columns and percent
@@ -119,6 +131,8 @@ of years for non-overlapping ACS samples to allow comparison.}
 
 \item{end}{A character string appended to the end of the full label. Defaults
 to ".".}
+
+\item{est_cols, perc_cols}{Deprecated. Estimate and percent estimate columns.}
 }
 \description{
 Create or format a gt table with an estimate and margin of error and

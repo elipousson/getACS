@@ -70,7 +70,7 @@ select_acs_cols <- function(data,
   dplyr::select(data, -starts_with(denominator_start))
 }
 
-#' Select columns from an ACS data frame using `dplyr::select()`
+#' Keep or drop columns from an ACS data frame using `dplyr::select()`
 #'
 #' `r lifecycle::badge("experimental")`
 #'
@@ -81,13 +81,16 @@ select_acs_cols <- function(data,
 #' [select_acs_cols()] function.
 #'
 #' @name select_acs
-#' @param ... Additional parameters passed to [dplyr::select()]
-#' @param .name_col,.column_title_col,.value_col,.moe_col ACS data column
-#'   names to select using [tidyselect::any_of()]. Set any parameter to `NULL`
-#'   to avoid selecting columns.
+#' @inheritParams dplyr::select
+#' @param .name_col,.column_title_col,.value_col,.moe_col ACS data column names
+#'   to select using the Tidyverse selection helper in `.fn`. Set any parameter
+#'   to `NULL` to avoid selecting columns.
 #' @param .perc_prefix,.perc_sep Percent value prefix and separator. Set
 #'   .perc_prefix to `NULL` to drop the percent value and percent margin of
 #'   error columns.
+#' @param .fn Tidyverse selection helper to use with named ACS columns. Defaults
+#'   to [tidyselect::any_of]. See [dplyr::select()] for an overview of selection
+#'   features.
 #' @export
 #' @importFrom dplyr select
 select_acs <- function(.data,

@@ -2,7 +2,7 @@
 % Please edit documentation in R/select_acs_cols.R
 \name{select_acs}
 \alias{select_acs}
-\title{Select columns from an ACS data frame using \code{dplyr::select()}}
+\title{Keep or drop columns from an ACS data frame using \code{dplyr::select()}}
 \usage{
 select_acs(
   .data,
@@ -17,15 +17,26 @@ select_acs(
 )
 }
 \arguments{
-\item{...}{Additional parameters passed to \code{\link[dplyr:select]{dplyr::select()}}}
+\item{.data}{A data frame, data frame extension (e.g. a tibble), or a
+lazy data frame (e.g. from dbplyr or dtplyr). See \emph{Methods}, below, for
+more details.}
 
-\item{.name_col, .column_title_col, .value_col, .moe_col}{ACS data column
-names to select using \code{\link[tidyselect:all_of]{tidyselect::any_of()}}. Set any parameter to \code{NULL}
-to avoid selecting columns.}
+\item{...}{<\code{\link[dplyr:dplyr_tidy_select]{tidy-select}}> One or more unquoted
+expressions separated by commas. Variable names can be used as if they
+were positions in the data frame, so expressions like \code{x:y} can
+be used to select a range of variables.}
+
+\item{.name_col, .column_title_col, .value_col, .moe_col}{ACS data column names
+to select using the Tidyverse selection helper in \code{.fn}. Set any parameter
+to \code{NULL} to avoid selecting columns.}
 
 \item{.perc_prefix, .perc_sep}{Percent value prefix and separator. Set
 .perc_prefix to \code{NULL} to drop the percent value and percent margin of
 error columns.}
+
+\item{.fn}{Tidyverse selection helper to use with named ACS columns. Defaults
+to \link[tidyselect:all_of]{tidyselect::any_of}. See \code{\link[dplyr:select]{dplyr::select()}} for an overview of selection
+features.}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
