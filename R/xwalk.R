@@ -192,10 +192,10 @@ make_area_xwalk <- function(area,
 
   cli::cli_progress_step("Checking {.arg block_xwalk} and {.arg area} geometry")
 
-  if (coverage && st_is_all_predicate(area, block_xwalk)) {
+  if (coverage && st_is_all_predicate(block_xwalk, area)) {
     cli::cli_bullets(
       c(
-        "!" = "All features in {.arg area_xwalk} intersect with {.arg block_xwalk}",
+        "!" = "All features in {.arg block_xwalk} already intersect with {.arg area}",
         "*" = "Setting {.arg coverage} to {.code FALSE} to avoid inaccurate results."
       )
     )
@@ -203,7 +203,7 @@ make_area_xwalk <- function(area,
     coverage <- FALSE
   }
 
-  if (!is_false(erase)) {
+  if (is_true(erase) || inherits_any(erase, c("sfc", "sf"))) {
     what <- "geometry"
     if (is_true(erase)) {
       what <- "water areas"
