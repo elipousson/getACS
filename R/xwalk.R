@@ -392,15 +392,15 @@ rbind_area_coverage <- function(area,
     )
   }
 
-  area_coverage <- data.frame(
-    coverage_name,
-    area_coverage
+  area_coverage <- set_names(
+    data.frame(
+      coverage_name,
+      area_coverage
+    ),
+    c(name_col, attr(area, "sf_column"))
   )
 
-  area <- vctrs::vec_rbind(
-    area,
-    set_names(area_coverage, c(name_col, "geometry"))
-  )
+  area <- vctrs::vec_rbind(area, area_coverage, .error_call = error_call)
 
   sf::st_make_valid(sf::st_as_sf(area))
 }
