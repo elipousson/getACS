@@ -31,11 +31,13 @@ fmt_acs_values <- function(data,
                            .cols_fn = starts_with) {
   perc_cols <- acs_perc_cols(value_col, moe_col, perc_prefix, perc_sep)
 
-  if (ncol(dplyr::select(data[["_data"]], .cols_fn(perc_cols))) == 0) {
+  if (!is.null(perc_cols) &&
+      ncol(dplyr::select(data[["_data"]], .cols_fn(perc_cols))) == 0) {
     perc_cols <- NULL
   }
 
-  if (ncol(dplyr::select(data[["_data"]], .cols_fn(value_col))) == 0) {
+  if (!is.null(value_col) &&
+      ncol(dplyr::select(data[["_data"]], .cols_fn(value_col))) == 0) {
     value_col <- NULL
   }
 
