@@ -54,7 +54,7 @@ pop_tbl_data <- pop_tbl_data |>
   )
 ```
 
-The main table building function is `gt_acs()` which is a wrapper for `gt::gt()`, `gt::cols_label()`, `gt::cols_merge_uncert()` and other `{gt}` functions. Based on the predictable structure of ACS data, this function can merge estimate and margin of error columns, format estimate and percent estimate columns, and set a source note with a survey and table attribution. Additional helpers can support common formatting tasks when working with American Community Survey data, such as `fmt_acs_county()` stripping the state name and trailing comma from the ACS data frame name column.
+The main table building function is `gt_acs()` which is a wrapper for `gt::gt()`, `gt::cols_label()`, `gt::cols_merge_uncert()` and other `{gt}` functions. Based on the predictable structure of ACS data, this function can merge estimate and margin of error columns, format estimate and percent estimate columns, and set a source note with a survey and table attribution.
 
 ```{r}
 pop_tbl_data |>
@@ -70,7 +70,9 @@ pop_tbl_data |>
   )
 ```
 
-Many helper functions are all built around tidyverse functions so additional parameters passed to `filter_data()` are passed to `dplyr::filter()` so subsetting data by indent, line_number, or other attributes is straightforward:
+Additional helpers can support common formatting tasks when working with American Community Survey data. For example, the function `fmt_acs_county()`  strips the state name and trailing comma from the ACS data frame name column.
+
+Many helper functions are built around tidyverse functions so additional parameters passed to `filter_data()` are passed to `dplyr::filter()` so subsetting data by indent, line_number, or other attributes is straightforward:
 
 ```{r}
 edu_tbl_data <- acs_data |>
@@ -125,7 +127,11 @@ Helpers such as `pivot_acs_wider()` can also be helpful even without the `gt_acs
 
 ```{r}
 comparison_data <- get_acs_geographies(
-  geography = c("county", "metropolitan statistical area/micropolitan statistical area", "state"),
+  geography = c(
+    "county",
+    "metropolitan statistical area/micropolitan statistical area",
+    "state"
+    ),
   county = "Baltimore city",
   state = "MD",
   msa = "Baltimore-Columbia-Towson, MD Metro Area",

@@ -22,7 +22,8 @@ reference:
   - starts_with("acs_")
   - starts_with("join_acs_")
   - '`collapse_acs_variables`'
-  - '`select_acs_cols`'
+  - '`select_acs`'
+  - '`pivot_acs_wider`'
   - '`filter_acs`'
   - '`load_acs_vars`'
 - title: Reference data
