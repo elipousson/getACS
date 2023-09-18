@@ -32,12 +32,12 @@ fmt_acs_values <- function(data,
   perc_cols <- acs_perc_cols(value_col, moe_col, perc_prefix, perc_sep)
 
   if (!is.null(perc_cols) &&
-      ncol(dplyr::select(data[["_data"]], .cols_fn(perc_cols))) == 0) {
+    ncol(dplyr::select(data[["_data"]], .cols_fn(perc_cols))) == 0) {
     perc_cols <- NULL
   }
 
   if (!is.null(value_col) &&
-      ncol(dplyr::select(data[["_data"]], .cols_fn(value_col))) == 0) {
+    ncol(dplyr::select(data[["_data"]], .cols_fn(value_col))) == 0) {
     value_col <- NULL
   }
 
@@ -62,20 +62,11 @@ fmt_acs_values <- function(data,
   }
 
   if (!is.null(perc_cols)) {
-    if (currency_value) {
-      data <- gt::fmt_currency(
-        data,
-        columns = .cols_fn(perc_cols),
-        decimals = decimals,
-        ...
-      )
-    } else {
-      data <- gt::fmt_percent(
-        data,
-        columns = .cols_fn(perc_cols),
-        decimals = decimals
-      )
-    }
+    data <- gt::fmt_percent(
+      data,
+      columns = .cols_fn(perc_cols),
+      decimals = decimals
+    )
   }
 
   if (!merge_moe) {
@@ -83,18 +74,84 @@ fmt_acs_values <- function(data,
   }
 
   if (!is.null(value_col)) {
-    data <- gt::cols_merge_uncert(
+    data <- cols_merge_uncert_multi(
       data,
-      col_val = .cols_fn(value_col),
-      col_uncert = .cols_fn(moe_col)
+      col_val = value_col,
+      col_uncert = moe_col,
+      .cols_fn = .cols_fn
     )
   }
 
   if (!is.null(perc_cols)) {
+    data <- cols_merge_uncert_multi(
+      data,
+      col_val = perc_cols[[1]],
+      col_uncert = perc_cols[[2]],
+      .cols_fn = .cols_fn
+    )
+  }
+
+  data
+}
+
+#' @noRd
+#' @importFrom tidyselect everything eval_select all_of
+#' @importFrom gt cols_merge_uncert
+#' @importFrom dplyr select
+cols_merge_uncert_multi <- function(data,
+                                    col_val = "estimate",
+                                    col_uncert = "moe",
+                                    .cols_fn = starts_with,
+                                    rows = everything(),
+                                    sep = " +/- ",
+                                    autohide = TRUE,
+                                    call = caller_env()) {
+  uncert_data <- dplyr::select(
+    data[["_data"]],
+    .cols_fn(col_uncert)
+  )
+
+  uncert_nm <- names(uncert_data)
+
+  if (has_length(uncert_nm, 1)) {
     data <- gt::cols_merge_uncert(
       data,
-      col_val = .cols_fn(perc_cols[[1]]),
-      col_uncert = .cols_fn(perc_cols[[2]])
+      col_val = .cols_fn(col_val),
+      col_uncert = .cols_fn(col_uncert),
+      rows = rows,
+      sep = sep,
+      autohide = autohide
+    )
+
+    return(data)
+  }
+
+  val_data <- dplyr::select(
+    data[["_data"]],
+    .cols_fn(col_val)
+  )
+
+  val_nm <- names(val_data)
+
+  if (length(uncert_nm) > length(val_nm)) {
+    cli_abort(
+      c(
+        "{.arg .cols_fn} selects more uncertainty than value columns.",
+        "i" = "Check that {.arg .cols_fn} selects an equal number of
+          estimate and margin of error columns."
+      ),
+      call = call
+    )
+  }
+
+  for (i in seq_along(uncert_nm)) {
+    data <- gt::cols_merge_uncert(
+      data,
+      col_val = tidyselect::all_of(val_nm[[i]]),
+      col_uncert = tidyselect::all_of(uncert_nm[[i]]),
+      rows = rows,
+      sep = sep,
+      autohide = autohide
     )
   }
 

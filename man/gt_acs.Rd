@@ -73,12 +73,14 @@ secondary column in the table stub.}
 and \code{moe_col} strings.}
 
 \item{column_title_col, column_title_label}{Column title and label. If
-column_title_label is a string, column_title_col is required.
-column_title_label can also be a named vector in the format of \code{c("label" = "column")}. column_title_col defaults to "column_title"}
+\code{column_title_label} is a string, \code{column_title_col} is required.
+\code{column_title_label} can also be a named vector in the format of \code{c("label" = "column")}. \code{column_title_col} defaults to "column_title". If
+\code{column_title_label} is "from_table", the label is set based on the
+simple_table_title column in the table metadata.}
 
-\item{name_col, name_label}{Place name column and label. name_label
-can be a string or a named vector (similar to column_title_label). name_col
-defaults to "NAME"}
+\item{name_col, name_label}{Place name column and label. \code{name_label}
+can be a string or a named vector (similar to \code{column_title_label}).
+\code{name_col} defaults to "NAME"}
 
 \item{perc_value_label}{Percent value column label.}
 
