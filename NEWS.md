@@ -6,6 +6,7 @@
 * Add `jam_values` reference data.
 * Add `extensive` parameter to `use_area_xwalk()` to support calculation of weighted mean estimates.
 * Fix errors due to invalid geometry in `make_block_xwalk()` and `make_area_xwalk()` functions.
+* Add experimental functions `geom_acs_errorbarh()` and `geom_acs_errorbarv()`
 
 # getACS 0.1.1
 
