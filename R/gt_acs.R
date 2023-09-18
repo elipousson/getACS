@@ -23,7 +23,7 @@
 #' @param est_spanner,perc_spanner Spanner labels for estimate and percent
 #'   estimate columns.
 #' @param est_cols,perc_cols Deprecated. Estimate and percent estimate columns.
-#' @inheritParams fmt_acs_estimate
+#' @inheritParams fmt_acs_values
 #' @inheritParams tab_acs_source_note
 #' @inheritParams cols_acs_label
 #' @param hide_na_cols If `TRUE` (default), hide columns where all values are

@@ -122,6 +122,9 @@ geometry before turning the data frame into a table.}
 \item{hide_na_cols}{If \code{TRUE} (default), hide columns where all values are
 \code{NA}.}
 
+\item{currency_value}{If \code{TRUE}, use \code{\link[gt:fmt_currency]{gt::fmt_currency()}} to format value
+columns instead of \code{\link[gt:fmt_number]{gt::fmt_number()}}.}
+
 \item{survey}{ACS survey, "acs5", "acs3", or "acs1".}
 
 \item{year}{Based on the year and survey, \code{\link[=acs_survey_ts]{acs_survey_ts()}} returns a vector
