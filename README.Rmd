@@ -82,6 +82,7 @@ The `gt_acs_compare()` function also allows side-by-side comparison of geographi
 ```{r}
 commute_tbl_compare <- gt_acs_compare(
   data = tbl_data,
+  id_cols = "column_title",
   column_title_label = "Commute time",
   table = "B08134"
 )
@@ -92,13 +93,15 @@ as_raw_html(commute_tbl_compare)
 The package also includes several simple functions to support creating plots with the `{ggplot2}` package:
 
 ```{r}
-plot_data <- filter_acs(acs_data, indent == 1, line_number > 10)
-plot_data <- select_acs(plot_data)
+plot_data <- acs_data |>
+  filter_acs(indent == 1, line_number > 10) |> 
+  select_acs() |> 
+  fmt_acs_county(state = "Maryland")
 
 plot_data |>
-  fmt_acs_county(state = "Maryland") |>
   ggplot(aes(x = perc_estimate, y = column_title, fill = NAME)) +
   geom_col(position = "dodge", alpha = 0.75) +
+  geom_acs_errorbarh(perc = TRUE, linewidth = 0.25, position = "dodge") +
   scale_x_acs_percent() +
   scale_fill_viridis_d() +
   theme_minimal() +
