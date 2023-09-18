@@ -115,10 +115,11 @@ tenure_tbl_data |>
   gt_acs(
     rowname_col = "column_title",
     value_label = "Units",
-    table = tenure_tbl_data$table_id[[1]]
+    # Only unique table values are used to append to the source note
+    table = tenure_tbl_data$table_id
   ) |>
   tab_header(
-    tenure_tbl_data$table_title[[1]],
+    unique(tenure_tbl_data$table_title),
     "Baltimore City, Maryland"
   )
 ```
@@ -131,7 +132,7 @@ comparison_data <- get_acs_geographies(
     "county",
     "metropolitan statistical area/micropolitan statistical area",
     "state"
-    ),
+  ),
   county = "Baltimore city",
   state = "MD",
   msa = "Baltimore-Columbia-Towson, MD Metro Area",
@@ -157,4 +158,15 @@ comparison_data |>
   )
 ```
 
+The `gt_acs_compare()` calls `pivot_acs_wider()` and handles the process of renaming column titles for a similar effect:
 
+```{r}
+comparison_data |> 
+  gt_acs_compare(
+    id_cols = "column_title",
+    column_title_label = "",
+    currency_value = TRUE
+    )
+```
+
+Note that, if you encounter warning or error messages, you may need to set a value for `id_cols` to resolve the issue.
