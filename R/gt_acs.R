@@ -12,12 +12,14 @@
 #'   columns as the columns parameter.
 #' @inheritParams fmt_acs_estimate
 #' @param column_title_col,column_title_label Column title and label. If
-#'   column_title_label is a string, column_title_col is required.
-#'   column_title_label can also be a named vector in the format of `c("label" =
-#'   "column")`. column_title_col defaults to "column_title"
-#' @param name_col,name_label Place name column and label. name_label
-#'   can be a string or a named vector (similar to column_title_label). name_col
-#'   defaults to "NAME"
+#'   `column_title_label` is a string, `column_title_col` is required.
+#'   `column_title_label` can also be a named vector in the format of `c("label"
+#'   = "column")`. `column_title_col` defaults to "column_title". If
+#'   `column_title_label` is "from_table", the label is set based on the
+#'   simple_table_title column in the table metadata.
+#' @param name_col,name_label Place name column and label. `name_label`
+#'   can be a string or a named vector (similar to `column_title_label`).
+#'   `name_col` defaults to "NAME"
 #' @param est_spanner,perc_spanner Spanner labels for estimate and percent
 #'   estimate columns.
 #' @param est_cols,perc_cols Deprecated. Estimate and percent estimate columns.
@@ -109,26 +111,6 @@ gt_acs <- function(data,
     currency_value = currency_value
   )
 
-  # if (!is_null(est_cols)) {
-  #   gt_object <- fmt_acs_estimate(
-  #     gt_object,
-  #     columns = est_cols,
-  #     col_labels = value_label,
-  #     decimals = decimals,
-  #     spanner = est_spanner
-  #   )
-  # }
-  #
-  # if (!is_null(perc_cols)) {
-  #   gt_object <- fmt_acs_percent(
-  #     gt_object,
-  #     columns = perc_cols,
-  #     col_labels = perc_col_label,
-  #     decimals = decimals,
-  #     spanner = perc_spanner
-  #   )
-  # }
-
   gt_object <- cols_acs_label(
     gt_object,
     value_col = value_col,
@@ -196,6 +178,8 @@ gt_acs_compare <- function(data,
                            perc_value_label = "% share",
                            perc_moe_label = "% MOE",
                            column_title_label = NULL,
+                           id_cols = NULL,
+                           id_expand = FALSE,
                            names_from = name_col,
                            values_from = NULL,
                            names_vary = "slowest",
@@ -219,6 +203,8 @@ gt_acs_compare <- function(data,
                            ...) {
   data <- pivot_acs_wider(
     data,
+    id_cols = id_cols,
+    id_expand = id_expand,
     name_col = name_col,
     value_col = value_col,
     moe_col = moe_col,
@@ -230,7 +216,7 @@ gt_acs_compare <- function(data,
     names_glue = names_glue
   )
 
-  gt_object <- .gt_ext(data, ...)
+  gt_object <- .gt_ext(data, ..., hide_na_cols = hide_na_cols)
 
   gt_object <- cols_acs_label(
     gt_object,
@@ -271,7 +257,7 @@ gt_acs_compare <- function(data,
     reverse = reverse
   )
 
-  tab_acs_source_note(
+  gt_object <- tab_acs_source_note(
     gt_object = gt_object,
     source_note = source_note,
     append_note = append_note,
@@ -282,4 +268,6 @@ gt_acs_compare <- function(data,
     end = end,
     use_md = use_md
   )
+
+  gt_object
 }

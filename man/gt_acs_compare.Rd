@@ -18,6 +18,8 @@ gt_acs_compare(
   perc_value_label = "\% share",
   perc_moe_label = "\% MOE",
   column_title_label = NULL,
+  id_cols = NULL,
+  id_expand = FALSE,
   names_from = name_col,
   values_from = NULL,
   names_vary = "slowest",
@@ -69,6 +71,23 @@ label. Defaults to  "column_title" and \code{NULL}.}
 \item{perc_value_label}{Percent value column label.}
 
 \item{perc_moe_label}{Percent margin of error column label.}
+
+\item{id_cols}{<\code{\link[tidyr:tidyr_tidy_select]{tidy-select}}> A set of columns that
+uniquely identify each observation. Typically used when you have
+redundant variables, i.e. variables whose values are perfectly correlated
+with existing variables.
+
+Defaults to all columns in \code{data} except for the columns specified through
+\code{names_from} and \code{values_from}. If a tidyselect expression is supplied, it
+will be evaluated on \code{data} after removing the columns specified through
+\code{names_from} and \code{values_from}.}
+
+\item{id_expand}{Should the values in the \code{id_cols} columns be expanded by
+\code{\link[tidyr:expand]{expand()}} before pivoting? This results in more rows, the output will
+contain a complete expansion of all possible values in \code{id_cols}. Implicit
+factor levels that aren't represented in the data will become explicit.
+Additionally, the row values corresponding to the expanded \code{id_cols} will
+be sorted.}
 
 \item{names_from, values_from}{<\code{\link[tidyr:tidyr_tidy_select]{tidy-select}}> A pair of
 arguments describing which column (or columns) to get the name of the

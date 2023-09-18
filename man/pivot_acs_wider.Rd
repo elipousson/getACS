@@ -11,14 +11,16 @@ pivot_acs_wider(
   moe_col = "moe",
   perc_prefix = "perc",
   perc_sep = "_",
-  names_from = name_col,
-  values_from = NULL,
-  names_sep = "_",
-  names_vary = "slowest",
-  names_glue = NULL,
-  names_repair = "check_unique",
   .col_fn = any_of,
-  ...
+  ...,
+  id_cols = NULL,
+  id_expand = FALSE,
+  names_from = name_col,
+  names_sep = "_",
+  names_glue = NULL,
+  names_vary = "slowest",
+  names_repair = "check_unique",
+  values_from = NULL
 )
 }
 \arguments{
@@ -36,59 +38,12 @@ set to name_col.}
 \item{perc_sep}{Separator string between \code{perc_prefix} and the \code{value_col}
 and \code{moe_col} strings.}
 
-\item{names_from, values_from}{<\code{\link[tidyr:tidyr_tidy_select]{tidy-select}}> A pair of
-arguments describing which column (or columns) to get the name of the
-output column (\code{names_from}), and which column (or columns) to get the
-cell values from (\code{values_from}).
-
-If \code{values_from} contains multiple values, the value will be added to the
-front of the output column.}
-
-\item{names_sep}{If \code{names_from} or \code{values_from} contains multiple
-variables, this will be used to join their values together into a single
-string to use as a column name.}
-
-\item{names_vary}{When \code{names_from} identifies a column (or columns) with
-multiple unique values, and multiple \code{values_from} columns are provided,
-in what order should the resulting column names be combined?
-\itemize{
-\item \code{"fastest"} varies \code{names_from} values fastest, resulting in a column
-naming scheme of the form: \verb{value1_name1, value1_name2, value2_name1, value2_name2}. This is the default.
-\item \code{"slowest"} varies \code{names_from} values slowest, resulting in a column
-naming scheme of the form: \verb{value1_name1, value2_name1, value1_name2, value2_name2}.
-}}
-
-\item{names_glue}{Instead of \code{names_sep} and \code{names_prefix}, you can supply
-a glue specification that uses the \code{names_from} columns (and special
-\code{.value}) to create custom column names.}
-
-\item{names_repair}{What happens if the output has invalid column names?
-The default, \code{"check_unique"} is to error if the columns are duplicated.
-Use \code{"minimal"} to allow duplicates in the output, or \code{"unique"} to
-de-duplicated by adding numeric suffixes. See \code{\link[vctrs:vec_as_names]{vctrs::vec_as_names()}}
-for more options.}
-
 \item{.col_fn}{tidyselect function to use with column names. Defaults to
 \link[tidyselect:starts_with]{tidyselect::starts_with},}
 
 \item{...}{
   Arguments passed on to \code{\link[tidyr:pivot_wider]{tidyr::pivot_wider}}
   \describe{
-    \item{\code{id_cols}}{<\code{\link[tidyr:tidyr_tidy_select]{tidy-select}}> A set of columns that
-uniquely identify each observation. Typically used when you have
-redundant variables, i.e. variables whose values are perfectly correlated
-with existing variables.
-
-Defaults to all columns in \code{data} except for the columns specified through
-\code{names_from} and \code{values_from}. If a tidyselect expression is supplied, it
-will be evaluated on \code{data} after removing the columns specified through
-\code{names_from} and \code{values_from}.}
-    \item{\code{id_expand}}{Should the values in the \code{id_cols} columns be expanded by
-\code{\link[tidyr:expand]{expand()}} before pivoting? This results in more rows, the output will
-contain a complete expansion of all possible values in \code{id_cols}. Implicit
-factor levels that aren't represented in the data will become explicit.
-Additionally, the row values corresponding to the expanded \code{id_cols} will
-be sorted.}
     \item{\code{names_from,values_from}}{<\code{\link[tidyr:tidyr_tidy_select]{tidy-select}}> A pair of
 arguments describing which column (or columns) to get the name of the
 output column (\code{names_from}), and which column (or columns) to get the
@@ -134,9 +89,62 @@ all unspecified columns will be considered \code{id_cols}.
 This is similar to grouping by the \code{id_cols} then summarizing the
 unused columns using \code{unused_fn}.}
   }}
+
+\item{id_cols}{<\code{\link[tidyr:tidyr_tidy_select]{tidy-select}}> A set of columns that
+uniquely identify each observation. Typically used when you have
+redundant variables, i.e. variables whose values are perfectly correlated
+with existing variables.
+
+Defaults to all columns in \code{data} except for the columns specified through
+\code{names_from} and \code{values_from}. If a tidyselect expression is supplied, it
+will be evaluated on \code{data} after removing the columns specified through
+\code{names_from} and \code{values_from}.}
+
+\item{id_expand}{Should the values in the \code{id_cols} columns be expanded by
+\code{\link[tidyr:expand]{expand()}} before pivoting? This results in more rows, the output will
+contain a complete expansion of all possible values in \code{id_cols}. Implicit
+factor levels that aren't represented in the data will become explicit.
+Additionally, the row values corresponding to the expanded \code{id_cols} will
+be sorted.}
+
+\item{names_from, values_from}{<\code{\link[tidyr:tidyr_tidy_select]{tidy-select}}> A pair of
+arguments describing which column (or columns) to get the name of the
+output column (\code{names_from}), and which column (or columns) to get the
+cell values from (\code{values_from}).
+
+If \code{values_from} contains multiple values, the value will be added to the
+front of the output column.}
+
+\item{names_sep}{If \code{names_from} or \code{values_from} contains multiple
+variables, this will be used to join their values together into a single
+string to use as a column name.}
+
+\item{names_glue}{Instead of \code{names_sep} and \code{names_prefix}, you can supply
+a glue specification that uses the \code{names_from} columns (and special
+\code{.value}) to create custom column names.}
+
+\item{names_vary}{When \code{names_from} identifies a column (or columns) with
+multiple unique values, and multiple \code{values_from} columns are provided,
+in what order should the resulting column names be combined?
+\itemize{
+\item \code{"fastest"} varies \code{names_from} values fastest, resulting in a column
+naming scheme of the form: \verb{value1_name1, value1_name2, value2_name1, value2_name2}. This is the default.
+\item \code{"slowest"} varies \code{names_from} values slowest, resulting in a column
+naming scheme of the form: \verb{value1_name1, value2_name1, value1_name2, value2_name2}.
+}}
+
+\item{names_repair}{What happens if the output has invalid column names?
+The default, \code{"check_unique"} is to error if the columns are duplicated.
+Use \code{"minimal"} to allow duplicates in the output, or \code{"unique"} to
+de-duplicated by adding numeric suffixes. See \code{\link[vctrs:vec_as_names]{vctrs::vec_as_names()}}
+for more options.}
 }
 \description{
 \code{\link[=pivot_acs_wider]{pivot_acs_wider()}} wraps \code{\link[tidyr:pivot_wider]{tidyr::pivot_wider()}} and makes it easy to convert
 an ACS data frame into a wide format by changing the value of the
-\code{names_from} parameter.
+\code{names_from} parameter. The default parameter value vary from the tidyr
+version with \code{names_vary = "slowest"} and \code{values_from = NULL} (replaced by
+using the \code{.col_fn} \code{{tidyselect}} function on the named value and percent
+value columns). You may need to retain the variable column and set \code{id_cols = "variable"} if the column_title does not uniquely identify rows after
+widening the input data.
 }
