@@ -123,3 +123,129 @@ scale_y_acs_ts <- function(name = "Year",
     ...
   )
 }
+
+#' `geom_` functions for plotting ACS data with ggplot2
+#'
+#' `r lifecycle::badge("experimental")`
+#'
+#' These functions wrap existing `{ggplot2}` functions and provide default
+#' aesthetic mappings that work with the structure of input ACS data to support
+#' shorter, less repetitive plotting code.
+#'
+#' @name geom_acs
+#' @keywords ggplot2 internal
+NULL
+
+
+#' @rdname geom_acs
+#' @name aes_errorbarh
+#' @inheritParams ggplot2::aes
+#' @export
+#' @importFrom ggplot2 aes
+aes_errorbarh <- function(xmin = NULL,
+                          xmax = NULL,
+                          ...,
+                          value_col = "estimate",
+                          moe_col = "moe",
+                          perc_prefix = "perc",
+                          perc_sep = "_",
+                          perc = FALSE) {
+  if (perc) {
+    perc_cols <- acs_perc_cols(value_col, moe_col, perc_prefix, perc_sep)
+    value_col <- perc_cols[[1]]
+    moe_col <- perc_cols[[2]]
+  }
+
+  ggplot2::aes(
+    xmin = .data[[value_col]] - .data[[moe_col]],
+    xmax = .data[[value_col]] + .data[[moe_col]],
+    ...
+  )
+}
+
+#' @rdname geom_acs
+#' @name aes_errorbarv
+#' @inheritParams ggplot2::aes
+#' @export
+#' @importFrom ggplot2 aes
+aes_errorbarv <- function(ymin = NULL,
+                          ymax = NULL,
+                          ...,
+                          value_col = "estimate",
+                          moe_col = "moe",
+                          perc_prefix = "perc",
+                          perc_sep = "_",
+                          perc = FALSE) {
+  if (perc) {
+    perc_cols <- acs_perc_cols(value_col, moe_col, perc_prefix, perc_sep)
+    value_col <- perc_cols[[1]]
+    moe_col <- perc_cols[[2]]
+  }
+
+  ggplot2::aes(
+    ymin = ymin %||% .data[[value_col]] - .data[[moe_col]],
+    ymax = ymax %||% .data[[value_col]] + .data[[moe_col]],
+    ...
+  )
+}
+
+#' @rdname geom_acs
+#' @name geom_acs_errorbarh
+#' @inheritParams ggplot2::geom_errorbarh
+#' @export
+#' @importFrom ggplot2 geom_errorbarh aes
+geom_acs_errorbarh <- function(mapping = NULL,
+                               data = NULL,
+                               ...,
+                               value_col = "estimate",
+                               moe_col = "moe",
+                               perc_prefix = "perc",
+                               perc_sep = "_",
+                               perc = FALSE) {
+
+  ggplot2::geom_errorbarh(
+    mapping = utils::modifyList(
+      mapping %||% aes(),
+      aes_errorbarh(
+        value_col = value_col,
+        moe_col = moe_col,
+        perc_prefix = perc_prefix,
+        perc_sep = perc_sep,
+        perc = perc
+      )
+    ),
+    data = data,
+    ...
+  )
+}
+
+#' @rdname geom_acs
+#' @name geom_acs_errorbarv
+#' @inheritParams ggplot2::geom_errorbarh
+#' @export
+#' @importFrom ggplot2 geom_errorbarh aes
+geom_acs_errorbarv <- function(mapping = NULL,
+                               data = NULL,
+                               ...,
+                               value_col = "estimate",
+                               moe_col = "moe",
+                               perc_prefix = "perc",
+                               perc_sep = "_",
+                               perc = FALSE) {
+
+  ggplot2::geom_errorbarv(
+    mapping = utils::modifyList(
+      mapping %||% aes(),
+      aes_errorbarv(
+       value_col = value_col,
+       moe_col = moe_col,
+       perc_prefix = perc_prefix,
+       perc_sep = perc_sep,
+       perc = perc
+     )
+    ),
+    data = data,
+    ...
+  )
+}
+
