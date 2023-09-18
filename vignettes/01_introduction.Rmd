@@ -89,8 +89,8 @@ The `fmt_acs_county()` function can work with both `gt_tbl` and data frame input
 
 ```{r}
 multigeo_acs_data |>
-  select_acs() |> 
-  fmt_acs_county(state = "Maryland") |> 
+  select_acs() |>
+  fmt_acs_county(state = "Maryland") |>
   gt_acs_compare(
     value_label = "",
     column_title_label = "",
@@ -130,7 +130,7 @@ acs_ts_data |>
   filter_acs(
     GEOID %in% c("24510", "24005", "24003", "24027", "24025", "24035")
   ) |>
-  fmt_acs_county(state = "Maryland") |> 
+  fmt_acs_county(state = "Maryland") |>
   ggplot(aes(x = year, y = estimate, color = NAME)) +
   geom_point(size = 2) +
   geom_line(linewidth = 1) +
