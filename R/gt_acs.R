@@ -157,6 +157,8 @@ gt_acs <- function(data,
 #' @inheritParams fmt_acs_values
 #' @inheritParams tab_acs_spanner_delim
 #' @inheritParams tab_acs_source_note
+#' @param id_cols Defaults to `column_title_col`. See [tidyr::pivot_longer()]
+#'   for details.
 #' @param hide_na_cols If `TRUE` (default), hide any columns with all `NA`
 #'   values using [gt::cols_hide()].
 #' @name gt_acs_compare
@@ -178,7 +180,7 @@ gt_acs_compare <- function(data,
                            perc_value_label = "% share",
                            perc_moe_label = "% MOE",
                            column_title_label = NULL,
-                           id_cols = NULL,
+                           id_cols = column_title_col,
                            id_expand = FALSE,
                            names_from = name_col,
                            values_from = NULL,
