@@ -158,12 +158,13 @@ After creating an area crosswalk with \code{\link[=make_area_xwalk]{make_area_xw
 crosswalk to \code{\link[=use_area_xwalk]{use_area_xwalk()}} along with a data frame from
 \code{\link[tidycensus:get_acs]{tidycensus::get_acs()}} or \code{\link[=get_acs_tables]{get_acs_tables()}}. At a minimum, the data must
 have a column with the same name as geoid_col along with columns named
-"variable", "estimate", and "moe". Please note that this approach to
-aggregation does \emph{not} work well if your data contains "jam" values, e.g. the
-substitution of 0 for "1939 or older" for the Median Year Built variable.
-Ideally, the weight used for aggregation should be based on household counts
-when aggregating a household-level variable and population counts when
-aggregating a individual-level variable.
+"variable", "estimate", and "moe".
+
+Please note that this approach to aggregation does \emph{not} work well if your
+data contains "jam" values, e.g. the substitution of 0 for "1939 or older"
+for the Median Year Built variable. Ideally, the weight used for aggregation
+should be based on household counts when aggregating a household-level
+variable and population counts when aggregating a individual-level variable.
 }
 \seealso{
 \code{\link[tidycensus:interpolate_pw]{tidycensus::interpolate_pw()}}, \code{\link[areal:aw_interpolate]{areal::aw_interpolate()}}
