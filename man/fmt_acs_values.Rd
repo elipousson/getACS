@@ -85,6 +85,7 @@ merge. Defaults to \link[tidyselect:starts_with]{tidyselect::starts_with}}
 }
 \description{
 \code{\link[=fmt_acs_values]{fmt_acs_values()}} is a wrapper for \code{\link[gt:fmt_number]{gt::fmt_number()}}, \code{\link[gt:fmt_percent]{gt::fmt_percent()}},
-and \code{\link[gt:cols_merge_uncert]{gt::cols_merge_uncert()}}.
+and \code{\link[gt:cols_merge_uncert]{gt::cols_merge_uncert()}}. If \code{value_col} starts with the string supplied
+to perc_prefix, the value column is formatted as a percent value.
 }
 \keyword{internal}

@@ -2,7 +2,8 @@
 #' and `gt::fmt_percent()`
 #'
 #' [fmt_acs_values()] is a wrapper for [gt::fmt_number()], [gt::fmt_percent()],
-#' and [gt::cols_merge_uncert()].
+#' and [gt::cols_merge_uncert()]. If `value_col` starts with the string supplied
+#' to perc_prefix, the value column is formatted as a percent value.
 #'
 #' @inheritParams acs_perc_cols
 #' @inheritParams gt::fmt_number
@@ -61,12 +62,21 @@ fmt_acs_values <- function(data,
     }
   }
 
+  # FIXME: This is not a very standard or flexible pattern
+  if (str_detect(value_col, paste0("^", perc_prefix))) {
+    perc_cols <- perc_cols %||% c(value_col, moe_col %||% value_col)
+  }
+
   if (!is.null(perc_cols)) {
     data <- gt::fmt_percent(
       data,
       columns = .cols_fn(perc_cols),
       decimals = decimals
     )
+  }
+
+  if (str_detect(value_col, paste0("^", perc_prefix))) {
+    perc_cols <- NULL
   }
 
   if (!merge_moe) {

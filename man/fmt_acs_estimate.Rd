@@ -96,6 +96,7 @@ Using cols_label_ext
 }
 \seealso{
 Other gt table: 
+\code{\link{gt_acs_compare}()},
 \code{\link{gt_acs}()},
 \code{\link{tab_acs_source_note}()}
 }

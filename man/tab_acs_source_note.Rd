@@ -62,6 +62,7 @@ additional parameters passed to \code{\link[gt:fmt_percent]{gt::fmt_percent()}}.
 \seealso{
 Other gt table: 
 \code{\link{fmt_acs_estimate}()},
+\code{\link{gt_acs_compare}()},
 \code{\link{gt_acs}()}
 }
 \concept{gt table}
