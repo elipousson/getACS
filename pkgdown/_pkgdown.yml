@@ -4,8 +4,11 @@ template:
 reference:
 - title: Get American Community Survey (ACS) data and metadata
   contents:
-  - starts_with("get_")
+  - starts_with("get_acs")
   - '`vec_get_acs`'
+- title: Get decennial Census data
+  contents:
+  - starts_with("get_decennial")
 - title: Interpolate ACS data across areas
   contents:
   - starts_with("make_")

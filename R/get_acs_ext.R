@@ -24,6 +24,19 @@ vec_get_acs <- function(...,
                         .fn = tidycensus::get_acs,
                         .size = NULL,
                         .call = caller_env()) {
+  vec_tidycensus(
+    ...,
+    .fn = .fn,
+    .size = .size,
+    .call = .call
+  )
+}
+
+#' @noRd
+vec_tidycensus <- function(...,
+                           .fn,
+                           .size = NULL,
+                           .call = caller_env()) {
   params <- vctrs::vec_recycle_common(..., .size = .size, .call = .call)
   params <- vctrs::list_drop_empty(params)
 
