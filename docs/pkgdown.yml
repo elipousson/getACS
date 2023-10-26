@@ -1,0 +1,12 @@
+pandoc: 3.1.1
+pkgdown: 2.0.7.9000
+pkgdown_sha: c9206802f2888992de92aa41f517ba7812f05331
+articles:
+  01_introduction: 01_introduction.html
+  02_gt-tables: 02_gt-tables.html
+  03_area-xwalk: 03_area-xwalk.html
+last_built: 2023-10-26T05:27Z
+urls:
+  reference: https://elipousson.github.io/getACS/reference
+  article: https://elipousson.github.io/getACS/articles
+
