@@ -64,7 +64,8 @@ NULL
 #' @importFrom rlang arg_match0
 acs_survey_match <- function(survey = "acs5",
                              error_call = caller_env()) {
-  arg_match0(survey, c("acs5", "acs3", "acs1"), error_call = error_call)
+  # See acs_surveys
+  arg_match0(survey, c("acs1", "acs3", "acs5", "acsse"), error_call = error_call)
 }
 
 #' @rdname acs_survey

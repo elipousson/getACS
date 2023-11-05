@@ -126,7 +126,7 @@ get_acs_table_alert <- function(...) {
 #' }
 #' }
 #' @export
-#' @importFrom purrr map list_rbind
+#' @importFrom vctrs vec_cbind
 #' @importFrom cli cli_progress_along col_blue symbol pb_bar pb_percent
 #' @importFrom tidycensus get_acs
 get_acs_tables <- function(geography,
@@ -180,7 +180,7 @@ get_acs_tables <- function(geography,
     .call = call
   )
 
-  acs_data <- purrr::list_rbind(acs_list)
+  acs_data <- list_rbind(acs_list)
 
   if (keep_geography) {
     acs_data <- vctrs::vec_cbind(
@@ -191,6 +191,7 @@ get_acs_tables <- function(geography,
   }
 
   if (is_true(params[["geometry"]])) {
+    check_installed("sf", call = call)
     acs_data <- sf::st_as_sf(acs_data)
 
     if (!is.null(crs)) {
@@ -262,7 +263,7 @@ get_acs_geographies <- function(geography = c("county", "state"),
   check_character(geography)
   geography <- unique(geography)
 
-  acs_data <- purrr::map(
+  acs_data <- map(
     seq_along(geography),
     function(i) {
       cli::cli_progress_step(
@@ -287,7 +288,7 @@ get_acs_geographies <- function(geography = c("county", "state"),
     }
   )
 
-  acs_data <- purrr::list_rbind(acs_data)
+  acs_data <- list_rbind(acs_data)
 
   if (is_true(list2(...)[["geometry"]])) {
     acs_data <- sf::st_as_sf(acs_data)
@@ -418,43 +419,20 @@ get_geography_params <- function(geography,
     geography <- "cbsa"
   }
 
-  drop_state <- c(
-    "us", "region", "division", "metropolitan/micropolitan statistical area",
-    "metropolitan statistical area/micropolitan statistical area", "cbsa",
-    "urban area", "zip code tabulation area", "zcta"
-  )
-
-  if (geography %in% drop_state) {
+  if (geography %in% geographies_drop_state) {
     state <- NULL
     county <- NULL
   }
 
-  allow_county <- c(
-    "county", "county subdivision", "tract",
-    "block group", "cbg", "block"
-  )
-
-  if (!(geography %in% allow_county)) {
+  if (!(geography %in% geographies_allow_county)) {
     county <- NULL
   }
 
-  require_county <- "block"
-
-  if (geography %in% require_county) {
+  if (geography %in% geographies_require_county) {
     check_required(county, call = call)
   }
 
-  require_state <- c(
-    "county subdivision", "tract", "block group", "cbg",
-    "block", "school district (elementary)",
-    "school district (secondary)", "school district (unified)",
-    "state legislative district (upper chamber)",
-    "state legislative district (upper chamber)",
-    "state legislative district (lower chamber)",
-    "voting district"
-  )
-
-  if (geography %in% require_state) {
+  if (geography %in% geographies_require_state) {
     check_required(state, call = call)
   }
 
