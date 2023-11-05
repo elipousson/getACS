@@ -204,6 +204,9 @@ to ".".}
 
 \item{use_md}{If \code{TRUE}, pass source_note to \code{\link[gt:md]{gt::md()}} first.}
 
+\item{use_spanner}{If \code{TRUE} (default), create spanners for the comparison
+geographies.}
+
 \item{...}{Additional arguments passed on to methods.}
 }
 \description{

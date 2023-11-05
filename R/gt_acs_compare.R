@@ -15,6 +15,8 @@
 #'   for details.
 #' @param hide_na_cols If `TRUE` (default), hide any columns with all `NA`
 #'   values using [gt::cols_hide()].
+#' @param use_spanner If `TRUE` (default), create spanners for the comparison
+#'   geographies.
 #' @name gt_acs_compare
 #' @family gt table
 #' @keywords gt
