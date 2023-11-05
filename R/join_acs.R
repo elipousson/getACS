@@ -12,7 +12,10 @@
 #' @param column_id_col Column ID column name from Census Reporter metadata.
 #'   Defaults to "column_id"
 #' @param denominator_col Denominator column ID name from Census Reporter
-#'   metadata. Defaults to "denominator_column_id"
+#'   metadata. Defaults to `NULL`
+#' @param denominator_prefix Prefix to use for denominator column names.
+#' @param value_col Value column name
+#' @param moe_col Margin of error column name
 #' @inheritParams base::round
 #' @inheritParams dplyr::left_join
 #' @seealso [tidycensus::moe_prop()], [camiller::calc_shares()]
@@ -22,29 +25,44 @@
 join_acs_percent <- function(data,
                              geoid_col = "GEOID",
                              column_id_col = "column_id",
-                             denominator_col = "denominator_column_id",
+                             denominator_col = NULL,
+                             denominator_prefix = "denominator_",
+                             value_col = "estimate",
+                             moe_col = "moe",
                              na_matches = "never",
                              digits = 2) {
+  denominator_id_col <- denominator_col %||%
+    paste0(denominator_prefix, column_id_col)
+
+  denominator_value_col <- paste0(denominator_prefix, value_col)
+  denominator_moe_col <- paste0(denominator_prefix, moe_col)
+
   data <- join_acs_denominator(
     data = data,
+    value_col = value_col,
+    moe_col = moe_col,
     geoid_col = geoid_col,
     column_id_col = column_id_col,
     denominator_col = denominator_col,
+    denominator_prefix = denominator_prefix,
     na_matches = na_matches,
     digits = digits
   )
 
   dplyr::mutate(
     data,
-    perc_estimate = round(estimate / denominator_estimate, digits = digits),
+    perc_estimate = round(
+      .data[[value_col]] / .data[[denominator_value_col]],
+      digits = digits
+      ),
     perc_moe = round(
       tidycensus::moe_prop(
-        estimate, denominator_estimate,
-        moe, denominator_moe
+        .data[[value_col]], .data[[denominator_value_col]],
+        .data[[moe_col]], .data[[denominator_moe_col]]
       ),
       digits = digits
     ),
-    .after = all_of("moe")
+    .after = dplyr::all_of(moe_col)
   )
 }
 
@@ -99,6 +117,7 @@ join_acs_denominator <- function(data,
     )
 
   if (inherits(denominator_data, "sf")) {
+    check_installed("sf")
     denominator_data <- sf::st_drop_geometry(denominator_data)
   }
 
@@ -162,6 +181,7 @@ join_acs_geography_ratio <- function(data,
   )
 
   if (inherits(comparison_data, "sf")) {
+    check_installed("sf")
     comparison_data <- sf::st_drop_geometry(comparison_data)
   }
 
@@ -229,9 +249,11 @@ join_acs_parent_column <- function(data,
                                    relationship = "many-to-one") {
   parent_data <- data[data[[column_id_col]] %in% data[[parent_id_col]], ]
 
-  stopifnot(
-    nrow(parent_data) > 0
-  )
+  if (nrow(parent_data) == 0) {
+    cli_abort(
+      "{.arg parent_data} must have at least one row."
+    )
+  }
 
   parent_data <- dplyr::distinct(
     parent_data,
@@ -249,53 +271,4 @@ join_acs_parent_column <- function(data,
     multiple = "any",
     relationship = relationship
   )
-}
-
-
-#' Join geometry from `{tigris}` to an ACS data frame by GeoID
-#'
-#' @keywords internal
-#' @noRd
-join_tigris_geometry <- function(data,
-                                 geography,
-                                 state = NULL,
-                                 county = NULL,
-                                 year = 2021,
-                                 by = "GEOID",
-                                 suffix = c("", "_geometry"),
-                                 crs = NULL,
-                                 ...) {
-  params <- get_geography_params(
-    geography = geography,
-    year = year,
-    state = state,
-    county = county
-  )
-
-  params[["geography"]] <- NULL
-
-  if (inherits(data, "sf")) {
-    params[["filter_by"]] <- sf::st_bbox(data)
-    data <- sf::st_drop_geometry(data)
-  }
-
-  geometry <- switch(geography,
-    "tract" = exec(tigris::tracts, !!!params, ..., year = year),
-    "county" = exec(tigris::counties, !!!params, ..., year = year)
-  )
-
-  data <- dplyr::left_join(
-    data,
-    geometry,
-    by = by,
-    suffix = suffix
-  )
-
-  data <- sf::st_as_sf(data)
-
-  if (is.null(crs)) {
-    return(data)
-  }
-
-  sf::st_transform(data, crs = sf::st_crs(crs))
 }

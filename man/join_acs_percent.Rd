@@ -8,7 +8,10 @@ join_acs_percent(
   data,
   geoid_col = "GEOID",
   column_id_col = "column_id",
-  denominator_col = "denominator_column_id",
+  denominator_col = NULL,
+  denominator_prefix = "denominator_",
+  value_col = "estimate",
+  moe_col = "moe",
   na_matches = "never",
   digits = 2
 )
@@ -24,7 +27,13 @@ join_acs_percent(
 Defaults to "column_id"}
 
 \item{denominator_col}{Denominator column ID name from Census Reporter
-metadata. Defaults to "denominator_column_id"}
+metadata. Defaults to \code{NULL}}
+
+\item{denominator_prefix}{Prefix to use for denominator column names.}
+
+\item{value_col}{Value column name}
+
+\item{moe_col}{Margin of error column name}
 
 \item{na_matches}{Should two \code{NA} or two \code{NaN} values match?
 \itemize{
