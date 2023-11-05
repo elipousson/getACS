@@ -233,7 +233,7 @@ geom_acs_errorbarv <- function(mapping = NULL,
                                perc_sep = "_",
                                perc = FALSE) {
 
-  ggplot2::geom_errorbarv(
+  ggplot2::geom_errorbar(
     mapping = utils::modifyList(
       mapping %||% aes(),
       aes_errorbarv(
