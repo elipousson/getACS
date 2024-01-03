@@ -1,12 +1,15 @@
-# getACS (development version)
+# getACS 0.1.1.9003
 
+* Set 2022 to the default year (instead of 2021) following [release of 2018-2022 5-year ACS data](https://www.census.gov/programs-surveys/acs/news/data-releases/2022/release-schedule.html) in December 2023.
 * Add `collapse_acs_variables()` helper function.
 * Add `gt_acs_compare()` function.
 * Add `load_acs_vars()` function as wrapper for `tidycensus::load_variables()`.
 * Add `jam_values` reference data.
+* Add `get_decennial_ts()` function.
+* Add experimental functions `geom_acs_errorbarh()` and `geom_acs_errorbarv()`
 * Add `extensive` parameter to `use_area_xwalk()` to support calculation of weighted mean estimates.
 * Fix errors due to invalid geometry in `make_block_xwalk()` and `make_area_xwalk()` functions.
-* Add experimental functions `geom_acs_errorbarh()` and `geom_acs_errorbarv()`
+* Improve handling of named `variables` parameter by `get_acs_tables()`
 
 # getACS 0.1.1
 
