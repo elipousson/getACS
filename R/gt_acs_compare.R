@@ -1,4 +1,3 @@
-
 #' Create a gt table with values compared by name, geography, or variable
 #'
 #' [gt_acs_compare()] is a variant of [gt_acs()] that uses [pivot_acs_wider()]
@@ -155,7 +154,6 @@ gt_acs_compare_vars <- function(data,
                                 values_from = c(value_col, moe_col),
                                 use_spanner = FALSE,
                                 ...) {
-
   if (is.null(value_label)) {
     value_label <- c(
       set_names(

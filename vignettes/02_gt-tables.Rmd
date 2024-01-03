@@ -161,12 +161,12 @@ comparison_data |>
 The `gt_acs_compare()` calls `pivot_acs_wider()` and handles the process of renaming column titles for a similar effect:
 
 ```{r}
-comparison_data |> 
+comparison_data |>
   gt_acs_compare(
     id_cols = "column_title",
     column_title_label = "",
     currency_value = TRUE
-    )
+  )
 ```
 
 Note that, if you encounter warning or error messages, you may need to set a value for `id_cols` to resolve the issue.

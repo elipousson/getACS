@@ -54,7 +54,7 @@ join_acs_percent <- function(data,
     perc_estimate = round(
       .data[[value_col]] / .data[[denominator_value_col]],
       digits = digits
-      ),
+    ),
     perc_moe = round(
       tidycensus::moe_prop(
         .data[[value_col]], .data[[denominator_value_col]],

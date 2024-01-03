@@ -202,7 +202,6 @@ geom_acs_errorbarh <- function(mapping = NULL,
                                perc_prefix = "perc",
                                perc_sep = "_",
                                perc = FALSE) {
-
   ggplot2::geom_errorbarh(
     mapping = utils::modifyList(
       mapping %||% aes(),
@@ -232,20 +231,18 @@ geom_acs_errorbarv <- function(mapping = NULL,
                                perc_prefix = "perc",
                                perc_sep = "_",
                                perc = FALSE) {
-
   ggplot2::geom_errorbar(
     mapping = utils::modifyList(
       mapping %||% aes(),
       aes_errorbarv(
-       value_col = value_col,
-       moe_col = moe_col,
-       perc_prefix = perc_prefix,
-       perc_sep = perc_sep,
-       perc = perc
-     )
+        value_col = value_col,
+        moe_col = moe_col,
+        perc_prefix = perc_prefix,
+        perc_sep = perc_sep,
+        perc = perc
+      )
     ),
     data = data,
     ...
   )
 }
-
