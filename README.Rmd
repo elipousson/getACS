@@ -94,8 +94,8 @@ as_raw_html(commute_tbl_compare)
 `gt_acs_compare_vars()` is a variant on `gt_acs_compare()` where the default values support comparisons with values in columns and geographical areas in rows:
 
 ```{r}
-commute_tbl_compare_vars <- acs_data |> 
-  filter_acs(indent == 1, line_number > 10) |> 
+commute_tbl_compare_vars <- acs_data |>
+  filter_acs(indent == 1, line_number > 10) |>
   gt_acs_compare_vars(
     table = acs_data$table_id
   )
@@ -108,8 +108,8 @@ The package also includes several simple functions to support creating plots wit
 
 ```{r}
 plot_data <- acs_data |>
-  filter_acs(indent == 1, line_number > 10) |> 
-  select_acs() |> 
+  filter_acs(indent == 1, line_number > 10) |>
+  select_acs() |>
   fmt_acs_county(state = "Maryland")
 
 plot_data |>
