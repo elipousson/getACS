@@ -57,6 +57,7 @@ acs_data <- get_acs_geographies(
   county = "Baltimore city",
   state = "MD",
   table = "B08134",
+  year = 2022,
   quiet = TRUE
 )
 ```
