@@ -134,6 +134,7 @@ get_acs_tables <- function(geography,
                            cache_table = TRUE,
                            year = 2021,
                            survey = "acs5",
+                           variables = NULL,
                            ...,
                            crs = NULL,
                            label = TRUE,
@@ -151,6 +152,14 @@ get_acs_tables <- function(geography,
 
   .fn <- tidycensus::get_acs
 
+  variable_col <- "variable"
+  variable_labels <- NULL
+
+  if (is_character(variables) && is_named(variables)) {
+    variable_labels <- tibble::enframe(variables, name = "variable", value = "variable_id")
+    variable_col <- "variable_id"
+  }
+
   params <- list2(...)
 
   if (!is.null(table)) {
@@ -161,7 +170,7 @@ get_acs_tables <- function(geography,
       )
     }
 
-    if (is_null(params[["variables"]])) {
+    if (is_null(variables)) {
       .fn <- get_acs_table_alert
     }
   }
@@ -175,6 +184,7 @@ get_acs_tables <- function(geography,
     cache_table = cache_table,
     year = year,
     survey = survey,
+    variables = variables,
     ...,
     .fn = .fn,
     .call = call
@@ -213,12 +223,18 @@ get_acs_tables <- function(geography,
 
   cli::cli_progress_step("Labelling data")
 
+  if (!is.null(variable_labels)) {
+    acs_data <- acs_data |>
+      dplyr::left_join(variable_labels, by = dplyr::join_by(variable))
+  }
+
   label_acs_metadata(
     data = acs_data,
     survey = survey,
     year = year,
     perc = perc,
-    geoid_col = geoid_col
+    geoid_col = geoid_col,
+    variable_col = variable_col
   )
 }
 

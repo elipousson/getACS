@@ -12,6 +12,7 @@ get_acs_tables(
   cache_table = TRUE,
   year = 2021,
   survey = "acs5",
+  variables = NULL,
   ...,
   crs = NULL,
   label = TRUE,
@@ -79,6 +80,10 @@ through 2021, with the exception of 2020.  Defaults to 2021.}
 \item{survey}{The ACS contains one-year, three-year, and five-year surveys
 expressed as "acs1", "acs3", and "acs5". The default selection is "acs5."}
 
+\item{variables}{Character string or vector of character strings of variable
+IDs. tidycensus automatically returns the estimate and the margin of error
+associated with the variable.}
+
 \item{...}{
   Arguments passed on to \code{\link[tidycensus:get_acs]{tidycensus::get_acs}}
   \describe{
@@ -137,10 +142,6 @@ temporarily with \code{\link[rlang:local_options]{rlang::local_options()}}}
 running function, e.g. \code{caller_env()}. The function will be
 mentioned in error messages as the source of the error. See the
 \code{call} argument of \code{\link[rlang:abort]{abort()}} for more information.}
-
-\item{variables}{Character string or vector of character strings of variable
-IDs. tidycensus automatically returns the estimate and the margin of error
-associated with the variable.}
 
 \item{state}{An optional vector of states for which you are requesting data.
 State names, postal codes, and FIPS codes are accepted. Defaults to NULL.}
