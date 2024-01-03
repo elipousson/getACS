@@ -30,8 +30,8 @@ cols_acs_label <- function(data,
                            name_label = NULL,
                            column_title_col = "column_title",
                            column_title_label = NULL,
-                           env = NULL,
-                           .col_fn = starts_with) {
+                           .col_fn = starts_with,
+                           env = NULL) {
   perc_cols <- acs_perc_cols(value_col, moe_col, perc_prefix, perc_sep)
 
   perc_value_col <- NULL
@@ -45,48 +45,48 @@ cols_acs_label <- function(data,
     data,
     columns = value_col,
     label = value_label,
-    env = env,
-    .col_fn = .col_fn
+    .col_fn = .col_fn,
+    env = env
   )
 
   data <- .cols_label_ext(
     data,
     columns = moe_col,
     label = moe_label,
-    env = env,
-    .col_fn = .col_fn
+    .col_fn = .col_fn,
+    env = env
   )
 
   data <- .cols_label_ext(
     data,
     columns = perc_value_col,
     label = perc_value_label,
-    env = env,
-    .col_fn = .col_fn
+    .col_fn = .col_fn,
+    env = env
   )
 
   data <- .cols_label_ext(
     data,
     columns = perc_moe_col,
     label = perc_moe_label,
-    env = env,
-    .col_fn = .col_fn
+    .col_fn = .col_fn,
+    env = env
   )
 
   data <- .cols_label_ext(
     data,
     columns = name_col,
     label = name_label,
-    env = env,
-    .col_fn = .col_fn
+    .col_fn = .col_fn,
+    env = env
   )
 
   .cols_label_ext(
     data,
     columns = column_title_col,
     label = column_title_label,
-    env = env,
-    .col_fn = .col_fn
+    .col_fn = .col_fn,
+    env = env
   )
 }
 
@@ -174,6 +174,7 @@ cols_acs_label <- function(data,
   }
 
   if (drop_geometry && inherits(data, "sf")) {
+    check_installed("sf")
     data <- sf::st_drop_geometry(data)
   }
 
