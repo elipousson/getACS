@@ -23,7 +23,7 @@ acs_cache_dir <- function(pkg = "getACS") {
 #' @export
 #' @importFrom rappdirs user_cache_dir
 get_acs_metadata <- function(survey = "acs5",
-                             year = 2021,
+                             year = 2022,
                              metadata = "table",
                              ...,
                              table = NULL,
@@ -121,7 +121,7 @@ get_acs_metadata <- function(survey = "acs5",
 #' @importFrom rlang has_name
 label_acs_metadata <- function(data,
                                survey = "acs5",
-                               year = 2021,
+                               year = 2022,
                                perc = TRUE,
                                geoid_col = "GEOID",
                                variable_col = "variable") {
@@ -144,7 +144,7 @@ label_acs_metadata <- function(data,
 #' @importFrom stringr str_detect
 label_acs_table_metadata <- function(data,
                                      survey = "acs5",
-                                     year = 2021,
+                                     year = 2022,
                                      variable_col = "variable") {
   stopifnot(
     has_name(data, variable_col)
@@ -208,7 +208,7 @@ join_acs_race_iteration <- function(data) {
 #' @importFrom stringr str_extract str_remove
 label_acs_column_metadata <- function(data,
                                       survey = "acs5",
-                                      year = 2021,
+                                      year = 2022,
                                       variable_col = "variable") {
   column_metadata <- get_acs_metadata(survey, year, metadata = "column")
 

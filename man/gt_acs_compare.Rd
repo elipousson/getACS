@@ -36,7 +36,7 @@ gt_acs_compare(
   append_note = FALSE,
   hide_na_cols = TRUE,
   survey = "acs5",
-  year = 2021,
+  year = 2022,
   table = NULL,
   prefix = "Source: ",
   end = ".",

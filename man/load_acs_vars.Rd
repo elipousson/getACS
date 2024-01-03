@@ -5,7 +5,7 @@
 \title{Load ACS variables with \code{\link[tidycensus:load_variables]{tidycensus::load_variables()}}}
 \usage{
 load_acs_vars(
-  year = 2021,
+  year = 2022,
   survey = "acs5",
   cache = TRUE,
   variable_col = "variable",

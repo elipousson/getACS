@@ -11,7 +11,7 @@
 labs_acs_survey <- function(...,
                             caption = NULL,
                             survey = "acs5",
-                            year = 2021,
+                            year = 2022,
                             prefix = "Source: ",
                             table = NULL) {
   ggplot2::labs(
@@ -101,7 +101,7 @@ scale_x_acs_ts <- function(name = "Year",
                            ...,
                            breaks = NULL,
                            survey = "acs5",
-                           year = 2021) {
+                           year = 2022) {
   ggplot2::scale_x_continuous(
     name = name,
     breaks = breaks %||% suppressMessages(acs_survey_ts(survey, year)),
@@ -116,7 +116,7 @@ scale_y_acs_ts <- function(name = "Year",
                            ...,
                            breaks = NULL,
                            survey = "acs5",
-                           year = 2021) {
+                           year = 2022) {
   ggplot2::scale_y_continuous(
     name = name,
     breaks = breaks %||% suppressMessages(acs_survey_ts(survey, year)),

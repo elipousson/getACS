@@ -8,7 +8,7 @@ labs_acs_survey(
   ...,
   caption = NULL,
   survey = "acs5",
-  year = 2021,
+  year = 2022,
   prefix = "Source: ",
   table = NULL
 )

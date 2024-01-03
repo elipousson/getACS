@@ -9,7 +9,7 @@ get_acs_ts(
   variables = NULL,
   table = NULL,
   cache_table = TRUE,
-  year = 2021,
+  year = 2022,
   state = NULL,
   county = NULL,
   survey = "acs5",

@@ -13,18 +13,18 @@ acs_survey_match(survey = "acs5", error_call = caller_env())
 
 acs_survey_sample(survey = "acs5")
 
-acs_survey_ts(survey = "acs5", year = 2021, call = caller_env())
+acs_survey_ts(survey = "acs5", year = 2022, call = caller_env())
 
 acs_survey_label(
   survey = "acs5",
-  year = 2021,
+  year = 2022,
   pattern = "{year_start}-{year} ACS {sample}-year Estimates",
   prefix = ""
 )
 
 acs_survey_label_table(
   survey = "acs5",
-  year = 2021,
+  year = 2022,
   prefix = "",
   table = NULL,
   table_label = "Table",

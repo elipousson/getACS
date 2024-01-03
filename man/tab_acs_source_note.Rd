@@ -9,7 +9,7 @@ tab_acs_source_note(
   source_note = NULL,
   append_note = FALSE,
   survey = "acs5",
-  year = 2021,
+  year = 2022,
   table = NULL,
   table_label = "Table",
   prefix = "Source: ",

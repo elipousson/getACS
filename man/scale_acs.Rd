@@ -26,9 +26,9 @@ scale_x_acs_percent(
 
 scale_y_acs_estimate(name = "Estimate", ..., labels = scales::label_comma())
 
-scale_x_acs_ts(name = "Year", ..., breaks = NULL, survey = "acs5", year = 2021)
+scale_x_acs_ts(name = "Year", ..., breaks = NULL, survey = "acs5", year = 2022)
 
-scale_y_acs_ts(name = "Year", ..., breaks = NULL, survey = "acs5", year = 2021)
+scale_y_acs_ts(name = "Year", ..., breaks = NULL, survey = "acs5", year = 2022)
 }
 \arguments{
 \item{name}{The name of the scale. Used as the axis or legend title. If

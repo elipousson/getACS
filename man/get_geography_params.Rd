@@ -6,7 +6,7 @@
 \usage{
 get_geography_params(
   geography,
-  year = 2021,
+  year = 2022,
   state = NULL,
   county = NULL,
   allow_decennial = FALSE,

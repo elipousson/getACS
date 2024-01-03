@@ -21,7 +21,7 @@
 #' @export
 #' @importFrom tidycensus load_variables
 #' @importFrom dplyr rename mutate
-load_acs_vars <- function(year = 2021,
+load_acs_vars <- function(year = 2022,
                           survey = "acs5",
                           cache = TRUE,
                           variable_col = "variable",

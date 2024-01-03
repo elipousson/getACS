@@ -6,7 +6,7 @@
 \usage{
 get_acs_metadata(
   survey = "acs5",
-  year = 2021,
+  year = 2022,
   metadata = "table",
   ...,
   table = NULL,

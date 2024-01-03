@@ -29,7 +29,7 @@ gt_acs(
   hide_na_cols = TRUE,
   currency_value = FALSE,
   survey = "acs5",
-  year = 2021,
+  year = 2022,
   table = NULL,
   prefix = "Source: ",
   end = ".",

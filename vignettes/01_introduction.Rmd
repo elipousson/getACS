@@ -115,7 +115,7 @@ acs_ts_data <- get_acs_ts(
   geography = "county",
   state = "MD",
   survey = "acs5",
-  year = 2021,
+  year = 2022,
   table = "B01003",
   quiet = TRUE
 )
@@ -135,7 +135,7 @@ acs_ts_data |>
   geom_point(size = 2) +
   geom_line(linewidth = 1) +
   scale_y_acs_estimate("Population", limits = c(0, 1000000)) +
-  scale_x_acs_ts(survey = "acs5", year = 2021) +
+  scale_x_acs_ts(survey = "acs5", year = 2022) +
   scale_color_brewer(type = "qual", palette = 3) +
   theme(legend.position = "bottom")
 ```

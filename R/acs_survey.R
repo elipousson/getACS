@@ -16,7 +16,7 @@ acs_sample_min_year <- function(sample = "5",
 #'
 #' @noRd
 check_acs_survey <- function(survey = "acs5",
-                             year = 2021,
+                             year = 2022,
                              sample = NULL,
                              min_year = NULL,
                              ...,
@@ -82,7 +82,7 @@ acs_survey_sample <- function(survey = "acs5") {
 #' @export
 #' @importFrom glue glue
 acs_survey_ts <- function(survey = "acs5",
-                          year = 2021,
+                          year = 2022,
                           call = caller_env()) {
   check_acs_survey(survey, year, call = call)
 
@@ -120,7 +120,7 @@ acs_survey_ts <- function(survey = "acs5",
 #'   specified by the survey parameter.
 #' @export
 acs_survey_label <- function(survey = "acs5",
-                             year = 2021,
+                             year = 2022,
                              pattern = "{year_start}-{year} ACS {sample}-year Estimates",
                              prefix = "") {
   sample <- acs_survey_sample(survey)
@@ -142,7 +142,7 @@ acs_survey_label <- function(survey = "acs5",
 #' @export
 #' @importFrom knitr combine_words
 acs_survey_label_table <- function(survey = "acs5",
-                                   year = 2021,
+                                   year = 2022,
                                    prefix = "",
                                    table = NULL,
                                    table_label = "Table",

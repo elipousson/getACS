@@ -9,7 +9,7 @@ acs_table_variables(
   variables = NULL,
   data = NULL,
   survey = "acs5",
-  year = 2021,
+  year = 2022,
   sep = "_",
   width = 3,
   error_call = caller_env()

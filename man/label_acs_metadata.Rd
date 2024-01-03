@@ -10,7 +10,7 @@ Census Reporter}
 label_acs_metadata(
   data,
   survey = "acs5",
-  year = 2021,
+  year = 2022,
   perc = TRUE,
   geoid_col = "GEOID",
   variable_col = "variable"
@@ -19,14 +19,14 @@ label_acs_metadata(
 label_acs_table_metadata(
   data,
   survey = "acs5",
-  year = 2021,
+  year = 2022,
   variable_col = "variable"
 )
 
 label_acs_column_metadata(
   data,
   survey = "acs5",
-  year = 2021,
+  year = 2022,
   variable_col = "variable"
 )
 }

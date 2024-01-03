@@ -6,7 +6,7 @@ get_tigris_geometry <- function(data = NULL,
                                 geography = NULL,
                                 state = NULL,
                                 county = NULL,
-                                year = 2021,
+                                year = 2022,
                                 by = "GEOID",
                                 suffix = c("", "_geometry"),
                                 crs = NULL,
@@ -47,7 +47,7 @@ join_tigris_geometry <- function(data = NULL,
                                  geography = NULL,
                                  state = NULL,
                                  county = NULL,
-                                 year = 2021,
+                                 year = 2022,
                                  ...) {
   if (!is.null(data)) {
     stopifnot(
