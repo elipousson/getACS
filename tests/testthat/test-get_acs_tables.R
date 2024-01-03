@@ -62,6 +62,7 @@ test_that("get_acs_tables works", {
     county = "Baltimore city",
     state = "MD",
     table = "B01003",
+    year = 2021,
     quiet = TRUE
   )
 
