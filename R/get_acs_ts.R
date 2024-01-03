@@ -19,14 +19,13 @@
 #' @inheritParams cli_quiet
 #' @returns A data frame or sf object.
 #' @export
-#' @importFrom purrr map list_cbind list_rbind
 #' @importFrom rlang try_fetch
 #' @importFrom tidycensus get_acs
 get_acs_ts <- function(geography,
                        variables = NULL,
                        table = NULL,
                        cache_table = TRUE,
-                       year = 2021,
+                       year = 2022,
                        state = NULL,
                        county = NULL,
                        survey = "acs5",
@@ -40,11 +39,11 @@ get_acs_ts <- function(geography,
     years <- acs_survey_ts(survey, year)
   }
 
-  acs_data <- purrr::map(
+  acs_data <- map(
     seq_along(years),
     function(i) {
       rlang::try_fetch(
-        purrr::list_cbind(
+        list_cbind(
           list(
             get_acs_geographies(
               geography = geography,
@@ -70,11 +69,12 @@ get_acs_ts <- function(geography,
     }
   )
 
-  acs_data <- purrr::list_rbind(
+  acs_data <- list_rbind(
     acs_data
   )
 
   if (is_true(list2(...)[["geometry"]])) {
+    check_installed("sf")
     acs_data <- sf::st_as_sf(acs_data)
   }
 
