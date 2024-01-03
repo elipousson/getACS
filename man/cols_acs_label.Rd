@@ -18,8 +18,8 @@ cols_acs_label(
   name_label = NULL,
   column_title_col = "column_title",
   column_title_label = NULL,
-  env = NULL,
-  .col_fn = starts_with
+  .col_fn = starts_with,
+  env = NULL
 )
 }
 \arguments{
@@ -43,10 +43,10 @@ and \code{moe_col} strings.}
 \item{column_title_col, column_title_label}{Column title column name and
 label. Defaults to  "column_title" and \code{NULL}.}
 
-\item{env}{\code{[environment()]}\cr Environment to attach.}
-
 \item{.col_fn}{tidyselect function to use with column names. Defaults to
 \link[tidyselect:starts_with]{tidyselect::starts_with},}
+
+\item{env}{\code{[environment()]}\cr Environment to attach.}
 
 \item{variable_col}{Variable column name. Defaults to "variable". Typically,
 dropped from table by default.}

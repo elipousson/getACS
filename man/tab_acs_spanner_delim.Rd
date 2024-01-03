@@ -34,15 +34,14 @@ The columns to consider for the splitting, relabeling, and spanner setting
 operations. Can either be a series of column names provided in \code{\link[=c]{c()}}, a
 vector of column indices, or a select helper function. Examples of select
 helper functions include \code{\link[gt:starts_with]{starts_with()}}, \code{\link[gt:ends_with]{ends_with()}}, \code{\link[gt:contains]{contains()}},
-\code{\link[gt:matches]{matches()}}, \code{\link[gt:one_of]{one_of()}}, \code{\link[gt:num_range]{num_range()}}, and \code{\link[gt:everything]{everything()}}. This argument
-works in tandem with the \code{spanners} argument.}
+\code{\link[gt:matches]{matches()}}, \code{\link[gt:one_of]{one_of()}}, \code{\link[gt:num_range]{num_range()}}, and \code{\link[gt:everything]{everything()}}.}
 
 \item{delim}{\emph{Delimiter for splitting}
 
 \verb{scalar<character>} // \strong{required}
 
-The delimiter to use to split an input column name. This should be a single
-character (e.g., \code{"_"}, \code{"."}, etc.).}
+The delimiter text to use to split one of more column names (i.e., those
+that are targeted via the \code{columns} argument).}
 
 \item{split}{\emph{Splitting side}
 
