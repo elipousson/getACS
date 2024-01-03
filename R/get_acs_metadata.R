@@ -160,8 +160,14 @@ label_acs_table_metadata <- function(data,
 
   data <- dplyr::left_join(data, table_metadata, by = dplyr::join_by(table_id))
 
-  if (any(stringr::str_detect(data[["table_id"]], "[:alpha:]$"))) {
-    data <- join_acs_race_iteration(data)
+  if (is_character(data[["table_id"]])) {
+    has_race_iteration <- any(
+      stringr::str_detect(data[["table_id"]], "[:alpha:]$")
+    )
+
+    if (has_race_iteration) {
+      data <- join_acs_race_iteration(data)
+    }
   }
 
   data
