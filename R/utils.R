@@ -33,7 +33,10 @@ cli_quiet <- function(quiet = FALSE,
     return(rlang::push_options("cli.default_handler" = suppressMessages))
   }
 
-  rlang::local_options("cli.default_handler" = suppressMessages, .frame = .frame)
+  rlang::local_options(
+    "cli.default_handler" = suppressMessages,
+    .frame = .frame
+    )
 }
 
 
@@ -69,7 +72,8 @@ check_has_name <- function(x,
   has_nm <- all(nm_check)
 
   msg <- c("{.arg {arg}} must have names {.val {nm}}",
-    "i" = "{.arg {arg}} is missing {length(nm[!nm_check])} name{?s}: {.val {nm[!nm_check]}}"
+    "i" = "{.arg {arg}} is missing {length(nm[!nm_check])} name{?s}:
+    {.val {nm[!nm_check]}}"
   )
 
   if (allow_any) {
