@@ -30,9 +30,9 @@ fmt_acs_county <- function(data,
                            columns = all_of(name_col),
                            ...) {
   if (is.null(state) && any(data[["geography"]] == "state")) {
-   state <- unique(
-     data[data[["geography"]] == "state", name_col]
-   )
+    state <- unique(
+      data[data[["geography"]] == "state", name_col]
+    )
   }
 
   pattern <- glue(pattern)

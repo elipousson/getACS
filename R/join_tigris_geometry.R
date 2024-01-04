@@ -77,7 +77,11 @@ join_tigris_geometry <- function(data = NULL,
     \(geography, state, county) {
       switch(geography,
         "block" = tigris::blocks(state = state, county = county, ...),
-        "block group" = tigris::block_groups(state = state, county = county, ...),
+        "block group" = tigris::block_groups(
+          state = state,
+          county = county,
+          ...
+        ),
         "tract" = tigris::tracts(state = state, county = county, ...),
         "county" = tigris::counties(state = state, ...),
         "state" = tigris::states(...)

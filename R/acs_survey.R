@@ -65,7 +65,11 @@ NULL
 acs_survey_match <- function(survey = "acs5",
                              error_call = caller_env()) {
   # See acs_surveys
-  arg_match0(survey, c("acs1", "acs3", "acs5", "acsse"), error_call = error_call)
+  arg_match0(
+    survey,
+    c("acs1", "acs3", "acs5", "acsse"),
+    error_call = error_call
+  )
 }
 
 #' @rdname acs_survey
@@ -119,10 +123,11 @@ acs_survey_ts <- function(survey = "acs5",
 #'   `year_start` variable which is the earliest year for a survey sample
 #'   specified by the survey parameter.
 #' @export
-acs_survey_label <- function(survey = "acs5",
-                             year = 2022,
-                             pattern = "{year_start}-{year} ACS {sample}-year Estimates",
-                             prefix = "") {
+acs_survey_label <- function(
+    survey = "acs5",
+    year = 2022,
+    pattern = "{year_start}-{year} ACS {sample}-year Estimates",
+    prefix = "") {
   sample <- acs_survey_sample(survey)
 
   year_start <- year - (as.integer(sample) - 1)

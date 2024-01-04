@@ -9,7 +9,7 @@ test_that("xwalk functions work", {
   expect_s3_class(block_xwalk, "sf")
 
   area_xwalk <- make_area_xwalk(
-    area = sf::st_buffer(block_xwalk[1,], dist = 5000),
+    area = sf::st_buffer(block_xwalk[1, ], dist = 5000),
     block_xwalk = block_xwalk
   )
 

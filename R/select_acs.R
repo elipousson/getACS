@@ -30,7 +30,7 @@
 #'     county = "Baltimore city"
 #'   )
 #'
-#' select_acs(edu_data)
+#'   select_acs(edu_data)
 #' }
 #' }
 #' @importFrom dplyr select

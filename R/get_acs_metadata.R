@@ -125,9 +125,15 @@ label_acs_metadata <- function(data,
                                perc = TRUE,
                                geoid_col = "GEOID",
                                variable_col = "variable") {
-  data <- label_acs_table_metadata(data, survey, year, variable_col = variable_col)
+  data <- label_acs_table_metadata(
+    data, survey, year,
+    variable_col = variable_col
+  )
 
-  data <- label_acs_column_metadata(data, survey, year, variable_col = variable_col)
+  data <- label_acs_column_metadata(
+    data, survey, year,
+    variable_col = variable_col
+  )
 
   if (perc && all(has_name(data, geoid_col))) {
     data <- join_acs_percent(data, geoid_col = geoid_col)

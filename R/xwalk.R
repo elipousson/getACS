@@ -195,8 +195,10 @@ make_area_xwalk <- function(area,
   if (coverage && st_is_all_predicate(block_xwalk, area)) {
     cli::cli_bullets(
       c(
-        "!" = "All features in {.arg block_xwalk} already intersect with {.arg area}",
-        "*" = "Setting {.arg coverage} to {.code FALSE} to avoid inaccurate results."
+        "!" = "All features in {.arg block_xwalk} already
+        intersect with {.arg area}",
+        "*" = "Setting {.arg coverage} to {.code FALSE} to
+        avoid inaccurate results."
       )
     )
 
@@ -373,7 +375,8 @@ rbind_area_coverage <- function(area,
     st_make_valid_coverage(block_xwalk, area),
     error = function(cnd) {
       cli_abort(
-        c("Valid spatial coverage for the area of {.arg block_xwalk} outside the {.arg area_xwalk} can't be created.",
+        c("Valid spatial coverage for the area of {.arg block_xwalk}
+          outside the {.arg area_xwalk} can't be created.",
           "*" = "Set {.code coverage = FALSE} and try again."
         ),
         parent = cnd,
@@ -524,7 +527,11 @@ summarise_weighted_sum <- function(data,
       digits = digits
     ),
     "{moe_col}" := round(
-      tidycensus::moe_sum(.data[[moe_col]], .data[[value_col]] * .data[[weight_col]]),
+      tidycensus::moe_sum(
+        moe = .data[[moe_col]],
+        estimate = .data[[value_col]] * .data[[weight_col]],
+        na.rm = na.rm
+      ),
       digits = digits
     ),
     .by = all_of(c(name_col, variable_col))
@@ -544,7 +551,11 @@ summarise_weighted_mean <- function(data,
   dplyr::summarise(
     data,
     "{value_col}" := round(
-      stats::weighted.mean(.data[[value_col]], w = .data[[weight_col]], na.rm = na.rm),
+      stats::weighted.mean(
+        x = .data[[value_col]],
+        w = .data[[weight_col]],
+        na.rm = na.rm
+      ),
       digits = digits
     ),
     # FIXME: Explore options to calculate an interpolated MOE per this method:

@@ -91,18 +91,34 @@ collapse_acs_variables <- function(data,
     data <- dplyr::summarise(
       data,
       "{variable_col}" := list(unique(.data[[variable_col]])),
-      "{value_col}" := round(sum(.data[[value_col]], na.rm = na.rm), digits = digits),
-      "{moe_col}" := round(
-        tidycensus::moe_sum(.data[[moe_col]], estimate = .data[[value_col]], na.rm = na.rm),
+      "{value_col}" := round(
+        sum(.data[[value_col]], na.rm = na.rm),
         digits = digits
       ),
-      "{perc_cols[[1]]}" := round(sum(.data[[perc_cols[[1]]]], na.rm = na.rm), digits = digits),
+      "{moe_col}" := round(
+        tidycensus::moe_sum(
+          .data[[moe_col]],
+          estimate = .data[[value_col]],
+          na.rm = na.rm
+        ),
+        digits = digits
+      ),
+      "{perc_cols[[1]]}" := round(
+        sum(.data[[perc_cols[[1]]]], na.rm = na.rm),
+        digits = digits
+      ),
       "{perc_cols[[2]]}" := round(
-        tidycensus::moe_sum(.data[[perc_cols[[2]]]], estimate = .data[[perc_cols[[1]]]], na.rm = na.rm),
+        tidycensus::moe_sum(
+          .data[[perc_cols[[2]]]],
+          estimate = .data[[perc_cols[[1]]]],
+          na.rm = na.rm
+        ),
         digits = digits
       ),
       dplyr::across(
-        -any_of(c(name_col, label_col, variable_col, value_col, moe_col, perc_cols)),
+        -any_of(
+          c(name_col, label_col, variable_col, value_col, moe_col, perc_cols)
+        ),
         function(x) {
           list(unique(x))
         }
@@ -113,13 +129,22 @@ collapse_acs_variables <- function(data,
     data <- dplyr::summarise(
       data,
       "{variable_col}" := list(unique(.data[[variable_col]])),
-      "{value_col}" := round(sum(.data[[value_col]], na.rm = na.rm), digits = digits),
+      "{value_col}" := round(
+        sum(.data[[value_col]], na.rm = na.rm),
+        digits = digits
+      ),
       "{moe_col}" := round(
-        tidycensus::moe_sum(.data[[moe_col]], estimate = .data[[value_col]], na.rm = na.rm),
+        tidycensus::moe_sum(
+          .data[[moe_col]],
+          estimate = .data[[value_col]],
+          na.rm = na.rm
+        ),
         digits = digits
       ),
       dplyr::across(
-        -any_of(c(name_col, label_col, variable_col, value_col, moe_col)),
+        -any_of(
+          c(name_col, label_col, variable_col, value_col, moe_col)
+        ),
         function(x) {
           list(unique(x))
         }
@@ -133,9 +158,14 @@ collapse_acs_variables <- function(data,
       # FIXME: This could be a weighted mean if some valid weight is included in
       # the dataset. As is, these values may be invalid if the relative size of
       # the collapsed groups is very different.
-      "{value_col}" := round(mean(.data[[value_col]], na.rm = na.rm), digits = digits),
+      "{value_col}" := round(
+        mean(.data[[value_col]], na.rm = na.rm),
+        digits = digits
+      ),
       dplyr::across(
-        -any_of(c(name_col, label_col, variable_col, value_col, moe_col)),
+        -any_of(
+          c(name_col, label_col, variable_col, value_col, moe_col)
+        ),
         function(x) {
           list(unique(x))
         }

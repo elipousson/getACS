@@ -54,9 +54,10 @@ get_decennial_ts <- function(geography,
   )
 
   if (has_length(year, 1)) {
-    if (!all(year %in% c(2000, 2010, 2020))) {
+    allow_years <- c(2000, 2010, 2020)
+    if (!all(year %in% allow_years)) {
       cli::cli_abort(
-        c("{.arg year} can't include any values other than {c(2000, 2010, 2020)}.",
+        c("{.arg year} can't include any values other than {allow_years}.",
           "i" = "Try using NHGIS for earlier decennial Census data:
         {.url https://www.nhgis.org/}"
         )
