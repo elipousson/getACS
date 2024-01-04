@@ -52,6 +52,11 @@ all available variables for the table for the supplied year and survey. Note
 that the \code{sep} and \code{width} parameters should \emph{not} be changed if you are
 working with data from the \code{{tidycensus}} package.
 }
+\examples{
+acs_table_variables(table = "B15003")
+
+acs_table_variables(table = "B15003", variables = c(1:5))
+}
 \seealso{
 \code{\link[=acs_table_race_iteration]{acs_table_race_iteration()}}
 }

@@ -24,6 +24,9 @@ A character vector of variable ID values for a single table.
 \code{\link[=acs_table_race_iteration]{acs_table_race_iteration()}} uses the \code{race_iteration} reference data to
 create or validate race iteration codes and create race iteration table IDs.
 }
+\examples{
+acs_table_race_iteration("B25003")
+}
 \seealso{
 \code{\link[=acs_table_variables]{acs_table_variables()}}
 }

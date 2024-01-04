@@ -58,7 +58,7 @@ if (interactive()) {
     county = "Baltimore city"
   )
 
-select_acs(edu_data)
+  select_acs(edu_data)
 }
 }
 }
