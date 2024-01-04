@@ -29,6 +29,12 @@ fmt_acs_county <- function(data,
                            name_col = "NAME",
                            columns = all_of(name_col),
                            ...) {
+  if (is.null(state) && any(data[["geography"]] == "state")) {
+   state <- unique(
+     data[data[["geography"]] == "state", name_col]
+   )
+  }
+
   pattern <- glue(pattern)
 
   fmt_str_replace(
