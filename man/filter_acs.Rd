@@ -38,6 +38,28 @@ data is filtered to variable "B14001_002").}
 enriched with table and column metadata using the \code{\link[=label_acs_metadata]{label_acs_metadata()}}
 function using \code{\link[dplyr:filter]{dplyr::filter()}}.
 }
+\examples{
+\dontrun{
+if (interactive()) {
+  edu_data <- get_acs_tables(
+    "county",
+    table = "B15003",
+    state = "MD",
+    county = "Baltimore city"
+  )
+
+edu_data |>
+  filter_acs(vars = "B15003_017")
+
+ edu_data |>
+  filter_acs(vars = 17)
+
+  edu_data |>
+  filter_data(drop_vars = 1)
+}
+}
+
+}
 \seealso{
 \code{\link[dplyr:filter]{dplyr::filter()}}
 }

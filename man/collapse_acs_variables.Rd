@@ -58,11 +58,12 @@ if (interactive()) {
 
   table_vars <- acs_table_variables("B15003")
 
-  collapse_acs_variables(edu_data,
-    "total" = table_vars[1],
-    "second" = table_vars[2],
-    "third and fourth" = table_vars[3:4],
-    "next 5" = table_vars[5:10],
+  collapse_acs_variables(
+    edu_data,
+    "Total" = table_vars[1],
+    "5th Grade or less" = table_vars[5:9],
+    "6th to 8th Grade" = table_vars[10:12],
+    "9th to 11th Grade" = table_vars[13:15],
     other_level = "Other"
   )
 }

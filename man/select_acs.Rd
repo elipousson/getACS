@@ -48,3 +48,17 @@ parameter to \code{NULL} to drop the respective column or use the additional \co
 parameter to modify the selection. This function replaces the deprecated
 \code{\link[=select_acs_cols]{select_acs_cols()}} function.
 }
+\examples{
+\dontrun{
+if (interactive()) {
+  edu_data <- get_acs_tables(
+    "county",
+    table = "B15003",
+    state = "MD",
+    county = "Baltimore city"
+  )
+
+select_acs(edu_data)
+}
+}
+}

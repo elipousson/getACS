@@ -19,6 +19,32 @@
 #' @seealso
 #'  [dplyr::filter()]
 #' @rdname filter_acs
+#' @examples
+#' \dontrun{
+#' if (interactive()) {
+#'   edu_data <- get_acs_geographies(
+#'     c("county", "state"),
+#'     table = "B15003",
+#'     state = "MD",
+#'     county = "Baltimore city"
+#'   )
+#'
+#'   edu_data |>
+#'     filter_acs(vars = "B15003_017")
+#'
+#'   edu_data |>
+#'     filter_acs(vars = 17)
+#'
+#'   edu_data |>
+#'     filter_acs(drop_vars = 1)
+#'
+#'   edu_data |>
+#'     filter_acs(geography = "county")
+#'
+#'   edu_data |>
+#'     filter_acs(column = "Master's degree")
+#' }
+#' }
 #' @export
 #' @importFrom dplyr filter
 filter_acs <- function(data,

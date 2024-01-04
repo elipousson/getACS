@@ -20,6 +20,19 @@
 #'   to [tidyselect::any_of]. See [dplyr::select()] for an overview of selection
 #'   features.
 #' @export
+#' @examples
+#' \dontrun{
+#' if (interactive()) {
+#'   edu_data <- get_acs_tables(
+#'     "county",
+#'     table = "B15003",
+#'     state = "MD",
+#'     county = "Baltimore city"
+#'   )
+#'
+#' select_acs(edu_data)
+#' }
+#' }
 #' @importFrom dplyr select
 select_acs <- function(.data,
                        ...,
