@@ -10,6 +10,8 @@
 #' @inheritParams rlang::args_error_context
 #' @returns A character vector of variable ID values for a single table.
 #' @seealso [acs_table_variables()]
+#' @examples
+#' acs_table_race_iteration("B25003")
 #' @export
 acs_table_race_iteration <- function(table,
                                      codes = NULL,
@@ -55,6 +57,10 @@ acs_table_race_iteration <- function(table,
 #' @inheritParams rlang::args_error_context
 #' @returns A character vector of variable ID values for a single table.
 #' @seealso [acs_table_race_iteration()]
+#' @examples
+#' acs_table_variables(table = "B15003")
+#'
+#' acs_table_variables(table = "B15003", variables = c(1:5))
 #' @export
 #' @importFrom stringr str_pad
 acs_table_variables <- function(table = NULL,
