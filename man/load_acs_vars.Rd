@@ -16,7 +16,7 @@ load_acs_vars(
 )
 }
 \arguments{
-\item{year}{Sample year (between 2006 and 2021).}
+\item{year}{Sample year (between 2006 and 2022).}
 
 \item{survey}{Survey, "acs5", "acs3", or "acs1".}
 

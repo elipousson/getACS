@@ -43,6 +43,7 @@ get_tigris_geometry <- function(data = NULL,
 }
 
 
+#' @noRd
 join_tigris_geometry <- function(data = NULL,
                                  geography = NULL,
                                  state = NULL,

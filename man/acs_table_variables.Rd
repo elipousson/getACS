@@ -27,7 +27,7 @@ than one table_id value, the function will error}
 
 \item{survey}{Survey, "acs5", "acs3", or "acs1".}
 
-\item{year}{Sample year (between 2006 and 2021).}
+\item{year}{Sample year (between 2006 and 2022).}
 
 \item{sep}{A separator character between the table ID string and variable ID
 values.}

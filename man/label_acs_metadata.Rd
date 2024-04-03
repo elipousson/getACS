@@ -35,7 +35,7 @@ label_acs_column_metadata(
 
 \item{survey}{Survey, "acs5", "acs3", or "acs1".}
 
-\item{year}{Sample year (between 2006 and 2021).}
+\item{year}{Sample year (between 2006 and 2022).}
 
 \item{perc}{If \code{TRUE} (default), use the denominator column ID to calculate
 each estimate as a percent share of the denominator value and use

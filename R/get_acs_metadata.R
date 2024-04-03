@@ -16,7 +16,7 @@ acs_cache_dir <- function(pkg = "getACS") {
 #' repository](https://github.com/censusreporter/census-table-metadata).
 #'
 #' @param survey Survey, "acs5", "acs3", or "acs1".
-#' @param year Sample year (between 2006 and 2021).
+#' @param year Sample year (between 2006 and 2022).
 #' @param metadata Type of metadata to return, "table" or "column"
 #' @inheritDotParams readr::read_csv
 #' @keywords internal
