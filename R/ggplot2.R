@@ -197,6 +197,7 @@ aes_errorbarv <- function(ymin = NULL,
 geom_acs_errorbarh <- function(mapping = NULL,
                                data = NULL,
                                ...,
+                               na.rm = TRUE,
                                value_col = "estimate",
                                moe_col = "moe",
                                perc_prefix = "perc",
@@ -214,6 +215,7 @@ geom_acs_errorbarh <- function(mapping = NULL,
       )
     ),
     data = data,
+    na.rm = na.rm,
     ...
   )
 }
@@ -226,6 +228,7 @@ geom_acs_errorbarh <- function(mapping = NULL,
 geom_acs_errorbarv <- function(mapping = NULL,
                                data = NULL,
                                ...,
+                               na.rm = TRUE,
                                value_col = "estimate",
                                moe_col = "moe",
                                perc_prefix = "perc",
@@ -243,6 +246,7 @@ geom_acs_errorbarv <- function(mapping = NULL,
       )
     ),
     data = data,
+    na.rm = na.rm,
     ...
   )
 }

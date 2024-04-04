@@ -34,6 +34,7 @@ geom_acs_errorbarh(
   mapping = NULL,
   data = NULL,
   ...,
+  na.rm = TRUE,
   value_col = "estimate",
   moe_col = "moe",
   perc_prefix = "perc",
@@ -45,6 +46,7 @@ geom_acs_errorbarv(
   mapping = NULL,
   data = NULL,
   ...,
+  na.rm = TRUE,
   value_col = "estimate",
   moe_col = "moe",
   perc_prefix = "perc",
@@ -77,6 +79,9 @@ A \code{function} will be called with a single argument,
 the plot data. The return value must be a \code{data.frame}, and
 will be used as the layer data. A \code{function} can be created
 from a \code{formula} (e.g. \code{~ head(.x, 10)}).}
+
+\item{na.rm}{If \code{FALSE}, the default, missing values are removed with
+a warning. If \code{TRUE}, missing values are silently removed.}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
