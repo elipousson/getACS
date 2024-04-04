@@ -107,7 +107,8 @@ make_block_xwalk <- function(state,
 #'   data frame. If `coverage` is `TRUE` and all features in area overlap with
 #'   block_xwalk, the function issues a warning and then resets coverage to
 #'   `FALSE`. The reverse option is applied if any features from area do not
-#'   overlap
+#'   overlap. `coverage` can also be a `sf` or `sfc` object which may be useful
+#'   in some limited cases.
 #' @param erase If `TRUE`, apply [tigris::erase_water()] to input area and
 #'   block_xwalk before joining. Defaults to `FALSE`. If `erase` is a sf object,
 #'   the geometry of the input sf is erased from area and block_xwalk. This
@@ -192,7 +193,14 @@ make_area_xwalk <- function(area,
 
   cli::cli_progress_step("Checking {.arg block_xwalk} and {.arg area} geometry")
 
-  if (coverage && st_is_all_predicate(block_xwalk, area)) {
+  area_coverage <- NULL
+
+  if (!is.logical(coverage) && inherits_any(coverage, c("sf", "sfc"))) {
+    area_coverage <- coverage
+    coverage <- TRUE
+  }
+
+  if (is_true(coverage) && st_is_all_predicate(block_xwalk, area)) {
     cli::cli_bullets(
       c(
         "!" = "All features in {.arg block_xwalk} already
@@ -230,7 +238,7 @@ make_area_xwalk <- function(area,
     )
   }
 
-  if (coverage) {
+  if (rlang::is_true(coverage)) {
     cli::cli_progress_step("Adding coverage for {.arg block_xwalk}")
 
     coverage_name <- tempfile(tmpdir = "")
@@ -239,7 +247,8 @@ make_area_xwalk <- function(area,
       area = area,
       coverage_name = coverage_name,
       name_col = name_col,
-      block_xwalk = block_xwalk
+      block_xwalk = block_xwalk,
+      area_coverage = area_coverage
     )
   }
 
@@ -262,7 +271,7 @@ make_area_xwalk <- function(area,
     digits = digits
   )
 
-  if (coverage) {
+  if (is_true(coverage)) {
     area_xwalk <- dplyr::filter(area_xwalk, .data[[name_col]] != coverage_name)
   }
 
@@ -275,15 +284,26 @@ make_area_xwalk <- function(area,
 }
 
 #' @noRd
+erase_input_geometry <- function(input_sf,
+                                 erase_sf) {
+  erase_sf <- sf::st_transform(erase_sf, crs = sf::st_crs(input_sf))
+
+  sf::st_difference(
+    input_sf,
+    sf::st_union(erase_sf)
+  )
+}
+
+#' @noRd
 erase_input_sf <- function(input_sf,
                            area_threshold = 0.75,
                            year = NULL,
                            erase = FALSE,
                            call = caller_env()) {
-  if (inherits(erase, "sf")) {
-    input_sf <- sf::st_difference(
+  if (inherits_any(erase, c("sf", "sfc"))) {
+    input_sf <- erase_input_geometry(
       input_sf,
-      sf::st_union(sf::st_transform(erase, crs = sf::st_crs(input_sf)))
+      erase
     )
 
     return(input_sf)
@@ -370,20 +390,37 @@ rbind_area_coverage <- function(area,
                                 coverage_name,
                                 name_col = "NAME",
                                 block_xwalk,
+                                area_coverage = NULL,
                                 error_call = caller_env()) {
-  area_coverage <- try_fetch(
-    st_make_valid_coverage(block_xwalk, area),
-    error = function(cnd) {
-      cli_abort(
-        c("Valid spatial coverage for the area of {.arg block_xwalk}
+
+  if (is.null(area_coverage)) {
+    area_coverage <- try_fetch(
+      st_make_valid_coverage(block_xwalk, area),
+      error = function(cnd) {
+        cli_abort(
+          c("Valid spatial coverage for the area of {.arg block_xwalk}
           outside the {.arg area_xwalk} can't be created.",
           "*" = "Set {.code coverage = FALSE} and try again."
-        ),
-        parent = cnd,
-        call = error_call
-      )
+          ),
+          parent = cnd,
+          call = error_call
+        )
+      }
+    )
+  } else {
+    stopifnot(
+      inherits_any(area_coverage, c("sf", "sfc"))
+    )
+
+    if (inherits(area_coverage, "sf")) {
+      area_coverage <- sf::st_geometry(area_coverage)
     }
-  )
+
+    area_coverage <- erase_input_geometry(
+      area_coverage,
+      area
+    )
+  }
 
   if (is_empty(area_coverage)) {
     cli_abort(

@@ -101,7 +101,8 @@ assigned to this alternate geography but it is excluded from the returned
 data frame. If \code{coverage} is \code{TRUE} and all features in area overlap with
 block_xwalk, the function issues a warning and then resets coverage to
 \code{FALSE}. The reverse option is applied if any features from area do not
-overlap}
+overlap. \code{coverage} can also be a \code{sf} or \code{sfc} object which may be useful
+in some limited cases.}
 
 \item{erase}{If \code{TRUE}, apply \code{\link[tigris:erase_water]{tigris::erase_water()}} to input area and
 block_xwalk before joining. Defaults to \code{FALSE}. If \code{erase} is a sf object,
