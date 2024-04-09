@@ -338,22 +338,12 @@ aes_acs_col <- function(
       mapping,
       ggplot2::aes(x = .data[[x]])
     )
-  } else if (!is.null(x)) {
-    mapping <- utils::modifyList(
-      mapping,
-      ggplot2::aes(x = x)
-    )
   }
 
   if (is_string(y)) {
     mapping <- utils::modifyList(
       mapping,
       ggplot2::aes(y = .data[[y]])
-    )
-  } else if (!is.null(y)) {
-    mapping <- utils::modifyList(
-      mapping,
-      ggplot2::aes(y = y)
     )
   }
 
@@ -362,20 +352,23 @@ aes_acs_col <- function(
       mapping,
       ggplot2::aes(fill = .data[[fill]])
     )
-  } else if (!is.null(fill)) {
-    mapping <- utils::modifyList(
-      mapping,
-      ggplot2::aes(fill = fill)
-    )
   }
 
   mapping
 }
 
-#' Creating a ggplot2 geom with mapping, scale, and labels
+#' Creating a bar chart with error bar and scale
 #'
+#' Create a bar chart with [ggplot2::geom_col()] and apply an errorbar (using
+#' [geom_acs_errorbar]), scale (using [scale_x_acs] or [scale_y_acs]).
+#'
+#' @param mapping Aesthetic mapping. Recommend leaving this as `NULL`.
+#' @param x,y,fill String values with column names mapped to aesthetics.
+#'   Optional if `mapping` is supplied.
+#' @inheritParams geom_acs_errorbar
+#' @inheritParams ggplot2::geom_col
 #' @export
-#' @keywords internal
+#' @keywords ggplot2
 geom_acs_col <- function(
     mapping = NULL,
     data = NULL,
@@ -434,18 +427,20 @@ geom_acs_col <- function(
     x <- cols[["value_col"]]
   }
 
-  if (y_orientation) {
-    if (identical(fill, x)) {
-      fill <- y
+
+  if (is.null(mapping)) {
+    if (y_orientation) {
+      if (identical(fill, x)) {
+        fill <- y
+      }
+
+      acs_mapping <- aes_acs_col(x = y, y = x, fill = fill)
+    } else {
+      acs_mapping <- aes_acs_col(x = x, y = y, fill = fill)
     }
-
-    acs_mapping <- aes_acs_col(x = y, y = x, fill = fill)
   } else {
-    acs_mapping <- aes_acs_col(x = x, y = y, fill = fill)
+    acs_mapping <- mapping
   }
-
-  acs_mapping <- mapping %||%
-    acs_mapping
 
   acs_geom <- ggplot2::geom_col(
     data = data,
