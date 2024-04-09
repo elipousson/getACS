@@ -103,8 +103,7 @@ commute_tbl_compare_vars <- acs_data |>
 as_raw_html(commute_tbl_compare_vars)
 ```
 
-
-The package also includes several simple functions to support creating plots with the `{ggplot2}` package:
+The package also includes several functions to support creating plots with the `{ggplot2}` package including `geom_acs_col()` and `labs_acs_survey()`:
 
 ```{r}
 plot_data <- acs_data |>
@@ -113,19 +112,24 @@ plot_data <- acs_data |>
   fmt_acs_county(state = "Maryland")
 
 plot_data |>
-  ggplot(aes(x = perc_estimate, y = column_title, fill = NAME)) +
-  geom_col(position = "dodge", alpha = 0.75) +
-  geom_acs_errorbarh(perc = TRUE, linewidth = 0.25, position = "dodge") +
-  scale_x_acs_percent() +
-  scale_fill_viridis_d() +
-  theme_minimal() +
-  theme(legend.position = "top") +
+  ggplot() +
+  geom_acs_col(
+    fill = "NAME",
+    position = "dodge",
+    color = NA,
+    alpha = 0.75,
+    perc = TRUE,
+    errorbar_params = list(position = "dodge", linewidth = 0.25)
+  ) +
+  scale_y_discrete("Means of transportation to work") +
+  scale_fill_viridis_d("Geography") +
   labs_acs_survey(
-    y = "Means of transportation to work",
-    fill = "Geography",
-    table = acs_data$table_id
-  )
+    .data = acs_data
+  ) +
+  theme_minimal()
 ```
+
+The `geom_acs_col()` function calls `geom_acs_errorbar()` (passing the `errorbar_params` argument as additional parameters) and `scale_x_acs()` or `scale_y_acs()` (depending on whether `orientation = "y"` or the default value of `NA`).
 
 For more information on working with Census data in R [read the book *Analyzing US Census Data: Methods, Maps, and Models in R*](https://walker-data.com/census-r) (February 2023).
 
