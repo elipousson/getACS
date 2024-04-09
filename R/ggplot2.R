@@ -4,6 +4,8 @@
 #' ggplot2 plot passed to the caption parameter of [ggplot2::labs()].
 #'
 #' @inheritParams acs_survey_label_table
+#' @param .data Optional data frame with "table_id" column used in place of
+#'   `table` if table is `NULL`. Ignored if `table` is supplied.
 #' @inheritParams ggplot2::labs
 #' @inheritDotParams ggplot2::labs
 #' @keywords ggplot2
@@ -13,7 +15,12 @@ labs_acs_survey <- function(...,
                             survey = "acs5",
                             year = 2022,
                             prefix = "Source: ",
-                            table = NULL) {
+                            table = NULL,
+                            .data = NULL) {
+  if (!is.null(.data)) {
+    table <- table %||% .data[["table_id"]]
+  }
+
   ggplot2::labs(
     ...,
     caption = c(
@@ -28,13 +35,40 @@ labs_acs_survey <- function(...,
   )
 }
 
-
 #' Scales for plotting ACS data with ggplot2
 #'
 #' @inheritParams ggplot2::scale_x_continuous
 #' @name scale_acs
+#' @param perc If `TRUE`, use the `scale_x_acs_percent` or
+#'   `scale_y_acs_percent`. Defaults to `FALSE`.
 #' @keywords ggplot2
 NULL
+
+#' @rdname scale_acs
+#' @name scale_x_acs
+#' @export
+scale_x_acs <- function(
+    ...,
+    perc = FALSE) {
+  if (perc) {
+    return(scale_x_acs_percent(...))
+  }
+
+  scale_x_acs_estimate(...)
+}
+
+#' @rdname scale_acs
+#' @name scale_y_acs
+#' @export
+scale_y_acs <- function(
+    ...,
+    perc = FALSE) {
+  if (perc) {
+    return(scale_y_acs_percent(...))
+  }
+
+  scale_y_acs_estimate(...)
+}
 
 #' @rdname scale_acs
 #' @name scale_x_acs_estimate
@@ -136,7 +170,6 @@ scale_y_acs_ts <- function(name = "Year",
 #' @keywords ggplot2 internal
 NULL
 
-
 #' @rdname geom_acs
 #' @name aes_errorbarh
 #' @inheritParams ggplot2::aes
@@ -151,14 +184,14 @@ aes_errorbarh <- function(xmin = NULL,
                           perc_sep = "_",
                           perc = FALSE) {
   if (perc) {
-    perc_cols <- acs_perc_cols(value_col, moe_col, perc_prefix, perc_sep)
-    value_col <- perc_cols[[1]]
-    moe_col <- perc_cols[[2]]
+    perc_cols <- acs_perc_cols(value_col, moe_col, perc_prefix, perc_sep, perc)
+    value_col <- perc_cols[["value_col"]]
+    moe_col <- perc_cols[["moe_col"]]
   }
 
   ggplot2::aes(
-    xmin = .data[[value_col]] - .data[[moe_col]],
-    xmax = .data[[value_col]] + .data[[moe_col]],
+    xmin = xmin %||% .data[[value_col]] - .data[[moe_col]],
+    xmax = xmax %||% .data[[value_col]] + .data[[moe_col]],
     ...
   )
 }
@@ -177,9 +210,9 @@ aes_errorbarv <- function(ymin = NULL,
                           perc_sep = "_",
                           perc = FALSE) {
   if (perc) {
-    perc_cols <- acs_perc_cols(value_col, moe_col, perc_prefix, perc_sep)
-    value_col <- perc_cols[[1]]
-    moe_col <- perc_cols[[2]]
+    perc_cols <- acs_perc_cols(value_col, moe_col, perc_prefix, perc_sep, perc)
+    value_col <- perc_cols[["value_col"]]
+    moe_col <- perc_cols[["moe_col"]]
   }
 
   ggplot2::aes(
@@ -187,6 +220,45 @@ aes_errorbarv <- function(ymin = NULL,
     ymax = ymax %||% .data[[value_col]] + .data[[moe_col]],
     ...
   )
+}
+
+#' @rdname geom_acs
+#' @export
+geom_acs_errorbar <- function(mapping = NULL,
+                              data = NULL,
+                              ...,
+                              na.rm = TRUE,
+                              orientation = NA,
+                              value_col = "estimate",
+                              moe_col = "moe",
+                              perc_prefix = "perc",
+                              perc_sep = "_",
+                              perc = FALSE) {
+  if (identical(orientation, "y")) {
+    geom_acs_errorbarv(
+      mapping = mapping,
+      data = data,
+      ...,
+      na.rm = na.rm,
+      value_col = value_col,
+      moe_col = moe_col,
+      perc_prefix = perc_prefix,
+      perc_sep = perc_sep,
+      perc = perc
+    )
+  } else {
+    geom_acs_errorbarh(
+      mapping = mapping,
+      data = data,
+      ...,
+      na.rm = na.rm,
+      value_col = value_col,
+      moe_col = moe_col,
+      perc_prefix = perc_prefix,
+      perc_sep = perc_sep,
+      perc = perc
+    )
+  }
 }
 
 #' @rdname geom_acs
@@ -248,5 +320,143 @@ geom_acs_errorbarv <- function(mapping = NULL,
     data = data,
     na.rm = na.rm,
     ...
+  )
+}
+
+#' Mapping ACS column names
+#'
+#' @export
+#' @keywords internal
+aes_acs_col <- function(
+    x = "estimate",
+    y = "column_title",
+    fill = y) {
+  mapping <- aes()
+
+  if (is_string(x)) {
+    mapping <- utils::modifyList(
+      mapping,
+      ggplot2::aes(x = .data[[x]])
+    )
+  } else if (!is.null(x)) {
+    mapping <- utils::modifyList(
+      mapping,
+      ggplot2::aes(x = x)
+    )
+  }
+
+  if (is_string(y)) {
+    mapping <- utils::modifyList(
+      mapping,
+      ggplot2::aes(y = .data[[y]])
+    )
+  } else if (!is.null(y)) {
+    mapping <- utils::modifyList(
+      mapping,
+      ggplot2::aes(y = y)
+    )
+  }
+
+  if (is_string(fill)) {
+    mapping <- utils::modifyList(
+      mapping,
+      ggplot2::aes(fill = .data[[fill]])
+    )
+  } else if (!is.null(fill)) {
+    mapping <- utils::modifyList(
+      mapping,
+      ggplot2::aes(fill = fill)
+    )
+  }
+
+  mapping
+}
+
+#' Creating a ggplot2 geom with mapping, scale, and labels
+#'
+#' @export
+#' @keywords internal
+geom_acs_col <- function(
+    mapping = NULL,
+    data = NULL,
+    position = "stack",
+    ...,
+    x = "estimate",
+    y = "column_title",
+    fill = y,
+    value_col = "estimate",
+    moe_col = "moe",
+    perc_prefix = "perc",
+    perc_sep = "_",
+    perc = TRUE,
+    orientation = NA,
+    errorbar_value = TRUE,
+    errorbar_params = list(linewidth = 0.5, height = 0.35),
+    scale_value = TRUE,
+    scale_params = list()) {
+  y_orientation <- identical(orientation, "y")
+
+  if (is_true(errorbar_value)) {
+    errorbar_value <- rlang::exec(
+      .fn = geom_acs_errorbar,
+      perc = perc,
+      value_col = value_col,
+      moe_col = moe_col,
+      perc_prefix = perc_prefix,
+      perc_sep = perc_sep,
+      orientation = orientation,
+      !!!errorbar_params
+    )
+  }
+
+  if (is_true(scale_value)) {
+    scale_fn <- scale_x_acs
+    if (y_orientation) {
+      scale_fn <- scale_y_acs
+    }
+
+    scale_value <- rlang::exec(
+      .fn = scale_fn,
+      !!!scale_params,
+      perc = perc
+    )
+  }
+
+  cols <- acs_perc_cols(
+    value_col = value_col,
+    moe_col = moe_col,
+    perc_prefix = perc_prefix,
+    perc_sep = perc_sep,
+    perc = perc
+  )
+
+  if (perc && is_string(x) && x != cols[["value_col"]]) {
+    x <- cols[["value_col"]]
+  }
+
+  if (y_orientation) {
+    if (identical(fill, x)) {
+      fill <- y
+    }
+
+    acs_mapping <- aes_acs_col(x = y, y = x, fill = fill)
+  } else {
+    acs_mapping <- aes_acs_col(x = x, y = y, fill = fill)
+  }
+
+  acs_mapping <- mapping %||%
+    acs_mapping
+
+  acs_geom <- ggplot2::geom_col(
+    data = data,
+    position = position,
+    ...
+  )
+
+  list(
+    acs_mapping,
+    acs_geom,
+    errorbar_value,
+    scale_value
   )
 }
