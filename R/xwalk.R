@@ -392,7 +392,6 @@ rbind_area_coverage <- function(area,
                                 block_xwalk,
                                 area_coverage = NULL,
                                 error_call = caller_env()) {
-
   if (is.null(area_coverage)) {
     area_coverage <- try_fetch(
       st_make_valid_coverage(block_xwalk, area),
@@ -400,7 +399,7 @@ rbind_area_coverage <- function(area,
         cli_abort(
           c("Valid spatial coverage for the area of {.arg block_xwalk}
           outside the {.arg area_xwalk} can't be created.",
-          "*" = "Set {.code coverage = FALSE} and try again."
+            "*" = "Set {.code coverage = FALSE} and try again."
           ),
           parent = cnd,
           call = error_call

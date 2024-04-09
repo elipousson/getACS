@@ -36,7 +36,7 @@ cli_quiet <- function(quiet = FALSE,
   rlang::local_options(
     "cli.default_handler" = suppressMessages,
     .frame = .frame
-    )
+  )
 }
 
 
