@@ -1,8 +1,8 @@
 ---
-title: "2. Creating gt tables"
+title: "Creating gt tables"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{2. Creating gt tables}
+  %\VignetteIndexEntry{Creating gt tables}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -62,7 +62,7 @@ pop_tbl_data |>
     table = "B01003",
     value_label = "Population",
     name_label = "County",
-    perc_prefix = NULL
+    perc = FALSE
   ) |>
   fmt_acs_county(
     state = "Maryland",
@@ -127,7 +127,7 @@ tenure_tbl_data |>
 Helpers such as `pivot_acs_wider()` can also be helpful even without the `gt_acs_compare()` variant:
 
 ```{r}
-comparison_data <- get_acs_geographies(
+geo_comparison_data <- get_acs_geographies(
   geography = c(
     "county",
     "metropolitan statistical area/micropolitan statistical area",
@@ -140,10 +140,10 @@ comparison_data <- get_acs_geographies(
   quiet = TRUE
 )
 
-comparison_data |>
+geo_comparison_data |>
   select_acs(
     .name_col = "NAME",
-    .perc_prefix = NULL
+    .perc = FALSE
   ) |>
   pivot_acs_wider() |>
   gt_acs(
@@ -161,7 +161,7 @@ comparison_data |>
 The `gt_acs_compare()` calls `pivot_acs_wider()` and handles the process of renaming column titles for a similar effect:
 
 ```{r}
-comparison_data |>
+geo_comparison_data |>
   gt_acs_compare(
     id_cols = "column_title",
     column_title_label = "",

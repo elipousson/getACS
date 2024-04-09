@@ -1,8 +1,8 @@
 ---
-title: "3. Interpolating ACS data using an area crosswalk"
+title: "Interpolating ACS data using an area crosswalk"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{3. Interpolating ACS data using an area crosswalk}
+  %\VignetteIndexEntry{Interpolating ACS data using an area crosswalk}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -150,4 +150,4 @@ As you can see, the differences in the estimates are very small. Most of these a
 
 In summary, I'd recommend the `{getACS}` functions if you want to retain a more accurate margin of error, you like a more verbose function, or you don't want to worry about matching coordinate reference systems in advance.
 
-If you prefer working with wide format data and don't want to transform the shape of your data back and forth with `tidyr::pivot_longer()` and `tidyr::pivot_wider()`, you'd be better off staying with `tidycensus::interpolate_pw()`
+If you prefer working with wide format data and don't want to transform the shape of your data back and forth with `tidyr::pivot_longer()` and `tidyr::pivot_wider()`, you may prefer sticking with `tidycensus::interpolate_pw()` instead.

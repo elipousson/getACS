@@ -1,8 +1,8 @@
 ---
-title: "1. Introduction to getACS"
+title: "Introduction to getACS"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{1. Introduction to getACS}
+  %\VignetteIndexEntry{Introduction to getACS}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -51,7 +51,13 @@ Filter out the totals and create a simple bar chart to compare the data across t
 tenure_data |>
   filter_acs(indent > 0) |>
   select_acs(race_iteration_group) |>
-  ggplot(aes(x = column_title, y = perc_estimate, fill = race_iteration_group)) +
+  ggplot(
+    aes(
+      x = column_title,
+      y = perc_estimate,
+      fill = race_iteration_group
+    )
+  ) +
   geom_col(alpha = 0.8, position = "dodge") +
   scale_y_acs_percent("% of households") +
   scale_fill_viridis_d("Race/ethnic group") +

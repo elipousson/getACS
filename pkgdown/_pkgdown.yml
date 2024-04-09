@@ -17,10 +17,10 @@ reference:
   - starts_with("gt_acs")
   - starts_with("tab_")
   - starts_with("fmt_acs")
-- title: Apply labels and scales to ggplot2 plots
+- title: Create and format ggplot2 plots
   contents:
   - has_keyword("ggplot2")
-- title: Additional utility functions for ACS data
+- title: Helpers for wrangling ACS data
   contents:
   - starts_with("acs_")
   - starts_with("join_acs_")
@@ -34,3 +34,10 @@ reference:
   - '`race_iteration`'
   - '`jam_values`'
   - '`tigerweb_geo_index`'
+articles:
+- title: Using getACS
+  navbar: ~
+  contents:
+  - introduction
+  - gt-tables
+  - area-xwalk
