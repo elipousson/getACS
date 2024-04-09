@@ -14,6 +14,7 @@ cols_acs_label(
   perc_sep = "_",
   perc_value_label = "\% share",
   perc_moe_label = "\% MOE",
+  perc = TRUE,
   name_col = "NAME",
   name_label = NULL,
   column_title_col = "column_title",
@@ -39,6 +40,8 @@ and \code{moe_col} strings.}
 \item{perc_value_label}{Percent value column label.}
 
 \item{perc_moe_label}{Percent margin of error column label.}
+
+\item{perc}{If \code{TRUE}, return percent value and margin of error columns.}
 
 \item{column_title_col, column_title_label}{Column title column name and
 label. Defaults to  "column_title" and \code{NULL}.}

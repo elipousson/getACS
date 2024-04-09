@@ -4,6 +4,7 @@
 \alias{geom_acs}
 \alias{aes_errorbarh}
 \alias{aes_errorbarv}
+\alias{geom_acs_errorbar}
 \alias{geom_acs_errorbarh}
 \alias{geom_acs_errorbarv}
 \title{\code{geom_} functions for plotting ACS data with ggplot2}
@@ -23,6 +24,19 @@ aes_errorbarv(
   ymin = NULL,
   ymax = NULL,
   ...,
+  value_col = "estimate",
+  moe_col = "moe",
+  perc_prefix = "perc",
+  perc_sep = "_",
+  perc = FALSE
+)
+
+geom_acs_errorbar(
+  mapping = NULL,
+  data = NULL,
+  ...,
+  na.rm = TRUE,
+  orientation = NA,
   value_col = "estimate",
   moe_col = "moe",
   perc_prefix = "perc",

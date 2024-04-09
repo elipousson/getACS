@@ -12,6 +12,7 @@ gt_acs_compare(
   moe_col = "moe",
   perc_prefix = "perc",
   perc_sep = "_",
+  perc = TRUE,
   variable_col = "variable",
   column_title_col = "column_title",
   value_label = "Est.",
@@ -77,6 +78,8 @@ set to name_col.}
 
 \item{perc_sep}{Separator string between \code{perc_prefix} and the \code{value_col}
 and \code{moe_col} strings.}
+
+\item{perc}{If \code{TRUE}, return percent value and margin of error columns.}
 
 \item{variable_col}{Variable column name. Defaults to "variable". Typically,
 dropped from table by default.}

@@ -13,6 +13,7 @@ select_acs(
   .moe_col = "moe",
   .perc_prefix = "perc",
   .perc_sep = "_",
+  .perc = TRUE,
   .fn = any_of
 )
 }
@@ -31,8 +32,11 @@ to select using the Tidyverse selection helper in \code{.fn}. Set any parameter
 to \code{NULL} to avoid selecting columns.}
 
 \item{.perc_prefix, .perc_sep}{Percent value prefix and separator. Set
-.perc_prefix to \code{NULL} to drop the percent value and percent margin of
+.perc_prefix to \code{NULL} or \code{.perc = FALSE} to drop the percent value and percent margin of
 error columns.}
+
+\item{.perc}{If \code{TRUE}, select the percent value and percent margin of
+error columns along with the supplied column values.}
 
 \item{.fn}{Tidyverse selection helper to use with named ACS columns. Defaults
 to \link[tidyselect:all_of]{tidyselect::any_of}. See \code{\link[dplyr:select]{dplyr::select()}} for an overview of selection
@@ -45,8 +49,7 @@ features.}
 \code{\link[=select_acs]{select_acs()}} is a wrapper for \code{\link[dplyr:select]{dplyr::select()}} designed to select the
 appropriate columns for a gt table created with \code{\link[=gt_acs]{gt_acs()}}. Set any named
 parameter to \code{NULL} to drop the respective column or use the additional \code{...}
-parameter to modify the selection. This function replaces the deprecated
-\code{\link[=select_acs_cols]{select_acs_cols()}} function.
+parameter to modify the selection.
 }
 \examples{
 \dontrun{

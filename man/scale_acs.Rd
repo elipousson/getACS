@@ -2,6 +2,8 @@
 % Please edit documentation in R/ggplot2.R
 \name{scale_acs}
 \alias{scale_acs}
+\alias{scale_x_acs}
+\alias{scale_y_acs}
 \alias{scale_x_acs_estimate}
 \alias{scale_y_acs_percent}
 \alias{scale_x_acs_percent}
@@ -10,6 +12,10 @@
 \alias{scale_y_acs_ts}
 \title{Scales for plotting ACS data with ggplot2}
 \usage{
+scale_x_acs(..., perc = FALSE)
+
+scale_y_acs(..., perc = FALSE)
+
 scale_x_acs_estimate(name = "Estimate", ..., labels = scales::label_comma())
 
 scale_y_acs_percent(
@@ -31,12 +37,15 @@ scale_x_acs_ts(name = "Year", ..., breaks = NULL, survey = "acs5", year = 2022)
 scale_y_acs_ts(name = "Year", ..., breaks = NULL, survey = "acs5", year = 2022)
 }
 \arguments{
+\item{...}{Other arguments passed on to \verb{scale_(x|y)_continuous()}}
+
+\item{perc}{If \code{TRUE}, use the \code{scale_x_acs_percent} or
+\code{scale_y_acs_percent}. Defaults to \code{FALSE}.}
+
 \item{name}{The name of the scale. Used as the axis or legend title. If
 \code{waiver()}, the default, the name of the scale is taken from the first
 mapping used for that aesthetic. If \code{NULL}, the legend title will be
 omitted.}
-
-\item{...}{Other arguments passed on to \verb{scale_(x|y)_continuous()}}
 
 \item{labels}{One of:
 \itemize{

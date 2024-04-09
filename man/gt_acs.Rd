@@ -13,6 +13,7 @@ gt_acs(
   moe_col = "moe",
   perc_prefix = "perc",
   perc_sep = "_",
+  perc = FALSE,
   column_title_col = "column_title",
   name_col = "NAME",
   perc_value_label = "\% share",
@@ -71,6 +72,8 @@ secondary column in the table stub.}
 
 \item{perc_sep}{Separator string between \code{perc_prefix} and the \code{value_col}
 and \code{moe_col} strings.}
+
+\item{perc}{If \code{TRUE}, return percent value and margin of error columns.}
 
 \item{column_title_col, column_title_label}{Column title and label. If
 \code{column_title_label} is a string, \code{column_title_col} is required.

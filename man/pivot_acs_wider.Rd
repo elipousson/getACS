@@ -11,6 +11,7 @@ pivot_acs_wider(
   moe_col = "moe",
   perc_prefix = "perc",
   perc_sep = "_",
+  perc = TRUE,
   .col_fn = any_of,
   ...,
   id_cols = NULL,
@@ -37,6 +38,8 @@ set to name_col.}
 
 \item{perc_sep}{Separator string between \code{perc_prefix} and the \code{value_col}
 and \code{moe_col} strings.}
+
+\item{perc}{If \code{TRUE}, return percent value and margin of error columns.}
 
 \item{.col_fn}{tidyselect function to use with column names. Defaults to
 \link[tidyselect:starts_with]{tidyselect::starts_with},}

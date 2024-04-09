@@ -10,7 +10,8 @@ labs_acs_survey(
   survey = "acs5",
   year = 2022,
   prefix = "Source: ",
-  table = NULL
+  table = NULL,
+  .data = NULL
 )
 }
 \arguments{
@@ -37,6 +38,9 @@ of years for non-overlapping ACS samples to allow comparison.}
 \item{prefix}{Text to insert before ACS survey label.}
 
 \item{table}{One or more table IDs to include in label or source note.}
+
+\item{.data}{Optional data frame with "table_id" column used in place of
+\code{table} if table is \code{NULL}. Ignored if \code{table} is supplied.}
 }
 \description{
 \code{labs_acs_survey()} uses \code{acs_survey_label_table()} to create a label for a

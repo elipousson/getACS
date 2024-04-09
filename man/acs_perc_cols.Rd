@@ -8,7 +8,8 @@ acs_perc_cols(
   value_col = "estimate",
   moe_col = "moe",
   perc_prefix = "perc",
-  perc_sep = "_"
+  perc_sep = "_",
+  perc = TRUE
 )
 }
 \arguments{
@@ -16,6 +17,8 @@ acs_perc_cols(
 
 \item{perc_sep}{Separator string between \code{perc_prefix} and the \code{value_col}
 and \code{moe_col} strings.}
+
+\item{perc}{If \code{TRUE}, return percent value and margin of error columns.}
 }
 \description{
 Create \code{perc} value and moe column names with prefix and separator
