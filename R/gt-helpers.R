@@ -26,13 +26,14 @@ cols_acs_label <- function(data,
                            perc_sep = "_",
                            perc_value_label = "% share",
                            perc_moe_label = "% MOE",
+                           perc = TRUE,
                            name_col = "NAME",
                            name_label = NULL,
                            column_title_col = "column_title",
                            column_title_label = NULL,
                            .col_fn = starts_with,
                            env = NULL) {
-  perc_cols <- acs_perc_cols(value_col, moe_col, perc_prefix, perc_sep)
+  perc_cols <- acs_perc_cols(value_col, moe_col, perc_prefix, perc_sep, perc)
 
   perc_value_col <- NULL
   perc_moe_col <- NULL

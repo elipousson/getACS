@@ -3,17 +3,31 @@
 #' @param perc_prefix Prefix string for percent value columns.
 #' @param perc_sep Separator string between `perc_prefix` and the `value_col`
 #'   and `moe_col` strings.
+#' @param perc If `TRUE`, return percent value and margin of error columns.
 #' @keywords internal
 acs_perc_cols <- function(value_col = "estimate",
                           moe_col = "moe",
                           perc_prefix = "perc",
-                          perc_sep = "_") {
+                          perc_sep = "_",
+                          perc = TRUE) {
   # FIXME: I'm not so sure about this as a design pattern
   if (is.null(perc_prefix)) {
     return(NULL)
   }
 
-  paste0(perc_prefix, perc_sep, c(value_col, moe_col))
+  if (!perc) {
+    cols <- set_names(
+      c(value_col, moe_col),
+      c("value_col", "moe_col")
+    )
+
+    return(cols)
+  }
+
+  set_names(
+    paste0(perc_prefix, perc_sep, c(value_col, moe_col)),
+    c("value_col", "moe_col")
+  )
 }
 
 #' Pivot a ACS data frame into a wider format by name or other columns
@@ -41,6 +55,7 @@ pivot_acs_wider <- function(data,
                             moe_col = "moe",
                             perc_prefix = "perc",
                             perc_sep = "_",
+                            perc = TRUE,
                             .col_fn = any_of,
                             ...,
                             id_cols = NULL,
@@ -51,6 +66,13 @@ pivot_acs_wider <- function(data,
                             names_vary = "slowest",
                             names_repair = "check_unique",
                             values_from = NULL) {
+  select_cols <- c(
+    value_col, moe_col,
+    acs_perc_cols(value_col, moe_col, perc_prefix, perc_sep, perc)
+  )
+
+  select_cols <- as.character(select_cols)
+
   tidyr::pivot_wider(
     data,
     id_cols = id_cols,
@@ -61,12 +83,7 @@ pivot_acs_wider <- function(data,
     names_vary = names_vary,
     names_repair = names_repair,
     values_from = values_from %||%
-      .col_fn(
-        c(
-          value_col, moe_col,
-          acs_perc_cols(value_col, moe_col, perc_prefix, perc_sep)
-        )
-      ),
+      .col_fn(select_cols),
     ...
   )
 }

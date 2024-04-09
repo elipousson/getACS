@@ -61,6 +61,7 @@ gt_acs <- function(data,
                    moe_col = "moe",
                    perc_prefix = "perc",
                    perc_sep = "_",
+                   perc = FALSE,
                    column_title_col = "column_title",
                    name_col = "NAME",
                    perc_value_label = "% share",
@@ -91,8 +92,11 @@ gt_acs <- function(data,
   )
 
   est_cols <- est_cols %||% c(value_col, moe_col)
-  perc_cols <- perc_cols %||%
-    acs_perc_cols(value_col, moe_col, perc_prefix, perc_sep)
+
+  if (perc) {
+    perc_cols <- perc_cols %||%
+      acs_perc_cols(value_col, moe_col, perc_prefix, perc_sep, perc)
+  }
 
   if (identical(column_title_label, "from_table")) {
     metadata <- get_acs_metadata(survey, year, table = table)
@@ -119,6 +123,7 @@ gt_acs <- function(data,
     perc_prefix = perc_prefix,
     perc_sep = perc_sep,
     perc_value_label = perc_value_label,
+    perc = perc,
     column_title_col = column_title_col,
     column_title_label = column_title_label,
     name_col = name_col,
