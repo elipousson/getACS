@@ -2,6 +2,7 @@
 % Please edit documentation in R/join_acs.R
 \name{join_acs_percent}
 \alias{join_acs_percent}
+\alias{join_acs_percent_parent}
 \title{Join percent estimates to ACS data based on denominator values}
 \usage{
 join_acs_percent(
@@ -12,6 +13,22 @@ join_acs_percent(
   denominator_prefix = "denominator_",
   value_col = "estimate",
   moe_col = "moe",
+  perc_prefix = "perc",
+  perc_sep = "_",
+  na_matches = "never",
+  digits = 2
+)
+
+join_acs_percent_parent(
+  data,
+  geoid_col = "GEOID",
+  column_id_col = "column_id",
+  denominator_col = NULL,
+  denominator_prefix = "parent_",
+  value_col = "estimate",
+  moe_col = "moe",
+  perc_prefix = "perc_parent",
+  perc_sep = "_",
   na_matches = "never",
   digits = 2
 )
@@ -35,6 +52,11 @@ metadata. Defaults to \code{NULL}}
 
 \item{moe_col}{Margin of error column name}
 
+\item{perc_prefix}{Prefix string for percent value columns.}
+
+\item{perc_sep}{Separator string between \code{perc_prefix} and the \code{value_col}
+and \code{moe_col} strings.}
+
 \item{na_matches}{Should two \code{NA} or two \code{NaN} values match?
 \itemize{
 \item \code{"na"}, the default, treats two \code{NA} or two \code{NaN} values as equal, like
@@ -52,7 +74,9 @@ for database sources and to \code{base::merge(incomparables = NA)}.
 \code{\link[=join_acs_percent]{join_acs_percent()}} uses the denominator_column_id value from the column
 metadata added with \code{\link[=label_acs_metadata]{label_acs_metadata()}} to calculate the estimate as a
 percent share of the denominator value. \code{\link[tidycensus:moe_prop]{tidycensus::moe_prop()}} is used to
-calculate the margin of error for the percentage.
+calculate the margin of error for the percentage. \code{\link[=join_acs_percent_parent]{join_acs_percent_parent()}}
+is a variation that, by default, calculates the percentage values based on
+the \code{"parent_column_id"} instead of the \code{"denomination_column_id"}.
 }
 \seealso{
 \code{\link[tidycensus:moe_prop]{tidycensus::moe_prop()}}, \code{\link[camiller:calc_shares]{camiller::calc_shares()}}

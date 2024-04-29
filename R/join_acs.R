@@ -3,7 +3,9 @@
 #' [join_acs_percent()] uses the denominator_column_id value from the column
 #' metadata added with [label_acs_metadata()] to calculate the estimate as a
 #' percent share of the denominator value. [tidycensus::moe_prop()] is used to
-#' calculate the margin of error for the percentage.
+#' calculate the margin of error for the percentage. [join_acs_percent_parent()]
+#' is a variation that, by default, calculates the percentage values based on
+#' the `"parent_column_id"` instead of the `"denomination_column_id"`.
 #'
 #' @param data A data frame with column names including "column_id",
 #'   "column_title", "denominator_column_id", "estimate", and "moe".
@@ -16,6 +18,7 @@
 #' @param denominator_prefix Prefix to use for denominator column names.
 #' @param value_col Value column name
 #' @param moe_col Margin of error column name
+#' @inheritParams acs_perc_cols
 #' @inheritParams base::round
 #' @inheritParams dplyr::left_join
 #' @seealso [tidycensus::moe_prop()], [camiller::calc_shares()]
@@ -29,6 +32,8 @@ join_acs_percent <- function(data,
                              denominator_prefix = "denominator_",
                              value_col = "estimate",
                              moe_col = "moe",
+                             perc_prefix = "perc",
+                             perc_sep = "_",
                              na_matches = "never",
                              digits = 2) {
   denominator_id_col <- denominator_col %||%
@@ -49,13 +54,20 @@ join_acs_percent <- function(data,
     digits = digits
   )
 
+  perc_cols <- acs_perc_cols(
+    value_col = value_col,
+    moe_col = moe_col,
+    perc_prefix = perc_prefix,
+    perc_sep = perc_sep
+  )
+
   dplyr::mutate(
     data,
-    perc_estimate = round(
+    "{perc_cols[[1]]}" := round(
       .data[[value_col]] / .data[[denominator_value_col]],
       digits = digits
     ),
-    perc_moe = round(
+    "{perc_cols[[2]]}" := round(
       tidycensus::moe_prop(
         .data[[value_col]], .data[[denominator_value_col]],
         .data[[moe_col]], .data[[denominator_moe_col]]
@@ -63,6 +75,35 @@ join_acs_percent <- function(data,
       digits = digits
     ),
     .after = dplyr::all_of(moe_col)
+  )
+}
+
+#' @rdname join_acs_percent
+#' @name join_acs_percent_parent
+#' @export
+join_acs_percent_parent <- function(data,
+                                    geoid_col = "GEOID",
+                                    column_id_col = "column_id",
+                                    denominator_col = NULL,
+                                    denominator_prefix = "parent_",
+                                    value_col = "estimate",
+                                    moe_col = "moe",
+                                    perc_prefix = "perc_parent",
+                                    perc_sep = "_",
+                                    na_matches = "never",
+                                    digits = 2) {
+  join_acs_percent(
+    data,
+    geoid_col = geoid_col,
+    column_id_col = column_id_col,
+    denominator_col = denominator_col,
+    denominator_prefix = denominator_prefix,
+    value_col = value_col,
+    moe_col = moe_col,
+    perc_prefix = perc_prefix,
+    perc_sep = perc_sep,
+    na_matches = na_matches,
+    digits = digits
   )
 }
 
