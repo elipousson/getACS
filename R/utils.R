@@ -8,11 +8,10 @@
 
 utils::globalVariables(
   c(
-    "cols", "column_id", "column_title", "denominator_estimate",
-    "denominator_moe", "estimate", "moe", "table_id", "table_title", "variable",
+    "cols", "column_id", "column_title",
+    "estimate", "moe", "table_id", "variable",
     # Added 2023-11-04
-    "name", "label", "indent",
-    "GEOID", "geography_data"
+    "name", "label", "indent", "GEOID", "what", "perc_cols", "acs_label"
   )
 )
 
