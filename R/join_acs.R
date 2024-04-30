@@ -7,17 +7,9 @@
 #' is a variation that, by default, calculates the percentage values based on
 #' the `"parent_column_id"` instead of the `"denomination_column_id"`.
 #'
-#' @param data A data frame with column names including "column_id",
-#'   "column_title", "denominator_column_id", "estimate", and "moe".
-#' @param geoid_col A GeoID column name to use if perc is `TRUE`, Defaults to
-#'   'GEOID'.
-#' @param column_id_col Column ID column name from Census Reporter metadata.
-#'   Defaults to "column_id"
-#' @param denominator_col Denominator column ID name from Census Reporter
-#'   metadata. Defaults to `NULL`
-#' @param denominator_prefix Prefix to use for denominator column names.
-#' @param value_col Value column name
-#' @param moe_col Margin of error column name
+#' @inheritParams join_acs_denominator
+#' @param perc If `FALSE`, return data joined with [join_acs_denominator()] and
+#'   skip joining percent values. Defaults to `TRUE`.
 #' @inheritParams acs_perc_cols
 #' @inheritParams base::round
 #' @inheritParams dplyr::left_join
@@ -32,16 +24,11 @@ join_acs_percent <- function(data,
                              denominator_prefix = "denominator_",
                              value_col = "estimate",
                              moe_col = "moe",
+                             perc = TRUE,
                              perc_prefix = "perc",
                              perc_sep = "_",
                              na_matches = "never",
                              digits = 2) {
-  denominator_id_col <- denominator_col %||%
-    paste0(denominator_prefix, column_id_col)
-
-  denominator_value_col <- paste0(denominator_prefix, value_col)
-  denominator_moe_col <- paste0(denominator_prefix, moe_col)
-
   data <- join_acs_denominator(
     data = data,
     value_col = value_col,
@@ -54,12 +41,19 @@ join_acs_percent <- function(data,
     digits = digits
   )
 
+  if (!perc) {
+    return(data)
+  }
+
   perc_cols <- acs_perc_cols(
     value_col = value_col,
     moe_col = moe_col,
     perc_prefix = perc_prefix,
     perc_sep = perc_sep
   )
+
+  denominator_value_col <- paste0(denominator_prefix, value_col)
+  denominator_moe_col <- paste0(denominator_prefix, moe_col)
 
   dplyr::mutate(
     data,
@@ -107,7 +101,23 @@ join_acs_percent_parent <- function(data,
   )
 }
 
-#' @noRd
+#' Join denominator values based on a supplied denominator column
+#'
+#' Note that this function and the related [join_acs_percent()] function depends
+#' on the column-level metadata supplied by [label_acs_metadata()].
+#'
+#' @param data A data frame with column names including "column_id",
+#'   "column_title", "denominator_column_id", "estimate", and "moe".
+#' @param geoid_col A GeoID column name to use if perc is `TRUE`, Defaults to
+#'   'GEOID'.
+#' @param column_id_col Column ID column name from Census Reporter metadata.
+#'   Defaults to "column_id"
+#' @param denominator_col Denominator column ID name from Census Reporter
+#'   metadata. Defaults to `NULL`
+#' @param denominator_prefix Prefix to use for denominator column names.
+#' @param value_col Value column name
+#' @param moe_col Margin of error column name
+#' @export
 join_acs_denominator <- function(data,
                                  geoid_col = "GEOID",
                                  value_col = "estimate",
@@ -117,16 +127,17 @@ join_acs_denominator <- function(data,
                                  denominator_col = NULL,
                                  denominator_prefix = "denominator_",
                                  na_matches = "never",
-                                 digits = 2) {
+                                 digits = 2,
+                                 call = caller_env()) {
   denominator_id_col <- denominator_col %||%
     paste0(denominator_prefix, column_id_col)
 
-  stopifnot(
-    all(has_name(data, c(
-      geoid_col, column_id_col, column_title_col,
-      denominator_id_col, value_col
-    )))
+  nm <- c(
+    geoid_col, column_id_col, column_title_col,
+    denominator_id_col, value_col
   )
+
+  check_has_name(data, nm = nm, call = call)
 
   if (!has_name(data, moe_col)) {
     data[[moe_col]] <- NA_integer_
@@ -200,8 +211,9 @@ join_acs_geography_ratio <- function(data,
                                      geography = "county",
                                      na_matches = "never",
                                      digits = 2) {
-  stopifnot(
-    all(has_name(data, c(variable_col, value_col, moe_col, "geography")))
+  check_has_name(
+    data,
+    nm = c(variable_col, value_col, moe_col, "geography")
   )
 
   check_string(geography, allow_empty = FALSE)
