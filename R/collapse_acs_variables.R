@@ -41,7 +41,7 @@
 #'  [forcats::fct_collapse()], [camiller::add_grps()]
 #' @rdname collapse_acs_variables
 #' @export
-#' @importFrom dplyr group_by mutate summarise across
+#' @importFrom dplyr group_by mutate all_of summarise across
 #' @importFrom tidycensus moe_sum
 collapse_acs_variables <- function(data,
                                    ...,
@@ -53,9 +53,7 @@ collapse_acs_variables <- function(data,
                                    moe_col = "moe",
                                    na.rm = TRUE,
                                    digits = 2) {
-  stopifnot(
-    all(has_name(data, c(variable_col, value_col, moe_col)))
-  )
+  check_has_name(data, c(variable_col, value_col, moe_col))
 
   check_installed("forcats")
 
@@ -83,49 +81,51 @@ collapse_acs_variables <- function(data,
   # TODO: Expose extensive parameter after implementing weighted mean summary
   extensive <- TRUE
 
-  perc_cols <- paste0("perc_", c(value_col, moe_col))
+  if (!extensive) {
+    data <- summarise_acs_intensive(
+      data = data,
+      name_col = name_col,
+      variable_col = variable_col,
+      label_col = label_col,
+      value_col = value_col,
+      moe_col = moe_col,
+      na.rm = na.rm,
+      digits = digits
+    )
+
+    return(data)
+  }
+
+  summarise_acs_extensive(
+    data = data,
+    name_col = name_col,
+    variable_col = variable_col,
+    label_col = label_col,
+    value_col = value_col,
+    moe_col = moe_col,
+    na.rm = na.rm,
+    digits = digits
+  )
+}
+
+#' @noRd
+summarise_acs_extensive <- function(
+    data,
+    name_col = "NAME",
+    variable_col = "variable",
+    label_col = "label",
+    value_col = "estimate",
+    moe_col = "moe",
+    na.rm = TRUE,
+    digits = 2) {
+  perc_cols <- acs_perc_cols(
+    value_col = value_col,
+    moe_col = moe_col
+  )
 
   # FIXME: Parameterize this code with across to allow for cases when the
   # perc_cols are not available and avoid this awkward if
-  if (extensive && all(has_name(data, perc_cols))) {
-    data <- dplyr::summarise(
-      data,
-      "{variable_col}" := list(unique(.data[[variable_col]])),
-      "{value_col}" := round(
-        sum(.data[[value_col]], na.rm = na.rm),
-        digits = digits
-      ),
-      "{moe_col}" := round(
-        tidycensus::moe_sum(
-          .data[[moe_col]],
-          estimate = .data[[value_col]],
-          na.rm = na.rm
-        ),
-        digits = digits
-      ),
-      "{perc_cols[[1]]}" := round(
-        sum(.data[[perc_cols[[1]]]], na.rm = na.rm),
-        digits = digits
-      ),
-      "{perc_cols[[2]]}" := round(
-        tidycensus::moe_sum(
-          .data[[perc_cols[[2]]]],
-          estimate = .data[[perc_cols[[1]]]],
-          na.rm = na.rm
-        ),
-        digits = digits
-      ),
-      dplyr::across(
-        -any_of(
-          c(name_col, label_col, variable_col, value_col, moe_col, perc_cols)
-        ),
-        function(x) {
-          list(unique(x))
-        }
-      ),
-      .groups = "drop"
-    )
-  } else if (extensive) {
+  if (!all(has_name(data, perc_cols))) {
     data <- dplyr::summarise(
       data,
       "{variable_col}" := list(unique(.data[[variable_col]])),
@@ -151,28 +151,78 @@ collapse_acs_variables <- function(data,
       ),
       .groups = "drop"
     )
-  } else {
-    data <- dplyr::summarise(
-      data,
-      "{variable_col}" := list(unique(.data[[variable_col]])),
-      # FIXME: This could be a weighted mean if some valid weight is included in
-      # the dataset. As is, these values may be invalid if the relative size of
-      # the collapsed groups is very different.
-      "{value_col}" := round(
-        mean(.data[[value_col]], na.rm = na.rm),
-        digits = digits
-      ),
-      dplyr::across(
-        -any_of(
-          c(name_col, label_col, variable_col, value_col, moe_col)
-        ),
-        function(x) {
-          list(unique(x))
-        }
-      ),
-      .groups = "drop"
-    )
+
+    return(data)
   }
 
-  data
+  dplyr::summarise(
+    data,
+    "{variable_col}" := list(unique(.data[[variable_col]])),
+    "{value_col}" := round(
+      sum(.data[[value_col]], na.rm = na.rm),
+      digits = digits
+    ),
+    "{moe_col}" := round(
+      tidycensus::moe_sum(
+        .data[[moe_col]],
+        estimate = .data[[value_col]],
+        na.rm = na.rm
+      ),
+      digits = digits
+    ),
+    "{perc_cols[[1]]}" := round(
+      sum(.data[[perc_cols[[1]]]], na.rm = na.rm),
+      digits = digits
+    ),
+    "{perc_cols[[2]]}" := round(
+      tidycensus::moe_sum(
+        .data[[perc_cols[[2]]]],
+        estimate = .data[[perc_cols[[1]]]],
+        na.rm = na.rm
+      ),
+      digits = digits
+    ),
+    dplyr::across(
+      -any_of(
+        c(name_col, label_col, variable_col, value_col, moe_col, perc_cols)
+      ),
+      function(x) {
+        list(unique(x))
+      }
+    ),
+    .groups = "drop"
+  )
+}
+
+
+#' @noRd
+summarise_acs_intensive <- function(
+    data,
+    name_col = "NAME",
+    variable_col = "variable",
+    label_col = "label",
+    value_col = "estimate",
+    moe_col = "moe",
+    na.rm = TRUE,
+    digits = 2) {
+  dplyr::summarise(
+    data,
+    "{variable_col}" := list(unique(.data[[variable_col]])),
+    # FIXME: This could be a weighted mean if some valid weight is included in
+    # the dataset. As is, these values may be invalid if the relative size of
+    # the collapsed groups is very different.
+    "{value_col}" := round(
+      mean(.data[[value_col]], na.rm = na.rm),
+      digits = digits
+    ),
+    dplyr::across(
+      -any_of(
+        c(name_col, label_col, variable_col, value_col, moe_col)
+      ),
+      function(x) {
+        list(unique(x))
+      }
+    ),
+    .groups = "drop"
+  )
 }
