@@ -119,8 +119,8 @@ tenure_tbl_data |>
     table = tenure_tbl_data$table_id
   ) |>
   tab_header(
-    unique(tenure_tbl_data$table_title),
-    "Baltimore City, Maryland"
+    title = unique(tenure_tbl_data$table_title),
+    subtitle = "Baltimore City, Maryland"
   )
 ```
 
