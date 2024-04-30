@@ -13,6 +13,7 @@ join_acs_percent(
   denominator_prefix = "denominator_",
   value_col = "estimate",
   moe_col = "moe",
+  perc = TRUE,
   perc_prefix = "perc",
   perc_sep = "_",
   na_matches = "never",
@@ -51,6 +52,9 @@ metadata. Defaults to \code{NULL}}
 \item{value_col}{Value column name}
 
 \item{moe_col}{Margin of error column name}
+
+\item{perc}{If \code{FALSE}, return data joined with \code{\link[=join_acs_denominator]{join_acs_denominator()}} and
+skip joining percent values. Defaults to \code{TRUE}.}
 
 \item{perc_prefix}{Prefix string for percent value columns.}
 

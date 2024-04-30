@@ -20,14 +20,20 @@ label_acs_table_metadata(
   data,
   survey = "acs5",
   year = 2022,
-  variable_col = "variable"
+  variable_col = "variable",
+  table_id_col = "table_id",
+  call = caller_env()
 )
 
 label_acs_column_metadata(
   data,
   survey = "acs5",
   year = 2022,
-  variable_col = "variable"
+  variable_col = "variable",
+  column_id_col = "column_id",
+  column_title_col = "column_title",
+  table_id_col = "table_id",
+  call = caller_env()
 )
 }
 \arguments{
@@ -46,6 +52,9 @@ estimate.}
 'GEOID'.}
 
 \item{variable_col}{Variable column name. Defaults to "variable"}
+
+\item{column_id_col}{Column ID column name from Census Reporter metadata.
+Defaults to "column_id"}
 }
 \description{
 Label American Community Survey data using table and column metadata from
