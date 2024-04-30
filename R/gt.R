@@ -30,10 +30,10 @@ fmt_acs_values <- function(data,
                            currency_value = FALSE,
                            ...,
                            .cols_fn = starts_with) {
-  perc_cols <- acs_perc_cols(value_col, moe_col, perc_prefix, perc_sep)
+  perc_cols <- .acs_perc_cols(value_col, moe_col, perc_prefix, perc_sep)
 
   if (!is.null(perc_cols) &&
-    ncol(dplyr::select(data[["_data"]], .cols_fn(perc_cols))) == 0) {
+      ncol(dplyr::select(data[["_data"]], .cols_fn(perc_cols))) == 0) {
     perc_cols <- NULL
   }
 
@@ -62,6 +62,8 @@ fmt_acs_values <- function(data,
     }
   }
 
+  # If "perc_" prefixed value is passed to value_col, set perc_cols to value_col
+  # (and optionally moe_col)
   # FIXME: This is not a very standard or flexible pattern
   if (str_detect(value_col, paste0("^", perc_prefix))) {
     perc_cols <- perc_cols %||% c(value_col, moe_col %||% value_col)
@@ -75,6 +77,7 @@ fmt_acs_values <- function(data,
     )
   }
 
+  # Blank value_col if it starts with a "perc_" prefix
   if (str_detect(value_col, paste0("^", perc_prefix))) {
     perc_cols <- NULL
   }

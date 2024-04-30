@@ -93,11 +93,6 @@ gt_acs <- function(data,
 
   est_cols <- est_cols %||% c(value_col, moe_col)
 
-  if (perc) {
-    perc_cols <- perc_cols %||%
-      acs_perc_cols(value_col, moe_col, perc_prefix, perc_sep, perc)
-  }
-
   if (identical(column_title_label, "from_table")) {
     metadata <- get_acs_metadata(survey, year, table = table)
 
@@ -131,6 +126,11 @@ gt_acs <- function(data,
   )
 
   if (!is_null(combined_spanner)) {
+    # TODO: perc argument is unused as of 2024-04-29
+    # Alternate implementation used by acs_perc_cols broke the table functions
+    perc_cols <- perc_cols %||%
+      .acs_perc_cols(value_col, moe_col, perc_prefix, perc_sep)
+
     gt_object <- gt::tab_spanner(
       gt_object,
       label = combined_spanner,

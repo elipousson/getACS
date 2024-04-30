@@ -33,10 +33,17 @@ cols_acs_label <- function(data,
                            column_title_label = NULL,
                            .col_fn = starts_with,
                            env = NULL) {
-  perc_cols <- acs_perc_cols(value_col, moe_col, perc_prefix, perc_sep, perc)
+  # TODO: perc argument is ignored as of 2024-04-29 refactoring to address
+  # regression
+  perc_cols <- .acs_perc_cols(
+    value_col = value_col,
+    moe_col = moe_col,
+    perc_prefix = perc_prefix,
+    perc_sep = perc_sep)
 
   perc_value_col <- NULL
   perc_moe_col <- NULL
+
   if (!is.null(perc_cols)) {
     perc_value_col <- perc_cols[[1]]
     perc_moe_col <- perc_cols[[2]]
