@@ -1,3 +1,9 @@
+# getACS (development)
+
+* Add `{tibble}` to Imports and add development version of `{tigris}` to Remotes (at least until [this PR](https://github.com/walkerke/tigris/pull/173) is merged).
+* Add `join_acs_percent_parent()` function.
+* Export `join_acs_denominator()` function.
+
 # getACS 0.1.1.9003
 
 * Set 2022 to the default year (instead of 2021) following [release of 2018-2022 5-year ACS data](https://www.census.gov/programs-surveys/acs/news/data-releases/2022/release-schedule.html) in December 2023.
