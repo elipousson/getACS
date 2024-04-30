@@ -90,7 +90,7 @@ join_tigris_geometry <- function(data = NULL,
     }
   )
 
-  tigris_data <- set_names(tigris_data, geography_data[["geography"]])
+  tigris_data <- set_names(tigris_data, geometry_params[["geography"]])
 
   # FIXME: Add list_rbind to utilities
   tigris_data <- purrr::list_rbind(
