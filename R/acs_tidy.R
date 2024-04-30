@@ -1,3 +1,18 @@
+#' Legacy version of acs_perc_cols
+#' @noRd
+.acs_perc_cols <- function(value_col = "estimate",
+                           moe_col = "moe",
+                           perc_prefix = "perc",
+                           perc_sep = "_",
+                           ...) {
+  # FIXME: I'm not so sure about this as a design pattern
+  if (is.null(perc_prefix)) {
+    return(NULL)
+  }
+
+  paste0(perc_prefix, perc_sep, c(value_col, moe_col))
+}
+
 #' Create `perc` value and moe column names with prefix and separator
 #'
 #' @param perc_prefix Prefix string for percent value columns.
@@ -75,9 +90,17 @@ pivot_acs_wider <- function(data,
 
   tidyr::pivot_wider(
     data,
-    id_cols = id_cols,
+    id_cols = if (!is.null(id_cols)) {
+      all_of(id_cols)
+    } else {
+      NULL
+    }, # all_of(id_cols),
     id_expand = id_expand,
-    names_from = names_from,
+    names_from = if (!is.null(names_from)) {
+      all_of(names_from)
+    } else {
+      NULL
+    }, # names_from,
     names_sep = names_sep,
     names_glue = names_glue,
     names_vary = names_vary,
