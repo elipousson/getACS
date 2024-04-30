@@ -151,7 +151,9 @@ label_acs_metadata <- function(data,
 label_acs_table_metadata <- function(data,
                                      survey = "acs5",
                                      year = 2022,
-                                     variable_col = "variable") {
+                                     variable_col = "variable",
+                                     table_id_col = "table_id",
+                                     call = caller_env()) {
   stopifnot(
     has_name(data, variable_col)
   )
@@ -160,19 +162,23 @@ label_acs_table_metadata <- function(data,
 
   data <- dplyr::mutate(
     data,
-    table_id = str_table_id(.data[[variable_col]]),
+    "{table_id_col}" := str_table_id(.data[[variable_col]]),
     .after = all_of(variable_col)
   )
 
-  data <- dplyr::left_join(data, table_metadata, by = dplyr::join_by(table_id))
+  data <- dplyr::left_join(
+    data,
+    table_metadata,
+    by = dplyr::join_by({{ table_id_col }})
+  )
 
-  if (is_character(data[["table_id"]])) {
+  if (is_character(data[[table_id_col]])) {
     has_race_iteration <- any(
-      stringr::str_detect(data[["table_id"]], "[:alpha:]$")
+      stringr::str_detect(data[[table_id_col]], "[:alpha:]$")
     )
 
     if (has_race_iteration) {
-      data <- join_acs_race_iteration(data)
+      data <- join_acs_race_iteration(data, table_id_col = table_id_col, call = call)
     }
   }
 
@@ -187,13 +193,13 @@ str_table_id <- function(variable) {
 
 #' @noRd
 #' @importFrom stringr str_extract str_replace_all
-join_acs_race_iteration <- function(data) {
-  stopifnot(
-    has_name(data, "table_id")
-  )
+join_acs_race_iteration <- function(data,
+                                    table_id_col = "table_id",
+                                    call = caller_env()) {
+  check_has_name(data, nm = table_id_col, call = call)
 
   data[["race_iteration_code"]] <- stringr::str_extract(
-    data[["table_id"]], "[:alpha:]$"
+    data[[table_id_col]], "[:alpha:]$"
   )
 
   data[["race_iteration_group"]] <- stringr::str_replace_all(
@@ -215,29 +221,31 @@ join_acs_race_iteration <- function(data) {
 label_acs_column_metadata <- function(data,
                                       survey = "acs5",
                                       year = 2022,
-                                      variable_col = "variable") {
+                                      variable_col = "variable",
+                                      column_id_col = "column_id",
+                                      column_title_col = "column_title",
+                                      table_id_col = "table_id",
+                                      call = caller_env()) {
   column_metadata <- get_acs_metadata(survey, year, metadata = "column")
 
-  stopifnot(
-    has_name(data, variable_col)
-  )
+  check_has_name(data, nm = variable_col, call = call)
 
   data <- dplyr::mutate(
     data,
-    table_id = str_table_id(.data[[variable_col]]),
-    column_id = stringr::str_remove(.data[[variable_col]], "_"),
+    "{table_id_col}" := str_table_id(.data[[variable_col]]),
+    "{column_id_col}" := stringr::str_remove(.data[[variable_col]], "_"),
     .after = all_of(variable_col)
   )
 
   data <- dplyr::left_join(
     data,
     column_metadata,
-    by = c("table_id", "column_id")
+    by = c(table_id_col, column_id_col)
   )
 
   # Strip trailing ":" from "Total:"
   dplyr::mutate(
     data,
-    column_title = stringr::str_remove(column_title, ":$")
+    "{column_title_col}" := stringr::str_remove(.data[[column_title_col]], ":$")
   )
 }
