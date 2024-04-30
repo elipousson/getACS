@@ -30,7 +30,7 @@ This package includes:
 -   Functions that extend `tidycensus::get_acs()` to support multiple tables, geographies, or years
 -   Functions for creating formatted tables from ACS data using the [gt package](https://gt.rstudio.com/)
 
-Note that I don't love the current name for this package and expect to rename it as soon as I think of a better one.
+As of April 2024, this package uses a development version of `{tigris}`, available at <https://github.com/elipousson/tigris>.
 
 ## Installation
 
