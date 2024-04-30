@@ -367,6 +367,15 @@ aes_acs_col <- function(
 #'   Optional if `mapping` is supplied.
 #' @inheritParams geom_acs_errorbar
 #' @inheritParams ggplot2::geom_col
+#' @inheritParams acs_perc_cols
+#' @param scale_value If `TRUE` (default), apply [scale_x_acs()] or
+#'   [scale_y_acs()] function to geom.
+#' @param scale_params Parameters passed to [scale_x_acs()] or [scale_y_acs()]
+#'   function if `scale_value = TRUE`. Defaults to `list()`.
+#' @param errorbar_value If `TRUE` (default), apply [geom_acs_errorbar()]
+#'   function to geom.
+#' @param errorbar_params Parameters passed to [geom_acs_errorbar()] if
+#'   `errorbar_value = TRUE`. Defaults to `list(linewidth = 0.5, height = 0.35)`
 #' @export
 #' @keywords ggplot2
 geom_acs_col <- function(

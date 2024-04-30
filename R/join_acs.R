@@ -11,8 +11,6 @@
 #' @param perc If `FALSE`, return data joined with [join_acs_denominator()] and
 #'   skip joining percent values. Defaults to `TRUE`.
 #' @inheritParams acs_perc_cols
-#' @inheritParams base::round
-#' @inheritParams dplyr::left_join
 #' @seealso [tidycensus::moe_prop()], [camiller::calc_shares()]
 #' @export
 #' @importFrom dplyr filter select left_join mutate join_by
@@ -112,11 +110,14 @@ join_acs_percent_parent <- function(data,
 #'   'GEOID'.
 #' @param column_id_col Column ID column name from Census Reporter metadata.
 #'   Defaults to "column_id"
+#' @param column_title_col Column title column name. Defaults to "column_title".
 #' @param denominator_col Denominator column ID name from Census Reporter
 #'   metadata. Defaults to `NULL`
 #' @param denominator_prefix Prefix to use for denominator column names.
 #' @param value_col Value column name
 #' @param moe_col Margin of error column name
+#' @inheritParams base::round
+#' @inheritParams dplyr::left_join
 #' @export
 join_acs_denominator <- function(data,
                                  geoid_col = "GEOID",

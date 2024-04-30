@@ -32,10 +32,25 @@ join_acs_denominator(
 \item{column_id_col}{Column ID column name from Census Reporter metadata.
 Defaults to "column_id"}
 
+\item{column_title_col}{Column title column name. Defaults to "column_title".}
+
 \item{denominator_col}{Denominator column ID name from Census Reporter
 metadata. Defaults to \code{NULL}}
 
 \item{denominator_prefix}{Prefix to use for denominator column names.}
+
+\item{na_matches}{Should two \code{NA} or two \code{NaN} values match?
+\itemize{
+\item \code{"na"}, the default, treats two \code{NA} or two \code{NaN} values as equal, like
+\code{\%in\%}, \code{\link[=match]{match()}}, and \code{\link[=merge]{merge()}}.
+\item \code{"never"} treats two \code{NA} or two \code{NaN} values as different, and will
+never match them together or to any other values. This is similar to joins
+for database sources and to \code{base::merge(incomparables = NA)}.
+}}
+
+\item{digits}{integer indicating the number of decimal places
+    (\code{round}) or significant digits (\code{signif}) to be used.
+    For \code{round}, negative values are allowed (see \sQuote{Details}).}
 }
 \description{
 Note that this function and the related \code{\link[=join_acs_percent]{join_acs_percent()}} function depends

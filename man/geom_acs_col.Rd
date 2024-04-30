@@ -55,10 +55,29 @@ to the paired geom/stat.}
 \item{x, y, fill}{String values with column names mapped to aesthetics.
 Optional if \code{mapping} is supplied.}
 
+\item{perc_prefix}{Prefix string for percent value columns.}
+
+\item{perc_sep}{Separator string between \code{perc_prefix} and the \code{value_col}
+and \code{moe_col} strings.}
+
+\item{perc}{If \code{TRUE}, return percent value and margin of error columns.}
+
 \item{orientation}{The orientation of the layer. The default (\code{NA})
 automatically determines the orientation from the aesthetic mapping. In the
 rare event that this fails it can be given explicitly by setting \code{orientation}
 to either \code{"x"} or \code{"y"}. See the \emph{Orientation} section for more detail.}
+
+\item{errorbar_value}{If \code{TRUE} (default), apply \code{\link[=geom_acs_errorbar]{geom_acs_errorbar()}}
+function to geom.}
+
+\item{errorbar_params}{Parameters passed to \code{\link[=geom_acs_errorbar]{geom_acs_errorbar()}} if
+\code{errorbar_value = TRUE}. Defaults to \code{list(linewidth = 0.5, height = 0.35)}}
+
+\item{scale_value}{If \code{TRUE} (default), apply \code{\link[=scale_x_acs]{scale_x_acs()}} or
+\code{\link[=scale_y_acs]{scale_y_acs()}} function to geom.}
+
+\item{scale_params}{Parameters passed to \code{\link[=scale_x_acs]{scale_x_acs()}} or \code{\link[=scale_y_acs]{scale_y_acs()}}
+function if \code{scale_value = TRUE}. Defaults to \code{list()}.}
 }
 \description{
 Create a bar chart with \code{\link[ggplot2:geom_bar]{ggplot2::geom_col()}} and apply an errorbar (using
