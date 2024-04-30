@@ -28,10 +28,11 @@ Imports:
     sf,
     stats,
     stringr,
+    tibble,
     tidycensus,
     tidyr,
     tidyselect,
-    tigris,
+    tigris (>= 2.1.1),
     vctrs,
     withr
 Suggests: 
@@ -46,3 +47,5 @@ Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.1
+Remotes:  
+    elipousson/tigris
