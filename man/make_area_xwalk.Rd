@@ -57,8 +57,8 @@ required to create a crosswalk using \code{\link[=make_block_xwalk]{make_block_x
 be state name or state abbreviation.}
 
 \item{county}{The three-digit FIPS code (string) of the county you'd like to
-subset for, or a vector of FIPS codes if you desire multiple counties.
-Can also be a county name or vector of names.}
+subset for, or a vector of FIPS codes if you desire multiple counties. Can
+also be a county name or vector of names.}
 
 \item{year}{the data year; defaults to 2022}
 
