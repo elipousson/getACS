@@ -205,6 +205,7 @@ summarise_acs_extensive <- function(
 #' Summarise ACS data assuming intensive variables
 #'
 #' @importFrom dplyr summarise across
+#' @noRd
 summarise_acs_intensive <- function(
     data,
     name_col = "NAME",
