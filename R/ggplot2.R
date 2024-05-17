@@ -318,8 +318,8 @@ geom_acs_errorbarv <- function(mapping = NULL,
       )
     ),
     data = data,
-    na.rm = na.rm,
-    ...
+    ...,
+    na.rm = na.rm
   )
 }
 
@@ -393,7 +393,7 @@ geom_acs_col <- function(
     perc = TRUE,
     orientation = NA,
     errorbar_value = TRUE,
-    errorbar_params = list(linewidth = 0.5, height = 0.35),
+    errorbar_params = list(linewidth = 0.5, height = 0.35, position = "identity"),
     scale_value = TRUE,
     scale_params = list()) {
   y_orientation <- identical(orientation, "y")
@@ -409,6 +409,8 @@ geom_acs_col <- function(
       orientation = orientation,
       !!!errorbar_params
     )
+  } else if (is_false(errorbar_value)) {
+    errorbar_value <- NULL
   }
 
   if (is_true(scale_value)) {
@@ -422,6 +424,8 @@ geom_acs_col <- function(
       !!!scale_params,
       perc = perc
     )
+  } else if (is_false(scale_value)) {
+    scale_value <- NULL
   }
 
   cols <- acs_perc_cols(
@@ -435,7 +439,6 @@ geom_acs_col <- function(
   if (perc && is_string(x) && x != cols[["value_col"]]) {
     x <- cols[["value_col"]]
   }
-
 
   if (is.null(mapping)) {
     if (y_orientation) {
