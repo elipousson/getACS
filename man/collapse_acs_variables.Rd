@@ -14,7 +14,9 @@ collapse_acs_variables(
   value_col = "estimate",
   moe_col = "moe",
   na.rm = TRUE,
-  digits = 2
+  digits = 2,
+  .add = FALSE,
+  extensive = TRUE
 )
 }
 \arguments{
@@ -39,12 +41,24 @@ column added to the returned data frame.}
 \item{na.rm}{Passed to \code{\link[=sum]{sum()}}, Default: \code{TRUE}}
 
 \item{digits}{Passed to \code{\link[=round]{round()}}, Default: 2}
+
+\item{.add}{When \code{FALSE}, the default, \code{group_by()} will
+override existing groups. To add to the existing groups, use
+\code{.add = TRUE}.
+
+This argument was previously called \code{add}, but that prevented
+creating a new grouping variable called \code{add}, and conflicts with
+our naming conventions.}
+
+\item{extensive}{Must be \code{TRUE}. If \code{FALSE}, summarize collapsed variables
+using a weighted mean. This is a planned feature.}
 }
 \description{
 \code{\link[=collapse_acs_variables]{collapse_acs_variables()}} uses \code{\link[forcats:fct_collapse]{forcats::fct_collapse()}} to aggregated
 variables while creating a new label column. Other variables are retained in
 list columns of unique values. The aggregated values for \code{perc_moe} may not
-be accurate after transformation with this function.
+be accurate after transformation with this function. To group by additional
+variables, passed a grouped data frame to data and set \code{.add = TRUE}.
 }
 \examples{
 \dontrun{

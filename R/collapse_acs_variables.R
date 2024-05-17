@@ -3,7 +3,8 @@
 #' [collapse_acs_variables()] uses [forcats::fct_collapse()] to aggregated
 #' variables while creating a new label column. Other variables are retained in
 #' list columns of unique values. The aggregated values for `perc_moe` may not
-#' be accurate after transformation with this function.
+#' be accurate after transformation with this function. To group by additional
+#' variables, passed a grouped data frame to data and set `.add = TRUE`.
 #'
 #' @param data ACS data frame input.
 #' @inheritParams forcats::fct_collapse
@@ -15,6 +16,8 @@
 #'   "estimate" and "moe").
 #' @param na.rm Passed to [sum()], Default: `TRUE`
 #' @param digits Passed to [round()], Default: 2
+#' @param extensive Must be `TRUE`. If `FALSE`, summarize collapsed variables
+#'   using a weighted mean. This is a planned feature.
 #' @examples
 #' \dontrun{
 #' if (interactive()) {
@@ -40,9 +43,9 @@
 #' @seealso
 #'  [forcats::fct_collapse()], [camiller::add_grps()]
 #' @rdname collapse_acs_variables
+#' @inheritParams dplyr::group_by
 #' @export
-#' @importFrom dplyr group_by mutate all_of summarise across
-#' @importFrom tidycensus moe_sum
+#' @importFrom dplyr group_by mutate all_of
 collapse_acs_variables <- function(data,
                                    ...,
                                    other_level = NULL,
@@ -52,13 +55,15 @@ collapse_acs_variables <- function(data,
                                    value_col = "estimate",
                                    moe_col = "moe",
                                    na.rm = TRUE,
-                                   digits = 2) {
+                                   digits = 2,
+                                   .add = FALSE,
+                                   extensive = TRUE) {
   check_has_name(data, c(variable_col, value_col, moe_col))
-
   check_installed("forcats")
 
   if (has_name(data, name_col)) {
-    data <- dplyr::group_by(data, .data[[name_col]])
+    check_string(name_col, allow_empty = FALSE)
+    data <- dplyr::group_by(data, .data[[name_col]], .add = .add)
   }
 
   data <- dplyr::mutate(
@@ -72,14 +77,12 @@ collapse_acs_variables <- function(data,
     .after = all_of(variable_col)
   )
 
-  if (has_name(data, name_col)) {
-    data <- dplyr::group_by(data, .data[[name_col]], .data[[label_col]])
-  } else {
-    data <- dplyr::group_by(data, .data[[label_col]])
-  }
+  data <- dplyr::group_by(data, .data[[label_col]], .add = TRUE)
 
   # TODO: Expose extensive parameter after implementing weighted mean summary
-  extensive <- TRUE
+  stopifnot(
+    is_true(extensive)
+  )
 
   if (!extensive) {
     data <- summarise_acs_intensive(
@@ -108,6 +111,10 @@ collapse_acs_variables <- function(data,
   )
 }
 
+#' Summarise ACS data assuming extensive variables
+#'
+#' @importFrom dplyr summarise across
+#' @importFrom tidycensus moe_sum
 #' @noRd
 summarise_acs_extensive <- function(
     data,
@@ -195,7 +202,9 @@ summarise_acs_extensive <- function(
 }
 
 
-#' @noRd
+#' Summarise ACS data assuming intensive variables
+#'
+#' @importFrom dplyr summarise across
 summarise_acs_intensive <- function(
     data,
     name_col = "NAME",
