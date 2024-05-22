@@ -54,23 +54,39 @@ filter_acs <- function(data,
                        vars = NULL,
                        drop_vars = NULL,
                        geography = NULL,
-                       variable_col = "variable") {
+                       variable_col = "variable",
+                       column_title_col = "column_title",
+                       table_id_col = "table_id",
+                       geography_col = "geography",
+                       require_geography = FALSE,
+                       require_table = FALSE) {
   if (!is_null(geography)) {
     stopifnot(
-      has_name(data, "geography")
+      has_name(data, geography_col)
     )
 
-    data <- data[data[["geography"]] %in% geography, ]
+    if (require_geography) {
+      check_acs_id(data, id = geography, id_col = geography_col)
+    }
+
+    data <- dplyr::filter(
+      data,
+      .data[[geography_col]] %in% geography
+    )
   }
 
   if (!is_null(table)) {
     stopifnot(
-      has_name(data, "table_id")
+      has_name(data, table_id_col)
     )
+
+    if (require_table) {
+      check_acs_id(data, id = table, id_col = table_id_col)
+    }
 
     data <- dplyr::filter(
       data,
-      table_id %in% table
+      .data[[table_id_col]] %in% table
     )
   }
 
@@ -114,14 +130,55 @@ filter_acs <- function(data,
 
   if (!is_null(column)) {
     stopifnot(
-      has_name(data, "column_title")
+      has_name(data, column_title_col)
     )
 
     data <- dplyr::filter(
       data,
-      column_title %in% column
+      .data[[column_title_col]] %in% column
     )
   }
 
   dplyr::filter(data, ...)
+}
+
+#' Check for presence of ACS ID values
+#'
+check_acs_id <- function(data,
+                         id = NULL,
+                         id_col = "table_id",
+                         allow_any = FALSE,
+                         allow_null = FALSE,
+                         id_arg = caller_arg(id),
+                         arg = caller_arg(data),
+                         call = caller_env()) {
+  check_character(id, allow_null = allow_null, call = call)
+
+  if (allow_null && is.null(id)) {
+    return(invisible(NULL))
+  }
+
+  check_data_frame(data, arg = arg, call = call)
+  check_has_name(data, id_col, arg = arg, call = call)
+
+  has_acs_id <- id %in% data[[id_col]]
+
+  if (all(has_acs_id) || (allow_any && any(has_acs_id))) {
+    return(invisible(NULL))
+  }
+
+  message <- "must have all"
+  if (allow_any) {
+    message <- "must have any"
+  }
+
+  missing_id <- id[!has_acs_id]
+
+  cli_abort(
+    c(
+      "{.arg {arg}} {message} of the required {.col {id_col}} value{?s}: {id}",
+      "i" = "{.arg {arg}} is missing: {.str {missing_id}}"
+    ),
+    call = call
+  )
 }

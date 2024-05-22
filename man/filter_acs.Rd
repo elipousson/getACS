@@ -13,7 +13,12 @@ filter_acs(
   vars = NULL,
   drop_vars = NULL,
   geography = NULL,
-  variable_col = "variable"
+  variable_col = "variable",
+  column_title_col = "column_title",
+  table_id_col = "table_id",
+  geography_col = "geography",
+  require_geography = FALSE,
+  require_table = FALSE
 )
 }
 \arguments{
