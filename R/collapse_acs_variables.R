@@ -15,9 +15,13 @@
 #' @param value_col,moe_col Value and margin of error column names (default to
 #'   "estimate" and "moe").
 #' @param na.rm Passed to [sum()], Default: `TRUE`
+#' @param na_zero If `TRUE`, and the collapsed sum of a MOE is 0, replaced MOE
+#'   value with `NA`. This is beneficial for percent estimates with the margin
+#'   of error falls below 1% and is rounded to 0 with the default number of
+#'   digits.
 #' @param digits Passed to [round()], Default: 2
-#' @param extensive Must be `TRUE`. If `FALSE`, summarize collapsed variables
-#'   using a weighted mean. This is a planned feature.
+#' @param extensive Must be `TRUE`. If `FALSE` (not currently supported),
+#'   summarize collapsed variables using a weighted mean.
 #' @examples
 #' \dontrun{
 #' if (interactive()) {
@@ -55,6 +59,7 @@ collapse_acs_variables <- function(data,
                                    value_col = "estimate",
                                    moe_col = "moe",
                                    na.rm = TRUE,
+                                   na_zero = TRUE,
                                    digits = 2,
                                    .add = FALSE,
                                    extensive = TRUE) {
@@ -107,7 +112,27 @@ collapse_acs_variables <- function(data,
     value_col = value_col,
     moe_col = moe_col,
     na.rm = na.rm,
+    na_zero = na_zero,
     digits = digits
+  )
+}
+
+moe_sum_safe <- function(moe,
+                         estimate,
+                         na.rm = TRUE,
+                         na_zero = TRUE,
+                         digits = 2) {
+  dplyr::if_else(
+    all(is.na(moe)) | (na_zero & sum(moe) == 0),
+    NA_real_,
+    round(
+      tidycensus::moe_sum(
+        moe,
+        estimate = estimate,
+        na.rm = na.rm
+      ),
+      digits = digits
+    )
   )
 }
 
@@ -124,6 +149,7 @@ summarise_acs_extensive <- function(
     value_col = "estimate",
     moe_col = "moe",
     na.rm = TRUE,
+    na_zero = TRUE,
     digits = 2) {
   perc_cols <- acs_perc_cols(
     value_col = value_col,
@@ -140,12 +166,11 @@ summarise_acs_extensive <- function(
         sum(.data[[value_col]], na.rm = na.rm),
         digits = digits
       ),
-      "{moe_col}" := round(
-        tidycensus::moe_sum(
-          .data[[moe_col]],
-          estimate = .data[[value_col]],
-          na.rm = na.rm
-        ),
+      "{moe_col}" := moe_sum_safe(
+        .data[[moe_col]],
+        .data[[value_col]],
+        na.rm = na.rm,
+        na_zero = na_zero,
         digits = digits
       ),
       dplyr::across(
@@ -169,24 +194,22 @@ summarise_acs_extensive <- function(
       sum(.data[[value_col]], na.rm = na.rm),
       digits = digits
     ),
-    "{moe_col}" := round(
-      tidycensus::moe_sum(
-        .data[[moe_col]],
-        estimate = .data[[value_col]],
-        na.rm = na.rm
-      ),
+    "{moe_col}" := moe_sum_safe(
+      .data[[moe_col]],
+      .data[[value_col]],
+      na.rm = na.rm,
+      na_zero = na_zero,
       digits = digits
     ),
     "{perc_cols[[1]]}" := round(
       sum(.data[[perc_cols[[1]]]], na.rm = na.rm),
       digits = digits
     ),
-    "{perc_cols[[2]]}" := round(
-      tidycensus::moe_sum(
-        .data[[perc_cols[[2]]]],
-        estimate = .data[[perc_cols[[1]]]],
-        na.rm = na.rm
-      ),
+    "{perc_cols[[2]]}" := moe_sum_safe(
+      .data[[perc_cols[[2]]]],
+      .data[[perc_cols[[1]]]],
+      na.rm = na.rm,
+      na_zero = na_zero,
       digits = digits
     ),
     dplyr::across(

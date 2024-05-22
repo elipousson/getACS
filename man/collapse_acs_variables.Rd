@@ -14,6 +14,7 @@ collapse_acs_variables(
   value_col = "estimate",
   moe_col = "moe",
   na.rm = TRUE,
+  na_zero = TRUE,
   digits = 2,
   .add = FALSE,
   extensive = TRUE
@@ -40,6 +41,11 @@ column added to the returned data frame.}
 
 \item{na.rm}{Passed to \code{\link[=sum]{sum()}}, Default: \code{TRUE}}
 
+\item{na_zero}{If \code{TRUE}, and the collapsed sum of a MOE is 0, replaced MOE
+value with \code{NA}. This is beneficial for percent estimates with the margin
+of error falls below 1\% and is rounded to 0 with the default number of
+digits.}
+
 \item{digits}{Passed to \code{\link[=round]{round()}}, Default: 2}
 
 \item{.add}{When \code{FALSE}, the default, \code{group_by()} will
@@ -50,8 +56,8 @@ This argument was previously called \code{add}, but that prevented
 creating a new grouping variable called \code{add}, and conflicts with
 our naming conventions.}
 
-\item{extensive}{Must be \code{TRUE}. If \code{FALSE}, summarize collapsed variables
-using a weighted mean. This is a planned feature.}
+\item{extensive}{Must be \code{TRUE}. If \code{FALSE} (not currently supported),
+summarize collapsed variables using a weighted mean.}
 }
 \description{
 \code{\link[=collapse_acs_variables]{collapse_acs_variables()}} uses \code{\link[forcats:fct_collapse]{forcats::fct_collapse()}} to aggregated
