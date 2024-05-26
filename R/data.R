@@ -62,3 +62,19 @@
 #' }
 #' @details <https://docs.google.com/spreadsheets/d/1YX3NBDkkoDXHs88KDfPS_QoS9-1j_C_q8UAyjPznfzA/edit?usp=sharing>
 "jam_values"
+
+#' U.S. States Reference Data
+#'
+#' A reference table of state names, abbreviations, regions, and divisions.
+#'
+#' @format A data frame with 56 rows and 7 variables:
+#' \describe{
+#'   \item{`state`}{State name}
+#'   \item{`state_abb`}{State USPS abbreviation}
+#'   \item{`STATE_GEOID`}{State GeoID}
+#'   \item{`division`}{Census Division name}
+#'   \item{`DIVISION_GEOID`}{Census Division GeoID}
+#'   \item{`region`}{Census Region name}
+#'   \item{`REGION_GEOID`}{Census Region GeoID}
+#'}
+"usa_states"
