@@ -4,7 +4,8 @@ test_that("get_acs_tables works", {
     county = "Baltimore city",
     state = "MD",
     table = c("B01003", "B19013"),
-    quiet = TRUE
+    quiet = TRUE,
+    reliability = TRUE
   )
 
   expect_s3_class(
@@ -23,7 +24,7 @@ test_that("get_acs_tables works", {
       "GEOID", "NAME",
       "variable", "column_id",
       "table_id", "estimate",
-      "moe", "perc_estimate",
+      "moe", "cv", "reliability", "perc_estimate",
       "perc_moe", "geography", "county", "state", "table_title",
       "simple_table_title", "subject_area",
       "universe", "denominator_column_id",
@@ -56,6 +57,15 @@ test_that("get_acs_tables works", {
     acs_geo_data[["county"]],
     c("Baltimore city", NA_character_)
   )
+
+  # FIXME: Figure out how to get this test working
+  # acs_multistate_data <- get_acs_geographies(
+  #   geography = c("county", "state"),
+  #   # county = "Baltimore city",
+  #   state = c("VT", "RI"),
+  #   table = "B01003",
+  #   quiet = TRUE
+  # )
 
   acs_ts_data <- get_acs_ts(
     geography = "state",
