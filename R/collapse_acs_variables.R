@@ -58,6 +58,8 @@ collapse_acs_variables <- function(data,
                                    label_col = "label",
                                    value_col = "estimate",
                                    moe_col = "moe",
+                                   moe_level = 90,
+                                   reliability = FALSE,
                                    na.rm = TRUE,
                                    na_zero = TRUE,
                                    digits = 2,
@@ -111,12 +113,15 @@ collapse_acs_variables <- function(data,
     label_col = label_col,
     value_col = value_col,
     moe_col = moe_col,
+    moe_level = moe_level,
+    reliability = reliability,
     na.rm = na.rm,
     na_zero = na_zero,
     digits = digits
   )
 }
 
+#' @noRd
 moe_sum_safe <- function(moe,
                          estimate,
                          na.rm = TRUE,
@@ -148,6 +153,8 @@ summarise_acs_extensive <- function(
     label_col = "label",
     value_col = "estimate",
     moe_col = "moe",
+    moe_level = 90,
+    reliability = FALSE,
     na.rm = TRUE,
     na_zero = TRUE,
     digits = 2) {
@@ -187,7 +194,7 @@ summarise_acs_extensive <- function(
     return(data)
   }
 
-  dplyr::summarise(
+  data <- dplyr::summarise(
     data,
     "{variable_col}" := list(unique(.data[[variable_col]])),
     "{value_col}" := round(
@@ -222,6 +229,17 @@ summarise_acs_extensive <- function(
     ),
     .groups = "drop"
   )
+
+  if (reliability) {
+    data <- data |>
+      assign_acs_reliability(
+        value_col = value_col,
+        moe_col = moe_col,
+        moe_level = moe_level
+      )
+  }
+
+  data
 }
 
 

@@ -13,6 +13,8 @@ collapse_acs_variables(
   label_col = "label",
   value_col = "estimate",
   moe_col = "moe",
+  moe_level = 90,
+  reliability = FALSE,
   na.rm = TRUE,
   na_zero = TRUE,
   digits = 2,
