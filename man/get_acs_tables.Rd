@@ -13,10 +13,12 @@ get_acs_tables(
   year = 2022,
   survey = "acs5",
   variables = NULL,
+  moe_level = 90,
   ...,
   crs = NULL,
   label = TRUE,
   perc = TRUE,
+  reliability = FALSE,
   keep_geography = TRUE,
   geoid_col = "GEOID",
   quiet = FALSE,
@@ -84,6 +86,9 @@ expressed as "acs1", "acs3", and "acs5". The default selection is "acs5."}
 IDs. tidycensus automatically returns the estimate and the margin of error
 associated with the variable.}
 
+\item{moe_level}{The confidence level of the returned margin of error.  One
+of 90 (the default), 95, or 99.}
+
 \item{...}{
   Arguments passed on to \code{\link[tidycensus:get_acs]{tidycensus::get_acs}}
   \describe{
@@ -109,8 +114,6 @@ be included in your output. Usually a variable (e.g. total population) that
 you'll want to use as a denominator or comparison.}
     \item{\code{key}}{Your Census API key. Obtain one at
 \url{https://api.census.gov/data/key_signup.html}}
-    \item{\code{moe_level}}{The confidence level of the returned margin of error.  One
-of 90 (the default), 95, or 99.}
     \item{\code{show_call}}{if TRUE, display call made to Census API. This can be very
 useful in debugging and determining if error messages returned are due to
 tidycensus or the Census API. Copy to the API call into a browser and see

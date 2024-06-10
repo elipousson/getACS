@@ -135,10 +135,12 @@ get_acs_tables <- function(geography,
                            year = 2022,
                            survey = "acs5",
                            variables = NULL,
+                           moe_level = 90,
                            ...,
                            crs = NULL,
                            label = TRUE,
                            perc = TRUE,
+                           reliability = FALSE,
                            keep_geography = TRUE,
                            geoid_col = "GEOID",
                            quiet = FALSE,
@@ -156,7 +158,12 @@ get_acs_tables <- function(geography,
   variable_labels <- NULL
 
   if (is_character(variables) && is_named(variables)) {
-    variable_labels <- tibble::enframe(variables, name = "variable", value = "variable_id")
+    variable_labels <- tibble::enframe(
+      variables,
+      name = "variable",
+      value = "variable_id"
+    )
+
     variable_col <- "variable_id"
   }
 
@@ -185,6 +192,7 @@ get_acs_tables <- function(geography,
     year = year,
     survey = survey,
     variables = variables,
+    moe_level = moe_level,
     ...,
     .fn = .fn,
     .call = call
@@ -193,9 +201,16 @@ get_acs_tables <- function(geography,
   acs_data <- list_rbind(acs_list)
 
   if (keep_geography) {
+    geography_cols <- as.data.frame(
+      do.call(
+        cbind,
+        get_geography_params(geography = geography, year = year, ...)
+      )
+    )
+
     acs_data <- vctrs::vec_cbind(
       acs_data,
-      as.data.frame(do.call(cbind, get_geography_params(geography = geography, year = year, ...))),
+      geography_cols,
       .error_call = call
     )
   }
@@ -233,6 +248,8 @@ get_acs_tables <- function(geography,
     survey = survey,
     year = year,
     perc = perc,
+    reliability = reliability,
+    moe_level = moe_level,
     geoid_col = geoid_col,
     variable_col = variable_col
   )
