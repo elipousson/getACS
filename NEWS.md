@@ -3,6 +3,8 @@
 * Add `{tibble}` to Imports and add development version of `{tigris}` to Remotes (at least until [this PR](https://github.com/walkerke/tigris/pull/173) is merged).
 * Add `join_acs_percent_parent()` function.
 * Export `join_acs_denominator()` function.
+* Add `assign_acs_reliability()` function (2024-06-09).
+* Add `na_zero` argument to return `NA` as the MOE when all MOE values are 0 and collapsing groups with `collapse_acs_variables()`.
 
 # getACS 0.1.1.9003
 
