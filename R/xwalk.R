@@ -302,8 +302,8 @@ erase_input_sf <- function(input_sf,
                            call = caller_env()) {
   if (inherits_any(erase, c("sf", "sfc"))) {
     input_sf <- erase_input_geometry(
-      input_sf,
-      erase
+      input_sf = input_sf,
+      erase_sf = erase
     )
 
     return(input_sf)
@@ -488,30 +488,30 @@ use_area_xwalk <- function(data,
                            moe_col = "moe",
                            digits = 0,
                            perc = TRUE,
-                           extensive = TRUE) {
-  check_data_frame(area_xwalk)
-  check_data_frame(data)
-  check_has_name(area_xwalk, c(geoid_col, weight_col))
-  check_has_name(data, c(geoid_col, variable_col, value_col, moe_col))
+                           extensive = TRUE,
+                           reliability = FALSE,
+                           moe_level = 90) {
+  check_data_frame(area_xwalk, call = call)
+  check_data_frame(data, call = call)
+  check_has_name(area_xwalk, c(geoid_col, weight_col), call = call)
+  check_has_name(data, c(geoid_col, variable_col, value_col, moe_col), call = call)
 
   cli::cli_progress_step("Joining {.arg data} to {.arg area_xwalk}")
 
-  data <- dplyr::select(
-    data,
-    all_of(c(geoid_col, variable_col, value_col, moe_col))
-  )
-
-  area_data <- dplyr::left_join(
-    area_xwalk,
-    data,
-    by = geoid_col,
-    suffix = suffix,
-    relationship = "many-to-many"
+  area_data <- join_area_xwalk(
+    data = data,
+    area_xwalk = area_xwalk,
+    geoid_col = geoid_col,
+    variable_col = variable_col,
+    value_col = value_col,
+    moe_col = moe_col,
+    suffix = suffix
   )
 
   cli::cli_progress_step("Summarizing {.arg data} by {geography}")
 
-  if (extensive) {
+  # TODO: Add support for extensive being a logical vector/predicate
+  if (is_true(extensive)) {
     area_data <- summarise_weighted_sum(
       area_data,
       weight_col = weight_col,
@@ -521,7 +521,7 @@ use_area_xwalk <- function(data,
       name_col = name_col,
       digits = digits
     )
-  } else {
+  } else if (is_false(extensive)) {
     area_data <- summarise_weighted_mean(
       area_data,
       weight_col = weight_col,
@@ -540,13 +540,47 @@ use_area_xwalk <- function(data,
     }
   }
 
+  check_string(geography, allow_empty = FALSE, allow_null = TRUE)
+
   area_data[["geography"]] <- geography
 
   suppressMessages(
-    label_acs_metadata(area_data, perc = perc, geoid_col = name_col)
+    label_acs_metadata(
+      area_data,
+      perc = perc,
+      reliability = reliability,
+      moe_level = moe_level,
+      geoid_col = name_col
+    )
   )
 }
 
+#' Join ACS data to an area crosswalk data frame
+#' @noRd
+join_area_xwalk <- function(data,
+                            area_xwalk,
+                            geoid_col = "GEOID",
+                            suffix = c("_area", ""),
+                            variable_col = "variable",
+                            value_col = "estimate",
+                            moe_col = "moe",
+                            call = caller_env()) {
+  data <- dplyr::select(
+    data,
+    all_of(c(geoid_col, variable_col, value_col, moe_col))
+  )
+
+  dplyr::left_join(
+    x = area_xwalk,
+    y = data,
+    by = geoid_col,
+    suffix = suffix,
+    relationship = "many-to-many",
+    na_matches = "never"
+  )
+}
+
+#' Summarise ACS data using a weighted sum
 #' @noRd
 summarise_weighted_sum <- function(data,
                                    weight_col = "perc_HOUSING20",
@@ -574,6 +608,7 @@ summarise_weighted_sum <- function(data,
   )
 }
 
+#' Summarise ACS data using a weighted mean
 #' @noRd
 #' @importFrom stats weighted.mean
 summarise_weighted_mean <- function(data,
