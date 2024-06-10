@@ -14,7 +14,7 @@ test_that("gt_acs works", {
     tbl1[["_options"]]
   )
 
-  tbl2 <- suppressWarnings(gt_acs_compare(md_acs_data))
+  tbl2 <- gt_acs_compare(md_acs_data)
 
   expect_snapshot(
     tbl2[["_options"]]
