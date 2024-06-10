@@ -38,3 +38,22 @@
       10 table_font_size        TRUE  table    px     <chr [1]> 
       # i 180 more rows
 
+# gt_acs_compare works
+
+    Code
+      tbl3[["_boxhead"]]
+    Output
+      # A tibble: 9 x 8
+        var   type  column_label column_units column_pattern column_align column_width
+        <chr> <chr> <list>       <chr>        <chr>          <chr>        <list>      
+      1 colu~ defa~ <chr [1]>    <NA>         <NA>           left         <NULL>      
+      2 esti~ defa~ <chr [1]>    <NA>         <NA>           right        <NULL>      
+      3 moe_~ hidd~ <chr [1]>    <NA>         <NA>           right        <NULL>      
+      4 perc~ hidd~ <chr [1]>    <NA>         <NA>           right        <NULL>      
+      5 perc~ hidd~ <chr [1]>    <NA>         <NA>           right        <NULL>      
+      6 esti~ defa~ <chr [1]>    <NA>         <NA>           right        <NULL>      
+      7 moe_~ hidd~ <chr [1]>    <NA>         <NA>           right        <NULL>      
+      8 perc~ hidd~ <chr [1]>    <NA>         <NA>           right        <NULL>      
+      9 perc~ hidd~ <chr [1]>    <NA>         <NA>           right        <NULL>      
+      # i 1 more variable: hidden_px <list>
+

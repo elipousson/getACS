@@ -20,3 +20,20 @@ test_that("gt_acs works", {
     tbl2[["_options"]]
   )
 })
+
+
+test_that("gt_acs_compare works", {
+  county_acs_data <- get_acs_geographies(
+    geography = c("county", "state"),
+    county = "Baltimore city",
+    state = "MD",
+    table = "B01003"
+  )
+
+  tbl3 <- gt_acs_compare(county_acs_data)
+
+  expect_snapshot(
+    tbl3[["_boxhead"]]
+  )
+})
+
