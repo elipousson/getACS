@@ -12,6 +12,8 @@ label_acs_metadata(
   survey = "acs5",
   year = 2022,
   perc = TRUE,
+  reliability = FALSE,
+  moe_level = 90,
   geoid_col = "GEOID",
   variable_col = "variable"
 )
@@ -47,6 +49,9 @@ label_acs_column_metadata(
 each estimate as a percent share of the denominator value and use
 \code{\link[tidycensus:moe_prop]{tidycensus::moe_prop()}} to calculate a new margin of error for the percent
 estimate.}
+
+\item{moe_level}{The confidence level of the margin of error. Defaults to 90
+(which is the same default as \code{\link[tidycensus:get_acs]{tidycensus::get_acs()}}).}
 
 \item{geoid_col}{A GeoID column name to use if perc is \code{TRUE}, Defaults to
 'GEOID'.}

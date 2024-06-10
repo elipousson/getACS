@@ -115,6 +115,7 @@ get_acs_metadata <- function(survey = "acs5",
 #' @param variable_col Variable column name. Defaults to "variable"
 #' @inheritParams join_acs_percent
 #' @inheritParams get_acs_metadata
+#' @inheritParams assign_acs_reliability
 #' @seealso [join_acs_percent()]
 #' @keywords internal
 #' @export
@@ -123,20 +124,30 @@ label_acs_metadata <- function(data,
                                survey = "acs5",
                                year = 2022,
                                perc = TRUE,
+                               reliability = FALSE,
+                               moe_level = 90,
                                geoid_col = "GEOID",
                                variable_col = "variable") {
   data <- label_acs_table_metadata(
-    data, survey, year,
+    data = data,
+    survey = survey,
+    year = year,
     variable_col = variable_col
   )
 
   data <- label_acs_column_metadata(
-    data, survey, year,
+    data = data,
+    survey = survey,
+    year = year,
     variable_col = variable_col
   )
 
   if (perc && all(has_name(data, geoid_col))) {
     data <- join_acs_percent(data, geoid_col = geoid_col)
+  }
+
+  if (reliability) {
+    data <- assign_acs_reliability(data, moe_level = moe_level)
   }
 
   data
@@ -172,13 +183,17 @@ label_acs_table_metadata <- function(data,
     by = dplyr::join_by({{ table_id_col }})
   )
 
-  if (is_character(data[[table_id_col]])) {
+  if (is_character(data[[table_id_col]]) && !all(is.na(data[[table_id_col]]))) {
     has_race_iteration <- any(
       stringr::str_detect(data[[table_id_col]], "[:alpha:]$")
     )
 
     if (has_race_iteration) {
-      data <- join_acs_race_iteration(data, table_id_col = table_id_col, call = call)
+      data <- join_acs_race_iteration(
+        data,
+        table_id_col = table_id_col,
+        call = call
+      )
     }
   }
 
