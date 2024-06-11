@@ -15,7 +15,8 @@ label_acs_metadata(
   reliability = FALSE,
   moe_level = 90,
   geoid_col = "GEOID",
-  variable_col = "variable"
+  variable_col = "variable",
+  call = caller_env()
 )
 
 label_acs_table_metadata(

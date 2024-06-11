@@ -42,7 +42,9 @@ use_area_xwalk(
   moe_col = "moe",
   digits = 0,
   perc = TRUE,
-  extensive = TRUE
+  extensive = TRUE,
+  reliability = FALSE,
+  moe_level = 90
 )
 }
 \arguments{
@@ -142,6 +144,9 @@ geography type. Defaults to "area" but typical values could include
 each estimate as a percent share of the denominator value and use
 \code{\link[tidycensus:moe_prop]{tidycensus::moe_prop()}} to calculate a new margin of error for the percent
 estimate.}
+
+\item{moe_level}{The confidence level of the margin of error. Defaults to 90
+(which is the same default as \code{\link[tidycensus:get_acs]{tidycensus::get_acs()}}).}
 }
 \value{
 A tibble or a sf object.
