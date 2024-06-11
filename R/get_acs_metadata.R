@@ -127,19 +127,22 @@ label_acs_metadata <- function(data,
                                reliability = FALSE,
                                moe_level = 90,
                                geoid_col = "GEOID",
-                               variable_col = "variable") {
+                               variable_col = "variable",
+                               call = caller_env()) {
   data <- label_acs_table_metadata(
     data = data,
     survey = survey,
     year = year,
-    variable_col = variable_col
+    variable_col = variable_col,
+    call = call
   )
 
   data <- label_acs_column_metadata(
     data = data,
     survey = survey,
     year = year,
-    variable_col = variable_col
+    variable_col = variable_col,
+    call = call
   )
 
   if (perc && all(has_name(data, geoid_col))) {
@@ -165,11 +168,14 @@ label_acs_table_metadata <- function(data,
                                      variable_col = "variable",
                                      table_id_col = "table_id",
                                      call = caller_env()) {
-  stopifnot(
-    has_name(data, variable_col)
-  )
+  check_has_name(data, variable_col, call = call)
 
-  table_metadata <- get_acs_metadata(survey, year, metadata = "table")
+  table_metadata <- get_acs_metadata(
+    survey = survey,
+    year = year,
+    metadata = "table",
+    error_call = call
+  )
 
   data <- dplyr::mutate(
     data,
@@ -180,7 +186,8 @@ label_acs_table_metadata <- function(data,
   data <- dplyr::left_join(
     data,
     table_metadata,
-    by = dplyr::join_by({{ table_id_col }})
+    by = dplyr::join_by({{ table_id_col }}),
+    na_matches = "never"
   )
 
   if (is_character(data[[table_id_col]]) && !all(is.na(data[[table_id_col]]))) {
@@ -241,7 +248,12 @@ label_acs_column_metadata <- function(data,
                                       column_title_col = "column_title",
                                       table_id_col = "table_id",
                                       call = caller_env()) {
-  column_metadata <- get_acs_metadata(survey, year, metadata = "column")
+  column_metadata <- get_acs_metadata(
+    survey,
+    year,
+    metadata = "column",
+    error_call = call
+  )
 
   check_has_name(data, nm = variable_col, call = call)
 
@@ -255,7 +267,8 @@ label_acs_column_metadata <- function(data,
   data <- dplyr::left_join(
     data,
     column_metadata,
-    by = c(table_id_col, column_id_col)
+    by = c(table_id_col, column_id_col),
+    na_matches = "never"
   )
 
   # Strip trailing ":" from "Total:"
