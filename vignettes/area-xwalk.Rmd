@@ -44,10 +44,10 @@ total_pop_sf <- filter_acs(pop_sf, vars = 1)
 total_pop <- sf::st_drop_geometry(total_pop_sf)
 ```
 
-We can also download Baltimore City neighborhood boundaries from Maryland iMap to provide an alternate geometry that we are interpolating the data to fit:
+We can also download Baltimore City neighborhood boundaries to provide an alternate geometry that we are interpolating the data to fit:
 
 ```{r}
-area <- sf::read_sf("https://services1.arcgis.com/UWYHeuuJISiGmgXx/arcgis/rest/services/Neighborhood/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson")
+area <- sf::read_sf("https://services1.arcgis.com/UWYHeuuJISiGmgXx/ArcGIS/rest/services/Neighborhoods/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson")
 
 area <- sf::st_transform(area, crs = sf::st_crs(pop_sf))
 
