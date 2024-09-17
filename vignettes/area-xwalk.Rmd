@@ -98,7 +98,8 @@ total_pop_interpolated <- tidycensus::interpolate_pw(
   to_id = "NAME",
   weights = blocks,
   weight_column = "POP20",
-  extensive = TRUE
+  extensive = TRUE,
+  crs = 3857
 )
 
 total_pop_interpolated <- select(total_pop_interpolated, NAME, estimate)
@@ -125,6 +126,7 @@ comparison_data <- left_join(
   suffix = c("_xwalk", "_interpolated")
 ) |>
   mutate(
+    estimate_interpolated = round(estimate_interpolated),
     difference = estimate_xwalk - estimate_interpolated
   )
 
@@ -146,7 +148,7 @@ comparison_summary |>
   )
 ```
 
-As you can see, the differences in the estimates are very small. Most of these areas are adjacent to large water or open space areas suggesting that any differences could be mitigated by erasing the non-populated geometry from both the blocks and area data before interpolating estimates.
+As you can see, the differences in the estimates are mostly very small. Most of these areas are adjacent to large water or open space areas suggesting that any differences could be mitigated by erasing the non-populated geometry from both the blocks and area data before interpolating estimates.
 
 In summary, I'd recommend the `{getACS}` functions if you want to retain a more accurate margin of error, you like a more verbose function, or you don't want to worry about matching coordinate reference systems in advance.
 
