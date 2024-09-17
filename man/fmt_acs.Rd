@@ -48,10 +48,9 @@ strips the trailing text for minutes.}
 
 \verb{<column-targeting expression>} // \emph{default:} \code{everything()}
 
-Can either be a series of column names provided in \code{\link[=c]{c()}}, a vector of
-column indices, or a select helper function. Examples of select helper
-functions include \code{\link[gt:starts_with]{starts_with()}}, \code{\link[gt:ends_with]{ends_with()}}, \code{\link[gt:contains]{contains()}},
-\code{\link[gt:matches]{matches()}}, \code{\link[gt:one_of]{one_of()}}, \code{\link[gt:num_range]{num_range()}}, and \code{\link[gt:everything]{everything()}}.}
+Can either be a series of column names provided in \code{c()}, a vector of
+column indices, or a select helper function (e.g. \code{\link[gt:starts_with]{starts_with()}},
+\code{\link[gt:ends_with]{ends_with()}}, \code{\link[gt:contains]{contains()}}, \code{\link[gt:matches]{matches()}}, \code{\link[gt:num_range]{num_range()}} and \code{\link[gt:everything]{everything()}}).}
 
 \item{...}{
   Arguments passed on to \code{\link[gt:fmt]{gt::fmt}}
@@ -63,11 +62,10 @@ functions include \code{\link[gt:starts_with]{starts_with()}}, \code{\link[gt:en
 In conjunction with \code{columns}, we can specify which of their rows should
 undergo formatting. The default \code{\link[gt:everything]{everything()}} results in all rows in
 \code{columns} being formatted. Alternatively, we can supply a vector of row
-captions within \code{\link[=c]{c()}}, a vector of row indices, or a select helper
-function. Examples of select helper functions include \code{\link[gt:starts_with]{starts_with()}},
-\code{\link[gt:ends_with]{ends_with()}}, \code{\link[gt:contains]{contains()}}, \code{\link[gt:matches]{matches()}}, \code{\link[gt:one_of]{one_of()}}, \code{\link[gt:num_range]{num_range()}}, and
-\code{\link[gt:everything]{everything()}}. We can also use expressions to filter down to the rows we
-need (e.g., \verb{[colname_1] > 100 & [colname_2] < 50}).}
+captions within \code{c()}, a vector of row indices, or a select helper
+function (e.g. \code{\link[gt:starts_with]{starts_with()}}, \code{\link[gt:ends_with]{ends_with()}}, \code{\link[gt:contains]{contains()}}, \code{\link[gt:matches]{matches()}},
+\code{\link[gt:num_range]{num_range()}}, and \code{\link[gt:everything]{everything()}}). We can also use expressions to filter
+down to the rows we need (e.g., \verb{[colname_1] > 100 & [colname_2] < 50}).}
     \item{\code{compat}}{\emph{Formatting compatibility}
 
 \verb{vector<character>} // \emph{default:} \code{NULL} (\code{optional})

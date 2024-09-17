@@ -25,8 +25,8 @@ tab_acs_source_note(
 
 \verb{scalar<character>} // \strong{required}
 
-Text to be used in the source note. We can optionally use the \code{\link[gt:md]{md()}} and
-\code{\link[gt:html]{html()}} functions to style the text as Markdown or to retain HTML elements
+Text to be used in the source note. We can optionally use \code{\link[gt:md]{md()}} and
+\code{\link[gt:html]{html()}} to style the text as Markdown or to retain HTML elements
 in the text.}
 
 \item{append_note}{If \code{TRUE}, add source_note to the end of the generated ACS

@@ -138,9 +138,7 @@ string to use as a column name.}
 This corresponds to the exact number of decimal places to use. A value
 such as \code{2.34} can, for example, be formatted with \code{0} decimal places and
 it would result in \code{"2"}. With \code{4} decimal places, the formatted value
-becomes \code{"2.3400"}. The trailing zeros can be removed with
-\code{drop_trailing_zeros = TRUE}. If you always need \code{decimals = 0}, the
-\code{\link[gt:fmt_integer]{fmt_integer()}} function should be considered.}
+becomes \code{"2.3400"}.}
 
 \item{currency_value}{If \code{TRUE}, use \code{\link[gt:fmt_currency]{gt::fmt_currency()}} to format value
 columns instead of \code{\link[gt:fmt_number]{gt::fmt_number()}}.}
@@ -182,8 +180,8 @@ Should the order of split names be reversed? By default, this is \code{FALSE}.}
 
 \verb{scalar<character>} // \strong{required}
 
-Text to be used in the source note. We can optionally use the \code{\link[gt:md]{md()}} and
-\code{\link[gt:html]{html()}} functions to style the text as Markdown or to retain HTML elements
+Text to be used in the source note. We can optionally use \code{\link[gt:md]{md()}} and
+\code{\link[gt:html]{html()}} to style the text as Markdown or to retain HTML elements
 in the text.}
 
 \item{append_note}{If \code{TRUE}, add source_note to the end of the generated ACS
