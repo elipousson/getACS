@@ -40,7 +40,6 @@ vec_tidycensus <- function(...,
   params <- vctrs::list_drop_empty(list2(...))
   params <- vctrs::vec_recycle_common(!!!params, .size = .size, .call = .call)
 
-  print(params)
   if (is_empty(params)) {
     cli_abort("{.arg ...} can't be empty.", call = .call)
   } else {
