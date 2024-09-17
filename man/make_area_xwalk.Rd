@@ -26,6 +26,7 @@ make_area_xwalk(
   area_threshold = 0.75,
   keep_geometry = FALSE,
   crs = NULL,
+  make_valid = TRUE,
   ...
 )
 
@@ -123,6 +124,11 @@ geometry as the input area. Defaults to \code{FALSE}.}
 
 \item{crs}{Coordinate reference system to use for input data. Recommended to
 set to a projected CRS if input area data is in a geographic CRS.}
+
+\item{make_valid}{Default \code{TRUE}. If \code{TRUE}, apply \code{\link[sf:valid]{sf::st_make_valid()}} to
+the input area geometry and to any sf or sfc object passed to the \code{erase}
+parameter. If this has any unexpected results, set \code{make_valid = FALSE} and
+prepare any invalid geometry before passing to this function.}
 
 \item{...}{Passed to \code{\link[=make_block_xwalk]{make_block_xwalk()}}.}
 

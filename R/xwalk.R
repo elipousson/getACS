@@ -124,6 +124,10 @@ make_block_xwalk <- function(state,
 #'   geometry as the input area. Defaults to `FALSE`.
 #' @param crs Coordinate reference system to use for input data. Recommended to
 #'   set to a projected CRS if input area data is in a geographic CRS.
+#' @param make_valid Default `TRUE`. If `TRUE`, apply [sf::st_make_valid()] to
+#'   the input area geometry and to any sf or sfc object passed to the `erase`
+#'   parameter. If this has any unexpected results, set `make_valid = FALSE` and
+#'   prepare any invalid geometry before passing to this function.
 #' @param ... Passed to [make_block_xwalk()].
 #' @returns A tibble or a sf object.
 #' @seealso [tidycensus::interpolate_pw()], [areal::aw_interpolate()]
@@ -154,6 +158,7 @@ make_area_xwalk <- function(area,
                             area_threshold = 0.75,
                             keep_geometry = FALSE,
                             crs = NULL,
+                            make_valid = TRUE,
                             ...) {
   check_name(name_col)
   check_name(tract_col)
@@ -179,7 +184,9 @@ make_area_xwalk <- function(area,
 
   check_sf(block_xwalk)
 
-  area <- sf::st_make_valid(area)
+  if (make_valid) {
+    area <- sf::st_make_valid(area)
+  }
 
   if (!is.null(crs)) {
     area <- sf::st_transform(area, crs = crs)
@@ -225,7 +232,8 @@ make_area_xwalk <- function(area,
       area,
       erase = erase,
       area_threshold = area_threshold,
-      year = year
+      year = year,
+      make_valid = make_valid
     )
 
     cli::cli_progress_step("Erasing {what} from {.arg block_xwalk}")
@@ -285,13 +293,25 @@ make_area_xwalk <- function(area,
 
 #' @noRd
 erase_input_geometry <- function(input_sf,
-                                 erase_sf) {
+                                 erase_sf,
+                                 make_valid = FALSE) {
+  if (make_valid) {
+    input_sf <- sf::st_make_valid(input_sf)
+    erase_sf <- sf::st_make_valid(erase_sf)
+  }
+
   erase_sf <- sf::st_transform(erase_sf, crs = sf::st_crs(input_sf))
 
-  sf::st_difference(
+  output_sf <- sf::st_difference(
     input_sf,
     sf::st_union(erase_sf)
   )
+
+  if (make_valid) {
+    output_sf <- sf::st_make_valid(output_sf)
+  }
+
+  output_sf
 }
 
 #' @noRd
@@ -299,11 +319,13 @@ erase_input_sf <- function(input_sf,
                            area_threshold = 0.75,
                            year = NULL,
                            erase = FALSE,
+                           make_valid = TRUE,
                            call = caller_env()) {
   if (inherits_any(erase, c("sf", "sfc"))) {
     input_sf <- erase_input_geometry(
       input_sf = input_sf,
-      erase_sf = erase
+      erase_sf = erase,
+      make_valid = make_valid
     )
 
     return(input_sf)
@@ -417,7 +439,8 @@ rbind_area_coverage <- function(area,
 
     area_coverage <- erase_input_geometry(
       area_coverage,
-      area
+      area,
+      make_valid = make_valid
     )
   }
 
