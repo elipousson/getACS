@@ -256,7 +256,8 @@ make_area_xwalk <- function(area,
       coverage_name = coverage_name,
       name_col = name_col,
       block_xwalk = block_xwalk,
-      area_coverage = area_coverage
+      area_coverage = area_coverage,
+      make_valid = make_valid
     )
   }
 
@@ -413,6 +414,7 @@ rbind_area_coverage <- function(area,
                                 name_col = "NAME",
                                 block_xwalk,
                                 area_coverage = NULL,
+                                make_valid = FALSE,
                                 error_call = caller_env()) {
   if (is.null(area_coverage)) {
     area_coverage <- try_fetch(
