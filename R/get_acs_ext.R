@@ -37,9 +37,10 @@ vec_tidycensus <- function(...,
                            .fn,
                            .size = NULL,
                            .call = caller_env()) {
-  params <- vctrs::vec_recycle_common(..., .size = .size, .call = .call)
-  params <- vctrs::list_drop_empty(params)
+  params <- vctrs::list_drop_empty(list2(...))
+  params <- vctrs::vec_recycle_common(!!!params, .size = .size, .call = .call)
 
+  print(params)
   if (is_empty(params)) {
     cli_abort("{.arg ...} can't be empty.", call = .call)
   } else {
@@ -440,7 +441,7 @@ get_geography_params <- function(geography,
     )
   }
 
-  if ((year < 2021) &&
+  if (has_length(year, 1) && (year < 2021) &&
     (identical(geography, "metropolitan/micropolitan statistical area"))) {
     # "metropolitan statistical area/micropolitan statistical area"
     cli_warn(
