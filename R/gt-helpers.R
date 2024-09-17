@@ -7,8 +7,6 @@
 #' @inheritParams acs_perc_cols
 #' @param perc_value_label Percent value column label.
 #' @param perc_moe_label Percent margin of error column label.
-#' @param variable_col Variable column name. Defaults to "variable". Typically,
-#'   dropped from table by default.
 #' @param column_title_col,column_title_label Column title column name and
 #'   label. Defaults to  "column_title" and `NULL`.
 #' @param .col_fn tidyselect function to use with column names. Defaults to
@@ -39,7 +37,8 @@ cols_acs_label <- function(data,
     value_col = value_col,
     moe_col = moe_col,
     perc_prefix = perc_prefix,
-    perc_sep = perc_sep)
+    perc_sep = perc_sep
+  )
 
   perc_value_col <- NULL
   perc_moe_col <- NULL

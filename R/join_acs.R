@@ -118,6 +118,7 @@ join_acs_percent_parent <- function(data,
 #' @param moe_col Margin of error column name
 #' @inheritParams base::round
 #' @inheritParams dplyr::left_join
+#' @inheritParams rlang::args_error_context
 #' @export
 join_acs_denominator <- function(data,
                                  geoid_col = "GEOID",

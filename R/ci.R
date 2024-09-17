@@ -45,25 +45,45 @@ reliability_when <- function(cv, type = c("census", "esri")) {
 
 #' Add columns for the coefficient of variation and reliability category
 #'
+#' [assign_acs_reliability()] tests the reliability of ACS estimate values based
+#' on the assigned MOE level and adds columns to the output with the reliability
+#' information.
 #'
+#' @param data A data frame with a column of estimate values. Typically created
+#'   with [tidycensus::get_acs()] or a function in this package such as
+#'   [get_acs_tables()] or [get_acs_geographies()].
 #' @param value_col,moe_col Value and margin of error column names (default to
 #'   "estimate" and "moe").
 #' @param moe_level The confidence level of the margin of error. Defaults to 90
 #'   (which is the same default as [tidycensus::get_acs()]).
+#' @param type Type of reliability rating to assign. Either "census" (default)
+#'   or "esri". In both cases, the added reliability column values are "high",
+#'   "medium", or "low".
+#' @param digits Number of digits to use for values in the coefficient of
+#'   variation column. Passed to [base::round()].
 #' @param cv_col Coefficient of variation column name. Defaults to "cv".
 #' @param reliability_col Reliability category column name. Defaults to
 #'   "reliability".
+#' @return A data frame with an added columns using the names assigned to
+#'   `cv_col` and `reliability_col`
 #' @export
 assign_acs_reliability <- function(data,
-                            value_col = "estimate",
-                            moe_col = "moe",
-                            moe_level = 90,
-                            cv_col = "cv",
-                            reliability_col = "reliability") {
+                                   value_col = "estimate",
+                                   moe_col = "moe",
+                                   moe_level = 90,
+                                   type = c("census", "esri"),
+                                   digits = 2,
+                                   cv_col = "cv",
+                                   reliability_col = "reliability") {
   data |>
     dplyr::mutate(
-      "{cv_col}" := acs_cv(.data[[value_col]], .data[[moe_col]], moe_level),
-      "{reliability_col}" := reliability_when(.data[[cv_col]]),
+      "{cv_col}" := acs_cv(
+        .data[[value_col]],
+        .data[[moe_col]],
+        moe_level = moe_level,
+        digits = digits
+      ),
+      "{reliability_col}" := reliability_when(.data[[cv_col]], type = type),
       .after = all_of(moe_col)
     )
 }

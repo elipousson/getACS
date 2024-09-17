@@ -143,7 +143,7 @@ filter_acs <- function(data,
 }
 
 #' Check for presence of ACS ID values
-#'
+#' @noRd
 check_acs_id <- function(data,
                          id = NULL,
                          id_col = "table_id",

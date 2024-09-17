@@ -48,6 +48,9 @@
 #'  [forcats::fct_collapse()], [camiller::add_grps()]
 #' @rdname collapse_acs_variables
 #' @inheritParams dplyr::group_by
+#' @param reliability If `TRUE`, use [assign_acs_reliability()] to assign a
+#'   reliability value to estimate values based on the specified `moe_level`.
+#' @inheritParams assign_acs_reliability
 #' @export
 #' @importFrom dplyr group_by mutate all_of
 collapse_acs_variables <- function(data,

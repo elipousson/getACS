@@ -16,6 +16,7 @@
 #'   values using [gt::cols_hide()].
 #' @param use_spanner If `TRUE` (default), create spanners for the comparison
 #'   geographies.
+#' @param variable_col Variable column name. Defaults to "variable".
 #' @name gt_acs_compare
 #' @family gt table
 #' @keywords gt

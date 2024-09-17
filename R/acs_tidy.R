@@ -15,6 +15,10 @@
 
 #' Create `perc` value and moe column names with prefix and separator
 #'
+#' @param value_col Column name for estimate value column. Defaults to
+#'   "estimate".
+#' @param moe_col Column name for margin of error column. Defaults to
+#'   "moe".
 #' @param perc_prefix Prefix string for percent value columns.
 #' @param perc_sep Separator string between `perc_prefix` and the `value_col`
 #'   and `moe_col` strings.

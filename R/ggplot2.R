@@ -173,6 +173,7 @@ NULL
 #' @rdname geom_acs
 #' @name aes_errorbarh
 #' @inheritParams ggplot2::aes
+#' @inheritParams acs_perc_cols
 #' @export
 #' @importFrom ggplot2 aes
 aes_errorbarh <- function(xmin = NULL,
@@ -365,7 +366,7 @@ aes_acs_col <- function(
 #' @param mapping Aesthetic mapping. Recommend leaving this as `NULL`.
 #' @param x,y,fill String values with column names mapped to aesthetics.
 #'   Optional if `mapping` is supplied.
-#' @inheritParams geom_acs_errorbar
+#' @inheritParams geom_acs
 #' @inheritParams ggplot2::geom_col
 #' @inheritParams acs_perc_cols
 #' @param scale_value If `TRUE` (default), apply [scale_x_acs()] or

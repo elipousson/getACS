@@ -35,12 +35,12 @@ acs_table_race_iteration <- function(table,
 #'
 #' [acs_table_variables()] helps to make a vector of variable ID values based on
 #' a table ID string. The returned variable IDs use the format returned by
-#' [tidycensus::get_acs()], e.g. "{table_id}_{line_number}" where the
+#' [tidycensus::get_acs()], e.g. "\{table_id\}_\{line_number\}" where the
 #' line_number is a width 3 string prefixed by "0". If variables is `NULL`, the
 #' function calls [get_acs_metadata()] with `metadata = "column"` and returns
 #' all available variables for the table for the supplied year and survey. Note
 #' that the `sep` and `width` parameters should *not* be changed if you are
-#' working with data from the `{tidycensus}` package.
+#' working with data from the `\{tidycensus\}` package.
 #'
 #' @name acs_table_variables
 #' @param table An ACS table ID string.

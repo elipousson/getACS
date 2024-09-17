@@ -113,6 +113,8 @@ get_acs_metadata <- function(survey = "acs5",
 #'   [tidycensus::moe_prop()] to calculate a new margin of error for the percent
 #'   estimate.
 #' @param variable_col Variable column name. Defaults to "variable"
+#' @param reliability If `TRUE`, use [assign_acs_reliability()] to assign a
+#'   reliability value to estimate values based on the specified `moe_level`.
 #' @inheritParams join_acs_percent
 #' @inheritParams get_acs_metadata
 #' @inheritParams assign_acs_reliability

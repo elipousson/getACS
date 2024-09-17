@@ -7,7 +7,7 @@ Authors@R:
            comment = c(ORCID = "0000-0001-8280-1706"))
 Maintainer: Eli Pousson <eli.pousson@gmail.com>
 Description: A package with helper functions for working with Census data
-    downloaded with the {tidycensus} package.
+    downloaded with the tidycensus package.
 License: MIT + file LICENSE
 URL: https://elipousson.github.io/getACS/
 BugReports: https://github.com/elipousson/getACS/issues
