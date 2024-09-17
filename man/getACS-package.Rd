@@ -6,7 +6,7 @@
 \alias{getACS-package}
 \title{getACS: Help Wrangling American Community Survey Data from tidycensus}
 \description{
-A package with helper functions for working with Census data downloaded with the {tidycensus} package.
+A package with helper functions for working with Census data downloaded with the tidycensus package.
 }
 \seealso{
 Useful links:

@@ -15,6 +15,7 @@ get_decennial_ts(
   county = NULL,
   geometry = FALSE,
   summary_var = NULL,
+  label = TRUE,
   ...
 )
 }
@@ -58,6 +59,9 @@ with simple feature geometry in the `geometry` column.}
 \item{summary_var}{Character string of a "summary variable" from the decennial Census
 to be included in your output. Usually a variable (e.g. total population)
 that you'll want to use as a denominator or comparison.}
+
+\item{label}{If \code{TRUE} (default), use \code{\link[=label_decennial_data]{label_decennial_data()}} to add
+formatted label columns to the decennial Census data frame.}
 
 \item{...}{
   Arguments passed on to \code{\link[tidycensus:get_decennial]{tidycensus::get_decennial}}

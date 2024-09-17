@@ -97,6 +97,19 @@ lists which parameters it can accept.
 \link[ggplot2:draw_key]{key glyphs}, to change the display of the layer in the legend.
 }}
 
+\item{value_col}{Column name for estimate value column. Defaults to
+"estimate".}
+
+\item{moe_col}{Column name for margin of error column. Defaults to
+"moe".}
+
+\item{perc_prefix}{Prefix string for percent value columns.}
+
+\item{perc_sep}{Separator string between \code{perc_prefix} and the \code{value_col}
+and \code{moe_col} strings.}
+
+\item{perc}{If \code{TRUE}, return percent value and margin of error columns.}
+
 \item{mapping}{Set of aesthetic mappings created by \code{\link[ggplot2:aes]{aes()}}. If specified and
 \code{inherit.aes = TRUE} (the default), it is combined with the default mapping
 at the top level of the plot. You must supply \code{mapping} if there is no plot

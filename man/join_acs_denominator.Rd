@@ -51,6 +51,11 @@ for database sources and to \code{base::merge(incomparables = NA)}.
 \item{digits}{integer indicating the number of decimal places
     (\code{round}) or significant digits (\code{signif}) to be used.
     For \code{round}, negative values are allowed (see \sQuote{Details}).}
+
+\item{call}{The execution environment of a currently
+running function, e.g. \code{caller_env()}. The function will be
+mentioned in error messages as the source of the error. See the
+\code{call} argument of \code{\link[rlang:abort]{abort()}} for more information.}
 }
 \description{
 Note that this function and the related \code{\link[=join_acs_percent]{join_acs_percent()}} function depends

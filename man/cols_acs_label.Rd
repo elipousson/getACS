@@ -50,9 +50,6 @@ label. Defaults to  "column_title" and \code{NULL}.}
 \link[tidyselect:starts_with]{tidyselect::starts_with},}
 
 \item{env}{\code{[environment()]}\cr Environment to attach.}
-
-\item{variable_col}{Variable column name. Defaults to "variable". Typically,
-dropped from table by default.}
 }
 \description{
 Variant of \code{gt::cols_label()} for ACS

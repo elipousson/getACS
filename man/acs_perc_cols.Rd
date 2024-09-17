@@ -13,6 +13,12 @@ acs_perc_cols(
 )
 }
 \arguments{
+\item{value_col}{Column name for estimate value column. Defaults to
+"estimate".}
+
+\item{moe_col}{Column name for margin of error column. Defaults to
+"moe".}
+
 \item{perc_prefix}{Prefix string for percent value columns.}
 
 \item{perc_sep}{Separator string between \code{perc_prefix} and the \code{value_col}

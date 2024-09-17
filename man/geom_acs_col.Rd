@@ -86,6 +86,12 @@ lists which parameters it can accept.
 \item{x, y, fill}{String values with column names mapped to aesthetics.
 Optional if \code{mapping} is supplied.}
 
+\item{value_col}{Column name for estimate value column. Defaults to
+"estimate".}
+
+\item{moe_col}{Column name for margin of error column. Defaults to
+"moe".}
+
 \item{perc_prefix}{Prefix string for percent value columns.}
 
 \item{perc_sep}{Separator string between \code{perc_prefix} and the \code{value_col}

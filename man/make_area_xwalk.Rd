@@ -151,6 +151,9 @@ each estimate as a percent share of the denominator value and use
 \code{\link[tidycensus:moe_prop]{tidycensus::moe_prop()}} to calculate a new margin of error for the percent
 estimate.}
 
+\item{reliability}{If \code{TRUE}, use \code{\link[=assign_acs_reliability]{assign_acs_reliability()}} to assign a
+reliability value to estimate values based on the specified \code{moe_level}.}
+
 \item{moe_level}{The confidence level of the margin of error. Defaults to 90
 (which is the same default as \code{\link[tidycensus:get_acs]{tidycensus::get_acs()}}).}
 }

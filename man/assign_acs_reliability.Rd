@@ -9,22 +9,41 @@ assign_acs_reliability(
   value_col = "estimate",
   moe_col = "moe",
   moe_level = 90,
+  type = c("census", "esri"),
+  digits = 2,
   cv_col = "cv",
   reliability_col = "reliability"
 )
 }
 \arguments{
+\item{data}{A data frame with a column of estimate values. Typically created
+with \code{\link[tidycensus:get_acs]{tidycensus::get_acs()}} or a function in this package such as
+\code{\link[=get_acs_tables]{get_acs_tables()}} or \code{\link[=get_acs_geographies]{get_acs_geographies()}}.}
+
 \item{value_col, moe_col}{Value and margin of error column names (default to
 "estimate" and "moe").}
 
 \item{moe_level}{The confidence level of the margin of error. Defaults to 90
 (which is the same default as \code{\link[tidycensus:get_acs]{tidycensus::get_acs()}}).}
 
+\item{type}{Type of reliability rating to assign. Either "census" (default)
+or "esri". In both cases, the added reliability column values are "high",
+"medium", or "low".}
+
+\item{digits}{Number of digits to use for values in the coefficient of
+variation column. Passed to \code{\link[base:Round]{base::round()}}.}
+
 \item{cv_col}{Coefficient of variation column name. Defaults to "cv".}
 
 \item{reliability_col}{Reliability category column name. Defaults to
 "reliability".}
 }
+\value{
+A data frame with an added columns using the names assigned to
+\code{cv_col} and \code{reliability_col}
+}
 \description{
-Add columns for the coefficient of variation and reliability category
+\code{\link[=assign_acs_reliability]{assign_acs_reliability()}} tests the reliability of ACS estimate values based
+on the assigned MOE level and adds columns to the output with the reliability
+information.
 }

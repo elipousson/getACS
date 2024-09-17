@@ -41,6 +41,12 @@ column added to the returned data frame.}
 \item{value_col, moe_col}{Value and margin of error column names (default to
 "estimate" and "moe").}
 
+\item{moe_level}{The confidence level of the margin of error. Defaults to 90
+(which is the same default as \code{\link[tidycensus:get_acs]{tidycensus::get_acs()}}).}
+
+\item{reliability}{If \code{TRUE}, use \code{\link[=assign_acs_reliability]{assign_acs_reliability()}} to assign a
+reliability value to estimate values based on the specified \code{moe_level}.}
+
 \item{na.rm}{Passed to \code{\link[=sum]{sum()}}, Default: \code{TRUE}}
 
 \item{na_zero}{If \code{TRUE}, and the collapsed sum of a MOE is 0, replaced MOE

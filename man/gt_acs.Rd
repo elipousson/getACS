@@ -64,9 +64,11 @@ secondary column in the table stub.}
 \item{...}{Additional parameters passed to \code{\link[gt:fmt_number]{gt::fmt_number()}} by
 \code{\link[=fmt_acs_estimate]{fmt_acs_estimate()}} or to \code{\link[gt:fmt_percent]{gt::fmt_percent()}} by \code{\link[=fmt_acs_percent]{fmt_acs_percent()}}.}
 
-\item{value_col}{Value column name. Defaults to "estimate"}
+\item{value_col}{Column name for estimate value column. Defaults to
+"estimate".}
 
-\item{moe_col}{Margin of error column name. Defaults to "moe"}
+\item{moe_col}{Column name for margin of error column. Defaults to
+"moe".}
 
 \item{perc_prefix}{Prefix string for percent value columns.}
 

@@ -45,12 +45,12 @@ A character vector of variable ID values for a single table.
 \description{
 \code{\link[=acs_table_variables]{acs_table_variables()}} helps to make a vector of variable ID values based on
 a table ID string. The returned variable IDs use the format returned by
-\code{\link[tidycensus:get_acs]{tidycensus::get_acs()}}, e.g. "{table_id}_{line_number}" where the
+\code{\link[tidycensus:get_acs]{tidycensus::get_acs()}}, e.g. "\{table_id\}_\{line_number\}" where the
 line_number is a width 3 string prefixed by "0". If variables is \code{NULL}, the
 function calls \code{\link[=get_acs_metadata]{get_acs_metadata()}} with \code{metadata = "column"} and returns
 all available variables for the table for the supplied year and survey. Note
 that the \code{sep} and \code{width} parameters should \emph{not} be changed if you are
-working with data from the \code{{tidycensus}} package.
+working with data from the \verb{\\\{tidycensus\\\}} package.
 }
 \examples{
 acs_table_variables(table = "B15003")

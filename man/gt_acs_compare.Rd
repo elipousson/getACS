@@ -70,9 +70,11 @@ gt_acs_compare_vars(
 \item{name_col}{Name column. Defaults to "NAME". Ignored if names_from is not
 set to name_col.}
 
-\item{value_col}{Value column name. Defaults to "estimate"}
+\item{value_col}{Column name for estimate value column. Defaults to
+"estimate".}
 
-\item{moe_col}{Margin of error column name. Defaults to "moe"}
+\item{moe_col}{Column name for margin of error column. Defaults to
+"moe".}
 
 \item{perc_prefix}{Prefix string for percent value columns.}
 
@@ -81,8 +83,7 @@ and \code{moe_col} strings.}
 
 \item{perc}{If \code{TRUE}, return percent value and margin of error columns.}
 
-\item{variable_col}{Variable column name. Defaults to "variable". Typically,
-dropped from table by default.}
+\item{variable_col}{Variable column name. Defaults to "variable".}
 
 \item{column_title_col, column_title_label}{Column title column name and
 label. Defaults to  "column_title" and \code{NULL}.}
