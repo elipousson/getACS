@@ -1,9 +1,9 @@
 #' @noRd
-acs_cache_dir <- function(pkg = "getACS") {
+acs_cache_dir <- function(pkg = "getACS", recursive = TRUE) {
   cache_dir <- rappdirs::user_cache_dir(pkg)
 
   if (!dir.exists(cache_dir)) {
-    dir.create(cache_dir)
+    dir.create(cache_dir, recursive = recursive)
   }
 
   cache_dir
