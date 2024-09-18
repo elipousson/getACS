@@ -5,6 +5,8 @@
 * Export `join_acs_denominator()` function.
 * Add `assign_acs_reliability()` function (2024-06-09).
 * Add `na_zero` argument to return `NA` as the MOE when all MOE values are 0 and collapsing groups with `collapse_acs_variables()`.
+* Clean-up documentation by filling in missing arguments (2024-09-17).
+* Add `load_decennial_vars()` `label_decennial_data()` functions (2024-09-17).
 
 # getACS 0.1.1.9003
 
