@@ -3,7 +3,7 @@
     Code
       tbl1[["_options"]]
     Output
-      # A tibble: 190 x 5
+      # A tibble: 191 x 5
          parameter              scss  category type   value     
          <chr>                  <lgl> <chr>    <chr>  <list>    
        1 table_id               FALSE table    value  <chr [1]> 
@@ -16,14 +16,14 @@
        8 table_additional_css   FALSE table    values <chr [0]> 
        9 table_font_names       FALSE table    values <chr [10]>
       10 table_font_size        TRUE  table    px     <chr [1]> 
-      # i 180 more rows
+      # i 181 more rows
 
 ---
 
     Code
       tbl2[["_options"]]
     Output
-      # A tibble: 190 x 5
+      # A tibble: 191 x 5
          parameter              scss  category type   value     
          <chr>                  <lgl> <chr>    <chr>  <list>    
        1 table_id               FALSE table    value  <chr [1]> 
@@ -36,7 +36,7 @@
        8 table_additional_css   FALSE table    values <chr [0]> 
        9 table_font_names       FALSE table    values <chr [10]>
       10 table_font_size        TRUE  table    px     <chr [1]> 
-      # i 180 more rows
+      # i 181 more rows
 
 # gt_acs_compare works
 
