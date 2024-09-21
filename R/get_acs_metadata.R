@@ -63,12 +63,26 @@ get_acs_metadata <- function(survey = "acs5",
 
   cli::cli_progress_step(msg)
 
-  data <- readr::read_csv(
-    file = file,
-    ...,
-    progress = progress,
-    show_col_types = show_col_types
+  data <- rlang::try_fetch(
+    readr::read_csv(
+      file = file,
+      ...,
+      progress = progress,
+      show_col_types = show_col_types
+    ),
+    error = \(cnd) {
+      NULL
+    }
   )
+
+  if (is.null(data)) {
+    cli::cli_warn(
+      "CensusReporter pre-computed {metadata} metadata for {acs_label} is not
+      available."
+    )
+    return(data.frame())
+  }
+
 
   if (cache_data) {
     cli::cli_progress_step("Caching {metadata} metadata")
@@ -147,7 +161,7 @@ label_acs_metadata <- function(data,
     call = call
   )
 
-  if (perc && all(has_name(data, geoid_col))) {
+  if (perc && all(has_name(data, c(geoid_col, "denominator_column_id")))) {
     data <- join_acs_percent(data, geoid_col = geoid_col)
   }
 
@@ -185,12 +199,14 @@ label_acs_table_metadata <- function(data,
     .after = all_of(variable_col)
   )
 
-  data <- dplyr::left_join(
-    data,
-    table_metadata,
-    by = dplyr::join_by({{ table_id_col }}),
-    na_matches = "never"
-  )
+  if (!is_empty(table_metadata)) {
+    data <- dplyr::left_join(
+      data,
+      table_metadata,
+      by = dplyr::join_by({{ table_id_col }}),
+      na_matches = "never"
+    )
+  }
 
   if (is_character(data[[table_id_col]]) && !all(is.na(data[[table_id_col]]))) {
     has_race_iteration <- any(
@@ -240,7 +256,8 @@ join_acs_race_iteration <- function(data,
 #' @rdname label_acs_metadata
 #' @name label_acs_column_metadata
 #' @export
-#' @importFrom dplyr mutate left_join all_of
+#' @importFrom dplyr mutate left_join row_number
+#' @importFrom tidyselect all_of any_of
 #' @importFrom stringr str_extract str_remove
 label_acs_column_metadata <- function(data,
                                       survey = "acs5",
@@ -263,8 +280,20 @@ label_acs_column_metadata <- function(data,
     data,
     "{table_id_col}" := str_table_id(.data[[variable_col]]),
     "{column_id_col}" := stringr::str_remove(.data[[variable_col]], "_"),
-    .after = all_of(variable_col)
+    .after = tidyselect::all_of(variable_col)
   )
+
+  if (is_empty(column_metadata)) {
+    data <- dplyr::mutate(
+      data,
+      line_number = dplyr::row_number(),
+      .by = tidyselect::any_of(c("year", "GEOID", table_id_col))
+    )
+
+    # FIXME: Consider using metadata from tidycensus::load_variables if the
+    # CensusReport data is unavailable
+    return(data)
+  }
 
   data <- dplyr::left_join(
     data,
