@@ -7,6 +7,7 @@
 #' @param .data Optional data frame with "table_id" column used in place of
 #'   `table` if table is `NULL`. Ignored if `table` is supplied.
 #' @inheritParams ggplot2::labs
+#' @param collapse If caption is not `NULL`, the vector is passed to
 #' @inheritDotParams ggplot2::labs
 #' @keywords ggplot2
 #' @export
@@ -16,21 +17,25 @@ labs_acs_survey <- function(...,
                             year = 2022,
                             prefix = "Source: ",
                             table = NULL,
-                            .data = NULL) {
+                            .data = NULL,
+                            collapse = "\n") {
   if (!is.null(.data)) {
     table <- table %||% .data[["table_id"]]
   }
 
   ggplot2::labs(
     ...,
-    caption = c(
-      caption,
-      acs_survey_label_table(
-        survey = survey,
-        year = year,
-        prefix = prefix,
-        table = table
-      )
+    caption = paste0(
+      c(
+        caption,
+        acs_survey_label_table(
+          survey = survey,
+          year = year,
+          prefix = prefix,
+          table = table
+        )
+      ),
+      collapse = collapse
     )
   )
 }
