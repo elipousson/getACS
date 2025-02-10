@@ -38,7 +38,7 @@ cli_quiet <- function(quiet = FALSE,
   )
 }
 
-
+#' Check if object is a sf object
 #' @noRd
 check_sf <- function(x,
                      allow_null = FALSE,
@@ -56,6 +56,7 @@ check_sf <- function(x,
   )
 }
 
+#' Check if object has specified names
 #' @noRd
 check_has_name <- function(x,
                            nm,
@@ -85,6 +86,32 @@ check_has_name <- function(x,
   }
 
   cli_abort(msg, call = call)
+}
+
+#' Check if object has a specified geometry type
+#' @noRd
+check_geometry_is_type <- function(x,
+                                   type,
+                                   allow_null = FALSE,
+                                   arg = caller_arg(x),
+                                   call = caller_env()) {
+  if (!inherits_any(x, c("sfg", "sfc", "sf"))) {
+    stop_input_type(
+      x,
+      what = c("sfg", "sfc", "sf"),
+      allow_null = allow_null,
+      call = call
+    )
+  }
+
+  if (sf::st_is(x, type)) {
+    return(invisible(NULL))
+  }
+
+  cli::cli_abort(
+    "{.arg {arg}} must have {type} geometry.",
+    call = call
+  )
 }
 
 #' Helper for recoding based on a named list
