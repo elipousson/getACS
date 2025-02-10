@@ -12,6 +12,7 @@ reference:
 - title: Interpolate ACS data across areas
   contents:
   - starts_with("make_")
+  - '`assign_acs_reliability`'
 - title: Format gt tables and ACS data frames
   contents:
   - starts_with("gt_acs")
@@ -34,6 +35,7 @@ reference:
   - '`race_iteration`'
   - '`jam_values`'
   - '`tigerweb_geo_index`'
+  - '`usa_states`'
 articles:
 - title: Using getACS
   navbar: ~
