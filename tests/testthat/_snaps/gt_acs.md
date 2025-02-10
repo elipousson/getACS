@@ -3,7 +3,7 @@
     Code
       tbl1[["_options"]]
     Output
-      # A tibble: 191 x 5
+      # A tibble: 193 x 5
          parameter              scss  category type   value     
          <chr>                  <lgl> <chr>    <chr>  <list>    
        1 table_id               FALSE table    value  <chr [1]> 
@@ -16,14 +16,14 @@
        8 table_additional_css   FALSE table    values <chr [0]> 
        9 table_font_names       FALSE table    values <chr [10]>
       10 table_font_size        TRUE  table    px     <chr [1]> 
-      # i 181 more rows
+      # i 183 more rows
 
 ---
 
     Code
       tbl2[["_options"]]
     Output
-      # A tibble: 191 x 5
+      # A tibble: 193 x 5
          parameter              scss  category type   value     
          <chr>                  <lgl> <chr>    <chr>  <list>    
        1 table_id               FALSE table    value  <chr [1]> 
@@ -36,24 +36,31 @@
        8 table_additional_css   FALSE table    values <chr [0]> 
        9 table_font_names       FALSE table    values <chr [10]>
       10 table_font_size        TRUE  table    px     <chr [1]> 
-      # i 181 more rows
+      # i 183 more rows
 
 # gt_acs_compare works
 
     Code
       tbl3[["_boxhead"]]
     Output
-      # A tibble: 9 x 8
-        var   type  column_label column_units column_pattern column_align column_width
-        <chr> <chr> <list>       <chr>        <chr>          <chr>        <list>      
-      1 colu~ defa~ <chr [1]>    <NA>         <NA>           left         <NULL>      
-      2 esti~ defa~ <chr [1]>    <NA>         <NA>           right        <NULL>      
-      3 moe_~ hidd~ <chr [1]>    <NA>         <NA>           right        <NULL>      
-      4 perc~ hidd~ <chr [1]>    <NA>         <NA>           right        <NULL>      
-      5 perc~ hidd~ <chr [1]>    <NA>         <NA>           right        <NULL>      
-      6 esti~ defa~ <chr [1]>    <NA>         <NA>           right        <NULL>      
-      7 moe_~ hidd~ <chr [1]>    <NA>         <NA>           right        <NULL>      
-      8 perc~ hidd~ <chr [1]>    <NA>         <NA>           right        <NULL>      
-      9 perc~ hidd~ <chr [1]>    <NA>         <NA>           right        <NULL>      
-      # i 1 more variable: hidden_px <list>
+                                           var    type column_label column_units
+      1                           column_title default column_title         <NA>
+      2      estimate_Baltimore city, Maryland default         Est.         <NA>
+      3           moe_Baltimore city, Maryland  hidden          MOE         <NA>
+      4 perc_estimate_Baltimore city, Maryland  hidden      % share         <NA>
+      5      perc_moe_Baltimore city, Maryland  hidden        % MOE         <NA>
+      6                      estimate_Maryland default         Est.         <NA>
+      7                           moe_Maryland  hidden          MOE         <NA>
+      8                 perc_estimate_Maryland  hidden      % share         <NA>
+      9                      perc_moe_Maryland  hidden        % MOE         <NA>
+        column_pattern column_align column_width hidden_px
+      1           <NA>         left         NULL      NULL
+      2           <NA>        right         NULL      NULL
+      3           <NA>        right         NULL      NULL
+      4           <NA>        right         NULL      NULL
+      5           <NA>        right         NULL      NULL
+      6           <NA>        right         NULL      NULL
+      7           <NA>        right         NULL      NULL
+      8           <NA>        right         NULL      NULL
+      9           <NA>        right         NULL      NULL
 
