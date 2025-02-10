@@ -65,6 +65,10 @@ reliability value to estimate values based on the specified \code{moe_level}.}
 \item{column_id_col}{Column ID column name from Census Reporter metadata.
 Defaults to "column_id"}
 }
+\value{
+A modified version of the input data frame with added metadata
+columns.
+}
 \description{
 Label American Community Survey data using table and column metadata from
 Census Reporter

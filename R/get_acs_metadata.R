@@ -19,6 +19,8 @@ acs_cache_dir <- function(pkg = "getACS", recursive = TRUE) {
 #' @param year Sample year (between 2006 and 2022).
 #' @param metadata Type of metadata to return, "table" or "column"
 #' @inheritDotParams readr::read_csv
+#' @returns A data frame with data from the
+#'   "censusreporter/census-table-metadata" GitHub repository.
 #' @keywords internal
 #' @export
 #' @importFrom rappdirs user_cache_dir
@@ -134,6 +136,8 @@ get_acs_metadata <- function(survey = "acs5",
 #' @inheritParams assign_acs_reliability
 #' @seealso [join_acs_percent()]
 #' @keywords internal
+#' @returns A modified version of the input data frame with added metadata
+#'   columns.
 #' @export
 #' @importFrom rlang has_name
 label_acs_metadata <- function(data,
@@ -284,6 +288,7 @@ label_acs_column_metadata <- function(data,
   )
 
   if (is_empty(column_metadata)) {
+    # Assign line number based on standard grouping
     data <- dplyr::mutate(
       data,
       line_number = dplyr::row_number(),

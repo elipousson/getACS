@@ -164,6 +164,10 @@ Learn more in \code{\link[readr:should_read_lazy]{should_read_lazy()}} and in th
 \code{altrep} argument of \code{\link[vroom:vroom]{vroom::vroom()}}.}
   }}
 }
+\value{
+A data frame with data from the
+"censusreporter/census-table-metadata" GitHub repository.
+}
 \description{
 Read precomputed U.S. Census table or column metadata files from the  \href{https://github.com/censusreporter/census-table-metadata}{Census Reporter GitHub repository}.
 }
