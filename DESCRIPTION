@@ -2,7 +2,7 @@ Type: Package
 Package: getACS
 Title: Help Wrangling American Community Survey Data from tidycensus
 Version: 0.1.1.9003
-Authors@R: 
+Authors@R:
     person("Eli", "Pousson", , "eli.pousson@gmail.com", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0001-8280-1706"))
 Maintainer: Eli Pousson <eli.pousson@gmail.com>
@@ -11,9 +11,9 @@ Description: A package with helper functions for working with Census data
 License: MIT + file LICENSE
 URL: https://elipousson.github.io/getACS/
 BugReports: https://github.com/elipousson/getACS/issues
-Depends: 
-    R (>= 2.10)
-Imports: 
+Depends:
+    R (>= 3.5)
+Imports:
     cli,
     dplyr,
     ggplot2,
@@ -35,17 +35,17 @@ Imports:
     tigris (>= 2.1.1),
     vctrs,
     withr
-Suggests: 
+Suggests:
     forcats,
     readr,
     rmarkdown,
     testthat (>= 3.0.0)
-VignetteBuilder: 
+VignetteBuilder:
     knitr
 Config/testthat/edition: 3
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
-Remotes: 
+Remotes:
     elipousson/tigris

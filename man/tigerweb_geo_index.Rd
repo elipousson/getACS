@@ -5,7 +5,7 @@
 \alias{tigerweb_geo_index}
 \title{U.S. Census Bureau ArcGIS Services Index}
 \format{
-A data frame with 7081 rows and 15 variables:
+A data frame with 7750 rows and 15 variables:
 \describe{
 \item{\code{name}}{Name}
 \item{\code{type}}{Service/layer type}
@@ -30,8 +30,8 @@ tigerweb_geo_index
 \description{
 Index created with \code{\link[esri2sf:esriIndex]{esri2sf::esriIndex()}} listing all services located at
 \url{https://tigerweb.geo.census.gov/arcgis/rest/services}. Access ArcGIS
-services using the esri2sf package \url{https://github.com/elipousson/esri2sf} or
-arcpullr \url{https://github.com/pfrater/arcpullr/}.
+services using the arcgislayers \url{https://github.com/R-ArcGIS/arcgislayers} or
+esri2sf package \url{https://github.com/elipousson/esri2sf}. Last updated 2025-02-10.
 }
 \details{
 \url{https://tigerweb.geo.census.gov/arcgis/rest/services}

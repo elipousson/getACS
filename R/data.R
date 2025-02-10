@@ -2,10 +2,10 @@
 #'
 #' Index created with [esri2sf::esriIndex()] listing all services located at
 #' <https://tigerweb.geo.census.gov/arcgis/rest/services>. Access ArcGIS
-#' services using the esri2sf package <https://github.com/elipousson/esri2sf> or
-#' arcpullr <https://github.com/pfrater/arcpullr/>.
+#' services using the arcgislayers <https://github.com/R-ArcGIS/arcgislayers> or
+#' esri2sf package <https://github.com/elipousson/esri2sf>. Last updated 2025-02-10.
 #'
-#' @format A data frame with 7081 rows and 15 variables:
+#' @format A data frame with 7750 rows and 15 variables:
 #' \describe{
 #'   \item{`name`}{Name}
 #'   \item{`type`}{Service/layer type}
