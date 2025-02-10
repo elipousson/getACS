@@ -7,6 +7,7 @@
 * Add `na_zero` argument to return `NA` as the MOE when all MOE values are 0 and collapsing groups with `collapse_acs_variables()`.
 * Clean-up documentation by filling in missing arguments (2024-09-17).
 * Add `load_decennial_vars()` `label_decennial_data()` functions (2024-09-17).
+* Add `collapse` argument to `labs_acs_survey()` (2025-02-10).
 
 # getACS 0.1.1.9003
 
