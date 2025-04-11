@@ -9,29 +9,44 @@
 #' to use this crosswalk data frame with [make_area_xwalk()].
 #'
 #' @inheritParams tigris::blocks
+#' @param area A sf object. Required if `type` is  "block-to-area-join or
+#' "block-to-area-intersection".
 #' @param by Specification of join variables in the format of c("block column
 #'   name for tract" = "tract column name"). Passed to [dplyr::left_join()].
 #' @param suffix Suffixes added to the output to disambiguate column names from
 #'   the block and tract data. Unused for 2020 data.
+#' @param type One of three types of `"block-to-tract"`, `"block-to-area-join"`, or `"block-to-area-intersection"`
 #' @inheritDotParams tigris::blocks
 #' @param keep_zipped_shapefile Passed to [tigris::blocks()] and
 #'   [tigris::tracts()] to keep and re-use the zipped shapefile.
 #' @param crs Coordinate reference system to return.
 #' @param ... Additional parameters passed to [tigris::blocks()] and
 #'   [tigris::tracts()].
+#' @inheritParams sf::st_join
 #' @export
 #' @importFrom cli cli_progress_step
 #' @importFrom tigris blocks tracts
 #' @importFrom dplyr left_join
 #' @importFrom sf st_drop_geometry st_make_valid st_crs st_transform
-make_block_xwalk <- function(state,
-                             county = NULL,
-                             year = 2020,
-                             by = c("TRACTCE20" = "TRACTCE"),
-                             keep_zipped_shapefile = TRUE,
-                             suffix = c("_block", "_tract"),
-                             crs = NULL,
-                             ...) {
+make_block_xwalk <- function(
+  state,
+  county = NULL,
+  year = 2020,
+  area = NULL,
+  type = c(
+    "block-to-tract",
+    "block-to-area-join",
+    "block-to-area-intersection"
+  ),
+  by = c("TRACTCE20" = "TRACTCE"),
+  suffix = c("_block", "_tract"),
+  crs = NULL,
+  join = sf::st_intersects,
+  left = TRUE,
+  largest = FALSE,
+  keep_zipped_shapefile = TRUE,
+  ...
+) {
   cli::cli_progress_step(
     "Downloading blocks"
   )
@@ -44,24 +59,62 @@ make_block_xwalk <- function(state,
     ...
   )
 
-  cli::cli_progress_step(
-    "Downloading tracts"
-  )
+  type <- arg_match(type)
 
-  tract_sf <- tigris::tracts(
-    state = state,
-    county = county,
-    year = year,
-    keep_zipped_shapefile = keep_zipped_shapefile,
-    ...
-  )
+  if (type == "block-to-tract") {
+    cli::cli_progress_step(
+      "Downloading tracts"
+    )
 
-  block_xwalk <- dplyr::left_join(
-    x = block_sf,
-    y = sf::st_drop_geometry(tract_sf),
-    by = by,
-    suffix = suffix
-  )
+    tract_sf <- tigris::tracts(
+      state = state,
+      county = county,
+      year = year,
+      keep_zipped_shapefile = keep_zipped_shapefile,
+      ...
+    )
+
+    block_xwalk <- dplyr::left_join(
+      x = block_sf,
+      y = sf::st_drop_geometry(tract_sf),
+      by = by,
+      suffix = suffix
+    )
+  } else {
+    check_sf(area)
+    area <- sf::st_transform(area, sf::st_crs(block_sf))
+
+    if (identical(suffix, c("_block", "_tract"))) {
+      cli::cli_alert_info(
+        'Replacing default suffix with {.str {c("_block", "_area")}}'
+      )
+      suffix <- c("_block", "_area")
+    }
+
+    if (type == "block-to-area-intersection") {
+      block_xwalk <- sf::st_intersection(
+        block_xwalk,
+        area
+      )
+
+      block_xwalk <- block_xwalk |>
+        dplyr::mutate(
+          area_size = sf::st_area(geometry)
+        ) |>
+        dplyr::summarise(
+          .by = dplyr::all_of(names(block_sf))
+        )
+    } else {
+      block_xwalk <- sf::st_join(
+        x = block_sf,
+        y = area,
+        join = join,
+        suffix = suffix,
+        left = left,
+        largest = largest
+      )
+    }
+  }
 
   block_xwalk <- sf::st_make_valid(block_xwalk)
 
@@ -139,27 +192,29 @@ make_block_xwalk <- function(state,
 #' @importFrom vctrs vec_rbind
 #' @importFrom sf st_make_valid st_as_sf st_transform st_crs st_join
 #'   st_drop_geometry
-make_area_xwalk <- function(area,
-                            block_xwalk = NULL,
-                            state = NULL,
-                            county = NULL,
-                            year = 2020,
-                            name_col = "NAME",
-                            weight_col = "HOUSING20",
-                            geoid_col = "GEOID",
-                            tract_col = "TRACTCE20",
-                            by = c("TRACTCE20" = "TRACTCE"),
-                            suffix = c("_block", "_tract"),
-                            placement = c("largest", "surface", "centroid"),
-                            digits = 2,
-                            extensive = TRUE,
-                            coverage = TRUE,
-                            erase = FALSE,
-                            area_threshold = 0.75,
-                            keep_geometry = FALSE,
-                            crs = NULL,
-                            make_valid = TRUE,
-                            ...) {
+make_area_xwalk <- function(
+  area,
+  block_xwalk = NULL,
+  state = NULL,
+  county = NULL,
+  year = 2020,
+  name_col = "NAME",
+  weight_col = "HOUSING20",
+  geoid_col = "GEOID",
+  tract_col = "TRACTCE20",
+  by = c("TRACTCE20" = "TRACTCE"),
+  suffix = c("_block", "_tract"),
+  placement = c("largest", "surface", "centroid"),
+  digits = 2,
+  extensive = TRUE,
+  coverage = TRUE,
+  erase = FALSE,
+  area_threshold = 0.75,
+  keep_geometry = FALSE,
+  crs = NULL,
+  make_valid = TRUE,
+  ...
+) {
   check_name(name_col)
   check_name(tract_col)
   check_name(weight_col)
@@ -293,9 +348,7 @@ make_area_xwalk <- function(area,
 }
 
 #' @noRd
-erase_input_geometry <- function(input_sf,
-                                 erase_sf,
-                                 make_valid = FALSE) {
+erase_input_geometry <- function(input_sf, erase_sf, make_valid = FALSE) {
   if (make_valid) {
     input_sf <- sf::st_make_valid(input_sf)
     erase_sf <- sf::st_make_valid(erase_sf)
@@ -316,12 +369,14 @@ erase_input_geometry <- function(input_sf,
 }
 
 #' @noRd
-erase_input_sf <- function(input_sf,
-                           area_threshold = 0.75,
-                           year = NULL,
-                           erase = FALSE,
-                           make_valid = TRUE,
-                           call = caller_env()) {
+erase_input_sf <- function(
+  input_sf,
+  area_threshold = 0.75,
+  year = NULL,
+  erase = FALSE,
+  make_valid = TRUE,
+  call = caller_env()
+) {
   if (inherits_any(erase, c("sf", "sfc"))) {
     input_sf <- erase_input_geometry(
       input_sf = input_sf,
@@ -348,10 +403,12 @@ erase_input_sf <- function(input_sf,
 }
 
 #' @noRd
-use_block_xwalk <- function(block_xwalk,
-                            area,
-                            placement = c("largest", "surface", "centroid"),
-                            error_call = caller_env()) {
+use_block_xwalk <- function(
+  block_xwalk,
+  area,
+  placement = c("largest", "surface", "centroid"),
+  error_call = caller_env()
+) {
   placement <- arg_match(placement, error_call = error_call)
 
   if (placement == "surface") {
@@ -370,12 +427,17 @@ use_block_xwalk <- function(block_xwalk,
 }
 
 #' @noRd
-summarise_area_weight <- function(area_xwalk,
-                                  name_col = "NAME",
-                                  weight_col = "HOUSING20",
-                                  geoid_col = "GEOID",
-                                  tract_col = "TRACTCE20",
-                                  digits = 2) {
+summarise_area_weight <- function(
+  area_xwalk,
+  name_col = "NAME",
+  weight_col = "HOUSING20",
+  geoid_col = "GEOID",
+  tract_col = "TRACTCE20",
+  digits = 2
+) {
+  # Add check
+  # check_name(area_xwalk, nm = c(weight_col, geoid_col, tract_col, name_col))
+
   area_xwalk <- dplyr::filter(
     area_xwalk,
     .data[[weight_col]] > 0
@@ -383,7 +445,9 @@ summarise_area_weight <- function(area_xwalk,
 
   area_xwalk <- dplyr::group_by(
     area_xwalk,
-    .data[[geoid_col]], .data[[tract_col]], .data[[name_col]]
+    .data[[geoid_col]],
+    .data[[tract_col]],
+    .data[[name_col]]
   )
 
   area_xwalk <- dplyr::summarise(
@@ -409,19 +473,22 @@ summarise_area_weight <- function(area_xwalk,
 }
 
 #' @noRd
-rbind_area_coverage <- function(area,
-                                coverage_name,
-                                name_col = "NAME",
-                                block_xwalk,
-                                area_coverage = NULL,
-                                make_valid = FALSE,
-                                error_call = caller_env()) {
+rbind_area_coverage <- function(
+  area,
+  coverage_name,
+  name_col = "NAME",
+  block_xwalk,
+  area_coverage = NULL,
+  make_valid = FALSE,
+  error_call = caller_env()
+) {
   if (is.null(area_coverage)) {
     area_coverage <- try_fetch(
       st_make_valid_coverage(block_xwalk, area),
       error = function(cnd) {
         cli_abort(
-          c("Valid spatial coverage for the area of {.arg block_xwalk}
+          c(
+            "Valid spatial coverage for the area of {.arg block_xwalk}
           outside the {.arg area_xwalk} can't be created.",
             "*" = "Set {.code coverage = FALSE} and try again."
           ),
@@ -448,7 +515,8 @@ rbind_area_coverage <- function(area,
 
   if (is_empty(area_coverage)) {
     cli_abort(
-      c("{.arg area} is not covered by {.arg block_xwalk}",
+      c(
+        "{.arg area} is not covered by {.arg block_xwalk}",
         "i" = "Supply a {.arg block_xwalk} covering the full geometry of
           {.arg area} or set {.arg coverage} to {.code FALSE}"
       ),
@@ -501,25 +569,31 @@ rbind_area_coverage <- function(area,
 #' @importFrom cli cli_progress_step
 #' @importFrom dplyr select all_of left_join summarise
 #' @importFrom tidycensus moe_sum
-use_area_xwalk <- function(data,
-                           area_xwalk,
-                           geography = "area",
-                           name_col = "NAME",
-                           geoid_col = "GEOID",
-                           suffix = c("_area", ""),
-                           weight_col = "perc_HOUSING20",
-                           variable_col = "variable",
-                           value_col = "estimate",
-                           moe_col = "moe",
-                           digits = 0,
-                           perc = TRUE,
-                           extensive = TRUE,
-                           reliability = FALSE,
-                           moe_level = 90) {
+use_area_xwalk <- function(
+  data,
+  area_xwalk,
+  geography = "area",
+  name_col = "NAME",
+  geoid_col = "GEOID",
+  suffix = c("_area", ""),
+  weight_col = "perc_HOUSING20",
+  variable_col = "variable",
+  value_col = "estimate",
+  moe_col = "moe",
+  digits = 0,
+  perc = TRUE,
+  extensive = TRUE,
+  reliability = FALSE,
+  moe_level = 90
+) {
   check_data_frame(area_xwalk, call = call)
   check_data_frame(data, call = call)
   check_has_name(area_xwalk, c(geoid_col, weight_col), call = call)
-  check_has_name(data, c(geoid_col, variable_col, value_col, moe_col), call = call)
+  check_has_name(
+    data,
+    c(geoid_col, variable_col, value_col, moe_col),
+    call = call
+  )
 
   cli::cli_progress_step("Joining {.arg data} to {.arg area_xwalk}")
 
@@ -582,14 +656,16 @@ use_area_xwalk <- function(data,
 
 #' Join ACS data to an area crosswalk data frame
 #' @noRd
-join_area_xwalk <- function(data,
-                            area_xwalk,
-                            geoid_col = "GEOID",
-                            suffix = c("_area", ""),
-                            variable_col = "variable",
-                            value_col = "estimate",
-                            moe_col = "moe",
-                            call = caller_env()) {
+join_area_xwalk <- function(
+  data,
+  area_xwalk,
+  geoid_col = "GEOID",
+  suffix = c("_area", ""),
+  variable_col = "variable",
+  value_col = "estimate",
+  moe_col = "moe",
+  call = caller_env()
+) {
   data <- dplyr::select(
     data,
     all_of(c(geoid_col, variable_col, value_col, moe_col))
@@ -607,27 +683,33 @@ join_area_xwalk <- function(data,
 
 #' Summarise ACS data using a weighted sum
 #' @noRd
-summarise_weighted_sum <- function(data,
-                                   weight_col = "perc_HOUSING20",
-                                   name_col = "NAME",
-                                   variable_col = "variable",
-                                   value_col = "estimate",
-                                   moe_col = "moe",
-                                   na.rm = TRUE,
-                                   digits = 2) {
+summarise_weighted_sum <- function(
+  data,
+  weight_col = "perc_HOUSING20",
+  name_col = "NAME",
+  variable_col = "variable",
+  value_col = "estimate",
+  moe_col = "moe",
+  na.rm = TRUE,
+  digits = 2
+) {
   dplyr::summarise(
     data,
     "{value_col}" := round(
       sum(.data[[value_col]] * .data[[weight_col]], na.rm = na.rm),
       digits = digits
     ),
-    "{moe_col}" := round(
-      tidycensus::moe_sum(
-        moe = .data[[moe_col]],
-        estimate = .data[[value_col]] * .data[[weight_col]],
-        na.rm = na.rm
-      ),
-      digits = digits
+    "{moe_col}" := if_else(
+      all(is.na(.data[[moe_col]])),
+      NA_real_,
+      round(
+        tidycensus::moe_sum(
+          moe = .data[[moe_col]],
+          estimate = .data[[value_col]] * .data[[weight_col]],
+          na.rm = na.rm
+        ),
+        digits = digits
+      )
     ),
     .by = all_of(c(name_col, variable_col))
   )
@@ -636,14 +718,16 @@ summarise_weighted_sum <- function(data,
 #' Summarise ACS data using a weighted mean
 #' @noRd
 #' @importFrom stats weighted.mean
-summarise_weighted_mean <- function(data,
-                                    weight_col = "perc_HOUSING20",
-                                    name_col = "NAME",
-                                    variable_col = "variable",
-                                    value_col = "estimate",
-                                    moe_col = "moe",
-                                    na.rm = TRUE,
-                                    digits = 2) {
+summarise_weighted_mean <- function(
+  data,
+  weight_col = "perc_HOUSING20",
+  name_col = "NAME",
+  variable_col = "variable",
+  value_col = "estimate",
+  moe_col = "moe",
+  na.rm = TRUE,
+  digits = 2
+) {
   dplyr::summarise(
     data,
     "{value_col}" := round(
