@@ -60,8 +60,8 @@ required to create a crosswalk using \code{\link[=make_block_xwalk]{make_block_x
 be state name or state abbreviation.}
 
 \item{county}{The three-digit FIPS code (string) of the county you'd like to
-subset for, or a vector of FIPS codes if you desire multiple counties. Can
-also be a county name or vector of names.}
+subset for, or a vector of FIPS codes if you desire multiple counties.
+Can also be a county name or vector of names.}
 
 \item{year}{the data year; defaults to 2022}
 
@@ -113,11 +113,7 @@ the geometry of the input sf is erased from area and block_xwalk. This
 option is intended to support erasing open space or other non-developed
 land as well as water areas.}
 
-\item{area_threshold}{The percentile rank cutoff of water areas to use in the
-erase operation, ranked by size. Defaults to 0.75, representing the water
-areas in the 75th percentile and up (the largest 25 percent of areas).
-This value may need to be modified by the user to achieve optimal results
-for a given location.}
+\item{area_threshold}{The percentile rank cutoff of water areas to use in the erase operation, ranked by size. Defaults to 0.75, representing the water areas in the 75th percentile and up (the largest 25 percent of areas).  This value may need to be modified by the user to achieve optimal results for a given location.}
 
 \item{keep_geometry}{If \code{TRUE}, area_xwalk is a sf object with the same
 geometry as the input area. Defaults to \code{FALSE}.}

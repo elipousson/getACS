@@ -46,7 +46,7 @@ strips the trailing text for minutes.}
 
 \item{columns}{\emph{Columns to target}
 
-\verb{<column-targeting expression>} // \emph{default:} \code{everything()}
+\code{\link[gt:rows-columns]{<column-targeting expression>}} // \emph{default:} \code{everything()}
 
 Can either be a series of column names provided in \code{c()}, a vector of
 column indices, or a select helper function (e.g. \code{\link[gt:starts_with]{starts_with()}},
@@ -57,7 +57,7 @@ column indices, or a select helper function (e.g. \code{\link[gt:starts_with]{st
   \describe{
     \item{\code{rows}}{\emph{Rows to target}
 
-\verb{<row-targeting expression>} // \emph{default:} \code{everything()}
+\code{\link[gt:rows-columns]{<row-targeting expression>}} // \emph{default:} \code{everything()}
 
 In conjunction with \code{columns}, we can specify which of their rows should
 undergo formatting. The default \code{\link[gt:everything]{everything()}} results in all rows in
@@ -76,7 +76,9 @@ By default this is \code{NULL}.}
 
 \verb{function|list of functions} // \strong{required}
 
-Either a single formatting function or a named list of functions.}
+Either a single formatting function or a named list of functions. Can also
+be anonymous functions, in both base R (\verb{\\(x) x + 1}) and \code{rlang}
+(\code{~.x + 1}) syntax.}
   }}
 
 \item{column_title_col}{Column title column.}

@@ -8,10 +8,15 @@ make_block_xwalk(
   state,
   county = NULL,
   year = 2020,
+  area = NULL,
+  type = c("block-to-tract", "block-to-area-join", "block-to-area-intersection"),
   by = c(TRACTCE20 = "TRACTCE"),
-  keep_zipped_shapefile = TRUE,
   suffix = c("_block", "_tract"),
   crs = NULL,
+  join = sf::st_intersects,
+  left = TRUE,
+  largest = FALSE,
+  keep_zipped_shapefile = TRUE,
   ...
 )
 }
@@ -20,21 +25,33 @@ make_block_xwalk(
 be state name or state abbreviation.}
 
 \item{county}{The three-digit FIPS code (string) of the county you'd like to
-subset for, or a vector of FIPS codes if you desire multiple counties. Can
-also be a county name or vector of names.}
+subset for, or a vector of FIPS codes if you desire multiple counties.
+Can also be a county name or vector of names.}
 
 \item{year}{the data year; defaults to 2022}
 
+\item{area}{A sf object. Required if \code{type} is  "block-to-area-join or
+"block-to-area-intersection".}
+
+\item{type}{One of three types of \code{"block-to-tract"}, \code{"block-to-area-join"}, or \code{"block-to-area-intersection"}}
+
 \item{by}{Specification of join variables in the format of c("block column
 name for tract" = "tract column name"). Passed to \code{\link[dplyr:mutate-joins]{dplyr::left_join()}}.}
-
-\item{keep_zipped_shapefile}{Passed to \code{\link[tigris:blocks]{tigris::blocks()}} and
-\code{\link[tigris:tracts]{tigris::tracts()}} to keep and re-use the zipped shapefile.}
 
 \item{suffix}{Suffixes added to the output to disambiguate column names from
 the block and tract data. Unused for 2020 data.}
 
 \item{crs}{Coordinate reference system to return.}
+
+\item{join}{geometry predicate function with the same profile as \link[sf]{st_intersects}; see details}
+
+\item{left}{logical; if \code{TRUE} return the left join, otherwise an inner join; see details.
+see also \link[dplyr:mutate-joins]{left_join}}
+
+\item{largest}{logical; if \code{TRUE}, return \code{x} features augmented with the fields of \code{y} that have the largest overlap with each of the features of \code{x}; see https://github.com/r-spatial/sf/issues/578}
+
+\item{keep_zipped_shapefile}{Passed to \code{\link[tigris:blocks]{tigris::blocks()}} and
+\code{\link[tigris:tracts]{tigris::tracts()}} to keep and re-use the zipped shapefile.}
 
 \item{...}{
   Arguments passed on to \code{\link[tigris:blocks]{tigris::blocks}}

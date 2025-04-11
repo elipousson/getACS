@@ -76,8 +76,8 @@ dataset.  If variables dataset is already cached via the
 \code{load_variables} function, this can be bypassed.}
 
 \item{year}{The year, or endyear, of the ACS sample. 5-year ACS data is
-available from 2009 through 2022; 1-year ACS data is available from 2005
-through 2022, with the exception of 2020.  Defaults to 2022.}
+available from 2009 through 2023; 1-year ACS data is available from 2005
+through 2023, with the exception of 2020.  Defaults to 2023.}
 
 \item{survey}{The ACS contains one-year, three-year, and five-year surveys
 expressed as "acs1", "acs3", and "acs5". The default selection is "acs5."}

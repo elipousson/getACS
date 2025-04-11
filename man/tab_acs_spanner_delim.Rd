@@ -32,8 +32,9 @@ This is the \strong{gt} table object that is commonly created through use of the
 
 The columns to consider for the splitting, relabeling, and spanner setting
 operations. Can either be a series of column names provided in \code{c()}, a
-vector of column indices, or a select helper function (e.g. \code{\link[gt:starts_with]{starts_with()}},
-\code{\link[gt:ends_with]{ends_with()}}, \code{\link[gt:contains]{contains()}}, \code{\link[gt:matches]{matches()}}, \code{\link[gt:num_range]{num_range()}}, and \code{\link[gt:everything]{everything()}}).}
+vector of column indices, or a select helper function (e.g.,
+\code{\link[gt:starts_with]{starts_with()}}, \code{\link[gt:ends_with]{ends_with()}}, \code{\link[gt:contains]{contains()}}, \code{\link[gt:matches]{matches()}}, \code{\link[gt:num_range]{num_range()}},
+and \code{\link[gt:everything]{everything()}}).}
 
 \item{delim}{\emph{Delimiter for splitting}
 
