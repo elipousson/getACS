@@ -7,10 +7,12 @@
 #'
 #' @inheritParams tidycensus::load_variables
 #' @keywords internal
-load_decennial_vars <- function(year = 2020,
-                                dataset = NULL,
-                                cache = TRUE,
-                                quiet = FALSE) {
+load_decennial_vars <- function(
+  year = 2020,
+  dataset = NULL,
+  cache = TRUE,
+  quiet = FALSE
+) {
   if (length(dataset) > 1) {
     if (length(year) == 1) {
       var_list <- purrr::map(
@@ -23,7 +25,8 @@ load_decennial_vars <- function(year = 2020,
       params <- vctrs::vec_recycle_common(year = year, dataset = dataset)
 
       var_list <- purrr::map2(
-        params[["dataset"]], params[["year"]],
+        params[["dataset"]],
+        params[["year"]],
         \(x, y) {
           load_decennial_vars(y, x, cache, quiet)
         }
@@ -54,7 +57,6 @@ load_decennial_vars <- function(year = 2020,
         dataset = x_dataset,
         cache = cache
       )
-
 
       if (isFALSE(df)) {
         return(NULL)
@@ -117,7 +119,8 @@ load_decennial_vars <- function(year = 2020,
     ) |>
     dplyr::mutate(
       column_title = stringr::str_remove(
-        column_title, ":$"
+        column_title,
+        ":$"
       )
     )
 }
@@ -160,18 +163,20 @@ load_decennial_vars <- function(year = 2020,
 #' @export
 #' @importFrom tidycensus get_decennial
 #' @importFrom vctrs vec_cbind
-get_decennial_ts <- function(geography,
-                             variables = NULL,
-                             table = NULL,
-                             cache_table = TRUE,
-                             year = 2020,
-                             sumfile = NULL,
-                             state = NULL,
-                             county = NULL,
-                             geometry = FALSE,
-                             summary_var = NULL,
-                             label = TRUE,
-                             ...) {
+get_decennial_ts <- function(
+  geography,
+  variables = NULL,
+  table = NULL,
+  cache_table = TRUE,
+  year = 2020,
+  sumfile = NULL,
+  state = NULL,
+  county = NULL,
+  geometry = FALSE,
+  summary_var = NULL,
+  label = TRUE,
+  ...
+) {
   params <- get_geography_params(
     geography,
     year = year,

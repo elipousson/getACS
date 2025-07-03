@@ -20,10 +20,12 @@
 #' @importFrom tidycensus get_acs
 #' @importFrom vctrs vec_recycle_common list_drop_empty vec_rep vec_assign
 #'   vec_slice
-vec_get_acs <- function(...,
-                        .fn = tidycensus::get_acs,
-                        .size = NULL,
-                        .call = caller_env()) {
+vec_get_acs <- function(
+  ...,
+  .fn = tidycensus::get_acs,
+  .size = NULL,
+  .call = caller_env()
+) {
   vec_tidycensus(
     ...,
     .fn = .fn,
@@ -33,10 +35,7 @@ vec_get_acs <- function(...,
 }
 
 #' @noRd
-vec_tidycensus <- function(...,
-                           .fn,
-                           .size = NULL,
-                           .call = caller_env()) {
+vec_tidycensus <- function(..., .fn, .size = NULL, .call = caller_env()) {
   params <- vctrs::list_drop_empty(list2(...))
   params <- vctrs::vec_recycle_common(!!!params, .size = .size, .call = .call)
 
@@ -129,22 +128,24 @@ get_acs_table_alert <- function(...) {
 #' @importFrom vctrs vec_cbind
 #' @importFrom cli cli_progress_along col_blue symbol pb_bar pb_percent
 #' @importFrom tidycensus get_acs
-get_acs_tables <- function(geography,
-                           table = NULL,
-                           cache_table = TRUE,
-                           year = 2022,
-                           survey = "acs5",
-                           variables = NULL,
-                           moe_level = 90,
-                           ...,
-                           crs = NULL,
-                           label = TRUE,
-                           perc = TRUE,
-                           reliability = FALSE,
-                           keep_geography = TRUE,
-                           geoid_col = "GEOID",
-                           quiet = FALSE,
-                           call = caller_env()) {
+get_acs_tables <- function(
+  geography,
+  table = NULL,
+  cache_table = TRUE,
+  year = 2022,
+  survey = "acs5",
+  variables = NULL,
+  moe_level = 90,
+  ...,
+  crs = NULL,
+  label = TRUE,
+  perc = TRUE,
+  reliability = FALSE,
+  keep_geography = TRUE,
+  geoid_col = "GEOID",
+  quiet = FALSE,
+  call = caller_env()
+) {
   cli_quiet(quiet)
 
   survey_label <- acs_survey_label(
@@ -272,20 +273,22 @@ get_acs_tables <- function(geography,
 #' @export
 #' @importFrom purrr map list_rbind
 #' @importFrom cli cli_progress_along
-get_acs_geographies <- function(geography = c("county", "state"),
-                                variables = NULL,
-                                table = NULL,
-                                cache_table = TRUE,
-                                year = 2022,
-                                state = NULL,
-                                county = NULL,
-                                msa = NULL,
-                                survey = "acs5",
-                                ...,
-                                label = TRUE,
-                                perc = TRUE,
-                                geoid_col = "GEOID",
-                                quiet = FALSE) {
+get_acs_geographies <- function(
+  geography = c("county", "state"),
+  variables = NULL,
+  table = NULL,
+  cache_table = TRUE,
+  year = 2022,
+  state = NULL,
+  county = NULL,
+  msa = NULL,
+  survey = "acs5",
+  ...,
+  label = TRUE,
+  perc = TRUE,
+  geoid_col = "GEOID",
+  quiet = FALSE
+) {
   cli_quiet(quiet)
 
   survey_label <- acs_survey_label(
@@ -336,20 +339,22 @@ get_acs_geographies <- function(geography = c("county", "state"),
 #' @export
 #' @importFrom dplyr filter
 #' @importFrom vctrs vec_cbind
-get_acs_geography <- function(geography,
-                              variables = NULL,
-                              table = NULL,
-                              cache_table = TRUE,
-                              year = 2022,
-                              state = NULL,
-                              county = NULL,
-                              msa = NULL,
-                              survey = "acs5",
-                              ...,
-                              label = TRUE,
-                              perc = TRUE,
-                              geoid_col = "GEOID",
-                              call = caller_env()) {
+get_acs_geography <- function(
+  geography,
+  variables = NULL,
+  table = NULL,
+  cache_table = TRUE,
+  year = 2022,
+  state = NULL,
+  county = NULL,
+  msa = NULL,
+  survey = "acs5",
+  ...,
+  label = TRUE,
+  perc = TRUE,
+  geoid_col = "GEOID",
+  call = caller_env()
+) {
   params <- get_geography_params(
     geography,
     year = year,
@@ -373,11 +378,15 @@ get_acs_geography <- function(geography,
     geoid_col = geoid_col
   )
 
-  if (!is_null(msa) &&
-    geography %in% c(
-      "metropolitan/micropolitan statistical area",
-      "cbsa", "metropolitan statistical area/micropolitan statistical area"
-    )) {
+  if (
+    !is_null(msa) &&
+      geography %in%
+        c(
+          "metropolitan/micropolitan statistical area",
+          "cbsa",
+          "metropolitan statistical area/micropolitan statistical area"
+        )
+  ) {
     cli_alert_info(
       "Filtering data to {msa}"
     )
@@ -424,13 +433,15 @@ get_acs_geography <- function(geography,
 #' @keywords internal
 #' @export
 #' @importFrom vctrs list_drop_empty
-get_geography_params <- function(geography,
-                                 year = 2022,
-                                 state = NULL,
-                                 county = NULL,
-                                 allow_decennial = FALSE,
-                                 ...,
-                                 call = caller_env()) {
+get_geography_params <- function(
+  geography,
+  year = 2022,
+  state = NULL,
+  county = NULL,
+  allow_decennial = FALSE,
+  ...,
+  call = caller_env()
+) {
   check_string(geography, allow_empty = FALSE, call = call)
 
   if (!allow_decennial && (geography %in% c("block", "voting district"))) {
@@ -440,11 +451,15 @@ get_geography_params <- function(geography,
     )
   }
 
-  if (has_length(year, 1) && (year < 2021) &&
-    (identical(geography, "metropolitan/micropolitan statistical area"))) {
+  if (
+    has_length(year, 1) &&
+      (year < 2021) &&
+      (identical(geography, "metropolitan/micropolitan statistical area"))
+  ) {
     # "metropolitan statistical area/micropolitan statistical area"
     cli_warn(
-      c("{geography} us not a supported {.arg geography} for {year} data.",
+      c(
+        "{geography} us not a supported {.arg geography} for {year} data.",
         "i" = "Setting {.arg geography} to {.val cbsa}."
       )
     )

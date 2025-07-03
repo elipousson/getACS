@@ -21,17 +21,23 @@
 #' @export
 #' @importFrom tidycensus load_variables
 #' @importFrom dplyr rename mutate
-load_acs_vars <- function(year = 2022,
-                          survey = "acs5",
-                          cache = TRUE,
-                          variable_col = "variable",
-                          geography_levels = c(
-                            "block", "block group", "tract",
-                            "county", "state", "us"
-                          ),
-                          table = NULL,
-                          vars = NULL,
-                          drop_vars = NULL) {
+load_acs_vars <- function(
+  year = 2022,
+  survey = "acs5",
+  cache = TRUE,
+  variable_col = "variable",
+  geography_levels = c(
+    "block",
+    "block group",
+    "tract",
+    "county",
+    "state",
+    "us"
+  ),
+  table = NULL,
+  vars = NULL,
+  drop_vars = NULL
+) {
   survey <- acs_survey_match(survey)
 
   acs_var_data <- tidycensus::load_variables(

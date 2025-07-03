@@ -13,9 +13,11 @@
 #' @examples
 #' acs_table_race_iteration("B25003")
 #' @export
-acs_table_race_iteration <- function(table,
-                                     codes = NULL,
-                                     error_call = caller_env()) {
+acs_table_race_iteration <- function(
+  table,
+  codes = NULL,
+  error_call = caller_env()
+) {
   check_string(table, call = error_call)
 
   code_options <- c("", race_iteration[["code"]])
@@ -63,14 +65,16 @@ acs_table_race_iteration <- function(table,
 #' acs_table_variables(table = "B15003", variables = c(1:5))
 #' @export
 #' @importFrom stringr str_pad
-acs_table_variables <- function(table = NULL,
-                                variables = NULL,
-                                data = NULL,
-                                survey = "acs5",
-                                year = 2022,
-                                sep = "_",
-                                width = 3,
-                                error_call = caller_env()) {
+acs_table_variables <- function(
+  table = NULL,
+  variables = NULL,
+  data = NULL,
+  survey = "acs5",
+  year = 2022,
+  sep = "_",
+  width = 3,
+  error_call = caller_env()
+) {
   if (is.data.frame(data) && is.null(table)) {
     stopifnot(has_name(data, "table_id"))
     table <- unique(data[["table_id"]])

@@ -24,16 +24,18 @@ acs_cache_dir <- function(pkg = "getACS", recursive = TRUE) {
 #' @keywords internal
 #' @export
 #' @importFrom rappdirs user_cache_dir
-get_acs_metadata <- function(survey = "acs5",
-                             year = 2022,
-                             metadata = "table",
-                             ...,
-                             table = NULL,
-                             cache_data = TRUE,
-                             progress = FALSE,
-                             show_col_types = FALSE,
-                             quiet = FALSE,
-                             error_call = caller_env()) {
+get_acs_metadata <- function(
+  survey = "acs5",
+  year = 2022,
+  metadata = "table",
+  ...,
+  table = NULL,
+  cache_data = TRUE,
+  progress = FALSE,
+  show_col_types = FALSE,
+  quiet = FALSE,
+  error_call = caller_env()
+) {
   sample <- acs_survey_sample(survey)
 
   check_acs_survey(survey, year, sample, call = error_call)
@@ -84,7 +86,6 @@ get_acs_metadata <- function(survey = "acs5",
     )
     return(data.frame())
   }
-
 
   if (cache_data) {
     cli::cli_progress_step("Caching {metadata} metadata")
@@ -140,15 +141,17 @@ get_acs_metadata <- function(survey = "acs5",
 #'   columns.
 #' @export
 #' @importFrom rlang has_name
-label_acs_metadata <- function(data,
-                               survey = "acs5",
-                               year = 2022,
-                               perc = TRUE,
-                               reliability = FALSE,
-                               moe_level = 90,
-                               geoid_col = "GEOID",
-                               variable_col = "variable",
-                               call = caller_env()) {
+label_acs_metadata <- function(
+  data,
+  survey = "acs5",
+  year = 2022,
+  perc = TRUE,
+  reliability = FALSE,
+  moe_level = 90,
+  geoid_col = "GEOID",
+  variable_col = "variable",
+  call = caller_env()
+) {
   data <- label_acs_table_metadata(
     data = data,
     survey = survey,
@@ -182,12 +185,14 @@ label_acs_metadata <- function(data,
 #' @export
 #' @importFrom dplyr mutate left_join all_of
 #' @importFrom stringr str_detect
-label_acs_table_metadata <- function(data,
-                                     survey = "acs5",
-                                     year = 2022,
-                                     variable_col = "variable",
-                                     table_id_col = "table_id",
-                                     call = caller_env()) {
+label_acs_table_metadata <- function(
+  data,
+  survey = "acs5",
+  year = 2022,
+  variable_col = "variable",
+  table_id_col = "table_id",
+  call = caller_env()
+) {
   check_has_name(data, variable_col, call = call)
 
   table_metadata <- get_acs_metadata(
@@ -237,13 +242,16 @@ str_table_id <- function(variable) {
 
 #' @noRd
 #' @importFrom stringr str_extract str_replace_all
-join_acs_race_iteration <- function(data,
-                                    table_id_col = "table_id",
-                                    call = caller_env()) {
+join_acs_race_iteration <- function(
+  data,
+  table_id_col = "table_id",
+  call = caller_env()
+) {
   check_has_name(data, nm = table_id_col, call = call)
 
   data[["race_iteration_code"]] <- stringr::str_extract(
-    data[[table_id_col]], "[:alpha:]$"
+    data[[table_id_col]],
+    "[:alpha:]$"
   )
 
   data[["race_iteration_group"]] <- stringr::str_replace_all(
@@ -263,14 +271,16 @@ join_acs_race_iteration <- function(data,
 #' @importFrom dplyr mutate left_join row_number
 #' @importFrom tidyselect all_of any_of
 #' @importFrom stringr str_extract str_remove
-label_acs_column_metadata <- function(data,
-                                      survey = "acs5",
-                                      year = 2022,
-                                      variable_col = "variable",
-                                      column_id_col = "column_id",
-                                      column_title_col = "column_title",
-                                      table_id_col = "table_id",
-                                      call = caller_env()) {
+label_acs_column_metadata <- function(
+  data,
+  survey = "acs5",
+  year = 2022,
+  variable_col = "variable",
+  column_id_col = "column_id",
+  column_title_col = "column_title",
+  table_id_col = "table_id",
+  call = caller_env()
+) {
   column_metadata <- get_acs_metadata(
     survey,
     year,

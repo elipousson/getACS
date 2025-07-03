@@ -53,21 +53,23 @@
 #' @inheritParams assign_acs_reliability
 #' @export
 #' @importFrom dplyr group_by mutate all_of
-collapse_acs_variables <- function(data,
-                                   ...,
-                                   other_level = NULL,
-                                   name_col = "NAME",
-                                   variable_col = "variable",
-                                   label_col = "label",
-                                   value_col = "estimate",
-                                   moe_col = "moe",
-                                   moe_level = 90,
-                                   reliability = FALSE,
-                                   na.rm = TRUE,
-                                   na_zero = TRUE,
-                                   digits = 2,
-                                   .add = FALSE,
-                                   extensive = TRUE) {
+collapse_acs_variables <- function(
+  data,
+  ...,
+  other_level = NULL,
+  name_col = "NAME",
+  variable_col = "variable",
+  label_col = "label",
+  value_col = "estimate",
+  moe_col = "moe",
+  moe_level = 90,
+  reliability = FALSE,
+  na.rm = TRUE,
+  na_zero = TRUE,
+  digits = 2,
+  .add = FALSE,
+  extensive = TRUE
+) {
   check_has_name(data, c(variable_col, value_col, moe_col))
   check_installed("forcats")
 
@@ -125,11 +127,13 @@ collapse_acs_variables <- function(data,
 }
 
 #' @noRd
-moe_sum_safe <- function(moe,
-                         estimate,
-                         na.rm = TRUE,
-                         na_zero = TRUE,
-                         digits = 2) {
+moe_sum_safe <- function(
+  moe,
+  estimate,
+  na.rm = TRUE,
+  na_zero = TRUE,
+  digits = 2
+) {
   dplyr::if_else(
     all(is.na(moe)) | (na_zero & sum(moe) == 0),
     NA_real_,
@@ -150,17 +154,18 @@ moe_sum_safe <- function(moe,
 #' @importFrom tidycensus moe_sum
 #' @noRd
 summarise_acs_extensive <- function(
-    data,
-    name_col = "NAME",
-    variable_col = "variable",
-    label_col = "label",
-    value_col = "estimate",
-    moe_col = "moe",
-    moe_level = 90,
-    reliability = FALSE,
-    na.rm = TRUE,
-    na_zero = TRUE,
-    digits = 2) {
+  data,
+  name_col = "NAME",
+  variable_col = "variable",
+  label_col = "label",
+  value_col = "estimate",
+  moe_col = "moe",
+  moe_level = 90,
+  reliability = FALSE,
+  na.rm = TRUE,
+  na_zero = TRUE,
+  digits = 2
+) {
   perc_cols <- acs_perc_cols(
     value_col = value_col,
     moe_col = moe_col
@@ -251,14 +256,15 @@ summarise_acs_extensive <- function(
 #' @importFrom dplyr summarise across
 #' @noRd
 summarise_acs_intensive <- function(
-    data,
-    name_col = "NAME",
-    variable_col = "variable",
-    label_col = "label",
-    value_col = "estimate",
-    moe_col = "moe",
-    na.rm = TRUE,
-    digits = 2) {
+  data,
+  name_col = "NAME",
+  variable_col = "variable",
+  label_col = "label",
+  value_col = "estimate",
+  moe_col = "moe",
+  na.rm = TRUE,
+  digits = 2
+) {
   dplyr::summarise(
     data,
     "{variable_col}" := list(unique(.data[[variable_col]])),

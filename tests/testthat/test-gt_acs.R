@@ -36,4 +36,3 @@ test_that("gt_acs_compare works", {
     tbl3[["_boxhead"]]
   )
 })
-

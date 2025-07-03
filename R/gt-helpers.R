@@ -15,22 +15,24 @@
 #' @keywords internal
 #' @export
 #' @importFrom tidyselect starts_with
-cols_acs_label <- function(data,
-                           value_col = "estimate",
-                           value_label = "Est.",
-                           moe_col = "moe",
-                           moe_label = "MOE",
-                           perc_prefix = "perc",
-                           perc_sep = "_",
-                           perc_value_label = "% share",
-                           perc_moe_label = "% MOE",
-                           perc = TRUE,
-                           name_col = "NAME",
-                           name_label = NULL,
-                           column_title_col = "column_title",
-                           column_title_label = NULL,
-                           .col_fn = starts_with,
-                           env = NULL) {
+cols_acs_label <- function(
+  data,
+  value_col = "estimate",
+  value_label = "Est.",
+  moe_col = "moe",
+  moe_label = "MOE",
+  perc_prefix = "perc",
+  perc_sep = "_",
+  perc_value_label = "% share",
+  perc_moe_label = "% MOE",
+  perc = TRUE,
+  name_col = "NAME",
+  name_label = NULL,
+  column_title_col = "column_title",
+  column_title_label = NULL,
+  .col_fn = starts_with,
+  env = NULL
+) {
   # TODO: perc argument is ignored as of 2024-04-29 refactoring to address
   # regression
   perc_cols <- .acs_perc_cols(
@@ -123,12 +125,14 @@ cols_acs_label <- function(data,
 #' Extended version of `gt::cols_label()`
 #'
 #' @noRd
-.cols_label_ext <- function(data,
-                            columns = NULL,
-                            label = NULL,
-                            .col_fn = starts_with,
-                            env = NULL,
-                            ...) {
+.cols_label_ext <- function(
+  data,
+  columns = NULL,
+  label = NULL,
+  .col_fn = starts_with,
+  env = NULL,
+  ...
+) {
   if (is_null(label) || is_null(columns)) {
     return(data)
   }
@@ -146,7 +150,6 @@ cols_acs_label <- function(data,
 
     return(data)
   }
-
 
   withr::with_environment(
     env = env %||% current_env(),
@@ -170,12 +173,14 @@ cols_acs_label <- function(data,
 #' @keywords internal
 #' @importFrom sf st_drop_geometry
 #' @importFrom gt gt
-.gt_ext <- function(data,
-                    rownames_to_stub = FALSE,
-                    row_group_as_column = FALSE,
-                    ...,
-                    drop_geometry = TRUE,
-                    hide_na_cols = TRUE) {
+.gt_ext <- function(
+  data,
+  rownames_to_stub = FALSE,
+  row_group_as_column = FALSE,
+  ...,
+  drop_geometry = TRUE,
+  hide_na_cols = TRUE
+) {
   if (inherits(data, "gt_tbl")) {
     return(gt)
   }
@@ -191,7 +196,6 @@ cols_acs_label <- function(data,
     row_group_as_column = row_group_as_column,
     ...
   )
-
 
   if (hide_na_cols) {
     gt_object <- .cols_hide_na(gt_object)

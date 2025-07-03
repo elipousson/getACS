@@ -2,15 +2,17 @@
 #'
 #' @keywords internal
 #' @noRd
-get_tigris_geometry <- function(data = NULL,
-                                geography = NULL,
-                                state = NULL,
-                                county = NULL,
-                                year = 2022,
-                                by = "GEOID",
-                                suffix = c("", "_geometry"),
-                                crs = NULL,
-                                ...) {
+get_tigris_geometry <- function(
+  data = NULL,
+  geography = NULL,
+  state = NULL,
+  county = NULL,
+  year = 2022,
+  by = "GEOID",
+  suffix = c("", "_geometry"),
+  crs = NULL,
+  ...
+) {
   check_installed("sf")
 
   params <- get_geography_params(
@@ -27,7 +29,8 @@ get_tigris_geometry <- function(data = NULL,
     data <- sf::st_drop_geometry(data)
   }
 
-  geometry <- switch(geography,
+  geometry <- switch(
+    geography,
     "block" = exec(tigris::blocks, !!!params, ..., year = year),
     "block group" = exec(tigris::block_groups, !!!params, ..., year = year),
     "tract" = exec(tigris::tracts, !!!params, ..., year = year),
@@ -44,12 +47,14 @@ get_tigris_geometry <- function(data = NULL,
 
 
 #' @noRd
-join_tigris_geometry <- function(data = NULL,
-                                 geography = NULL,
-                                 state = NULL,
-                                 county = NULL,
-                                 year = 2022,
-                                 ...) {
+join_tigris_geometry <- function(
+  data = NULL,
+  geography = NULL,
+  state = NULL,
+  county = NULL,
+  year = 2022,
+  ...
+) {
   if (!is.null(data)) {
     stopifnot(
       has_name(data, "geography"),
@@ -76,7 +81,8 @@ join_tigris_geometry <- function(data = NULL,
   tigris_data <- purrr::pmap(
     geometry_params,
     \(geography, state, county) {
-      switch(geography,
+      switch(
+        geography,
         "block" = tigris::blocks(state = state, county = county, ...),
         "block group" = tigris::block_groups(
           state = state,

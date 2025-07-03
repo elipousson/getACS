@@ -17,28 +17,34 @@
 #' @param .cols_fn tidyselect function used to select columns to format and
 #'   merge. Defaults to [tidyselect::starts_with]
 #' @keywords internal
-fmt_acs_values <- function(data,
-                           value_col = "estimate",
-                           moe_col = "moe",
-                           perc_prefix = "perc",
-                           perc_sep = "_",
-                           decimals = 0,
-                           use_seps = TRUE,
-                           accounting = FALSE,
-                           scale_by = 1,
-                           merge_moe = TRUE,
-                           currency_value = FALSE,
-                           ...,
-                           .cols_fn = starts_with) {
+fmt_acs_values <- function(
+  data,
+  value_col = "estimate",
+  moe_col = "moe",
+  perc_prefix = "perc",
+  perc_sep = "_",
+  decimals = 0,
+  use_seps = TRUE,
+  accounting = FALSE,
+  scale_by = 1,
+  merge_moe = TRUE,
+  currency_value = FALSE,
+  ...,
+  .cols_fn = starts_with
+) {
   perc_cols <- .acs_perc_cols(value_col, moe_col, perc_prefix, perc_sep)
 
-  if (!is.null(perc_cols) &&
-      ncol(dplyr::select(data[["_data"]], .cols_fn(perc_cols))) == 0) {
+  if (
+    !is.null(perc_cols) &&
+      ncol(dplyr::select(data[["_data"]], .cols_fn(perc_cols))) == 0
+  ) {
     perc_cols <- NULL
   }
 
-  if (!is.null(value_col) &&
-    ncol(dplyr::select(data[["_data"]], .cols_fn(value_col))) == 0) {
+  if (
+    !is.null(value_col) &&
+      ncol(dplyr::select(data[["_data"]], .cols_fn(value_col))) == 0
+  ) {
     value_col <- NULL
   }
 
@@ -111,14 +117,16 @@ fmt_acs_values <- function(data,
 #' @importFrom tidyselect everything eval_select all_of
 #' @importFrom gt cols_merge_uncert
 #' @importFrom dplyr select
-cols_merge_uncert_multi <- function(data,
-                                    col_val = "estimate",
-                                    col_uncert = "moe",
-                                    .cols_fn = starts_with,
-                                    rows = everything(),
-                                    sep = " +/- ",
-                                    autohide = TRUE,
-                                    call = caller_env()) {
+cols_merge_uncert_multi <- function(
+  data,
+  col_val = "estimate",
+  col_uncert = "moe",
+  .cols_fn = starts_with,
+  rows = everything(),
+  sep = " +/- ",
+  autohide = TRUE,
+  call = caller_env()
+) {
   uncert_data <- dplyr::select(
     data[["_data"]],
     .cols_fn(col_uncert)
@@ -176,19 +184,21 @@ cols_merge_uncert_multi <- function(data,
 #' @inheritParams gt::tab_spanner_delim
 #' @keywords internal
 #' @export
-tab_acs_spanner_delim <- function(data,
-                                  column_title_col = "column_title",
-                                  value_col = "estimate",
-                                  moe_col = "moe",
-                                  perc_prefix = "perc",
-                                  columns = starts_with(
-                                    c(value_col, moe_col, perc_prefix)
-                                  ),
-                                  delim = "_",
-                                  split = "last",
-                                  limit = 1,
-                                  reverse = TRUE,
-                                  ...) {
+tab_acs_spanner_delim <- function(
+  data,
+  column_title_col = "column_title",
+  value_col = "estimate",
+  moe_col = "moe",
+  perc_prefix = "perc",
+  columns = starts_with(
+    c(value_col, moe_col, perc_prefix)
+  ),
+  delim = "_",
+  split = "last",
+  limit = 1,
+  reverse = TRUE,
+  ...
+) {
   gt::tab_spanner_delim(
     data,
     delim = delim,
@@ -228,30 +238,33 @@ NULL
 #' @export
 #' @importFrom glue glue
 #' @importFrom gt md tab_source_note
-tab_acs_source_note <- function(gt_object,
-                                source_note = NULL,
-                                append_note = FALSE,
-                                survey = "acs5",
-                                year = 2022,
-                                table = NULL,
-                                table_label = "Table",
-                                prefix = "Source: ",
-                                end = ".",
-                                use_md = FALSE,
-                                ...) {
+tab_acs_source_note <- function(
+  gt_object,
+  source_note = NULL,
+  append_note = FALSE,
+  survey = "acs5",
+  year = 2022,
+  table = NULL,
+  table_label = "Table",
+  prefix = "Source: ",
+  end = ".",
+  use_md = FALSE,
+  ...
+) {
   if (append_note) {
     end <- paste(end, source_note)
     source_note <- NULL
   }
 
-  source_note <- source_note %||% acs_survey_label_table(
-    survey = survey,
-    year = year,
-    prefix = prefix,
-    table = table,
-    table_label = table_label,
-    end = end
-  )
+  source_note <- source_note %||%
+    acs_survey_label_table(
+      survey = survey,
+      year = year,
+      prefix = prefix,
+      table = table,
+      table_label = table_label,
+      end = end
+    )
 
   if (use_md) {
     source_note <- gt::md(source_note)
@@ -291,15 +304,17 @@ tab_acs_source_note <- function(gt_object,
 #' @importFrom stringr str_c
 #' @importFrom gt cols_merge_uncert
 #' @importFrom cli cli_alert_warning
-cols_merge_uncert_ext <- function(gt_object,
-                                  columns = NULL,
-                                  col_val = NULL,
-                                  col_uncert = NULL,
-                                  prefix = "",
-                                  postfix = "",
-                                  sep = "",
-                                  ...,
-                                  call = caller_env()) {
+cols_merge_uncert_ext <- function(
+  gt_object,
+  columns = NULL,
+  col_val = NULL,
+  col_uncert = NULL,
+  prefix = "",
+  postfix = "",
+  sep = "",
+  ...,
+  call = caller_env()
+) {
   columns <- columns %||% c(col_val, col_uncert)
 
   check_character(columns, call = call)
@@ -352,16 +367,18 @@ cols_merge_uncert_ext <- function(gt_object,
 #' @keywords gt
 #' @export
 #' @importFrom gt fmt_number tab_spanner
-fmt_acs_estimate <- function(gt_object,
-                             col_est = "estimate",
-                             col_moe = "moe",
-                             columns = NULL,
-                             col_labels = "Est.",
-                             spanner = NULL,
-                             decimals = 0,
-                             use_seps = TRUE,
-                             ...,
-                             call = caller_env()) {
+fmt_acs_estimate <- function(
+  gt_object,
+  col_est = "estimate",
+  col_moe = "moe",
+  columns = NULL,
+  col_labels = "Est.",
+  spanner = NULL,
+  decimals = 0,
+  use_seps = TRUE,
+  ...,
+  call = caller_env()
+) {
   columns <- columns %||% c(col_est, col_moe)
 
   gt_object <- cols_label_ext(
@@ -389,16 +406,18 @@ fmt_acs_estimate <- function(gt_object,
 #' @name fmt_acs_percent
 #' @export
 #' @importFrom gt fmt_percent tab_spanner
-fmt_acs_percent <- function(gt_object,
-                            col_est = "perc_estimate",
-                            col_moe = "perc_moe",
-                            columns = NULL,
-                            col_labels = "% share",
-                            spanner = NULL,
-                            decimals = 0,
-                            use_seps = TRUE,
-                            ...,
-                            call = caller_env()) {
+fmt_acs_percent <- function(
+  gt_object,
+  col_est = "perc_estimate",
+  col_moe = "perc_moe",
+  columns = NULL,
+  col_labels = "% share",
+  spanner = NULL,
+  decimals = 0,
+  use_seps = TRUE,
+  ...,
+  call = caller_env()
+) {
   columns <- columns %||% c(col_est, col_moe)
 
   gt_object <- cols_label_ext(
@@ -436,10 +455,12 @@ fmt_acs_percent <- function(gt_object,
 #' [fmt_acs_estimate()] and [fmt_acs_percent()].
 #' @export
 #' @importFrom gt cols_label
-cols_label_ext <- function(gt_object,
-                           columns = NULL,
-                           col_labels = NULL,
-                           call = caller_env()) {
+cols_label_ext <- function(
+  gt_object,
+  columns = NULL,
+  col_labels = NULL,
+  call = caller_env()
+) {
   if (is_null(col_labels)) {
     return(gt_object)
   }

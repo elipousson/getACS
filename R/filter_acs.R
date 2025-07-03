@@ -47,19 +47,21 @@
 #' }
 #' @export
 #' @importFrom dplyr filter
-filter_acs <- function(data,
-                       ...,
-                       table = NULL,
-                       column = NULL,
-                       vars = NULL,
-                       drop_vars = NULL,
-                       geography = NULL,
-                       variable_col = "variable",
-                       column_title_col = "column_title",
-                       table_id_col = "table_id",
-                       geography_col = "geography",
-                       require_geography = FALSE,
-                       require_table = FALSE) {
+filter_acs <- function(
+  data,
+  ...,
+  table = NULL,
+  column = NULL,
+  vars = NULL,
+  drop_vars = NULL,
+  geography = NULL,
+  variable_col = "variable",
+  column_title_col = "column_title",
+  table_id_col = "table_id",
+  geography_col = "geography",
+  require_geography = FALSE,
+  require_table = FALSE
+) {
   if (!is_null(geography)) {
     stopifnot(
       has_name(data, geography_col)
@@ -144,14 +146,16 @@ filter_acs <- function(data,
 
 #' Check for presence of ACS ID values
 #' @noRd
-check_acs_id <- function(data,
-                         id = NULL,
-                         id_col = "table_id",
-                         allow_any = FALSE,
-                         allow_null = FALSE,
-                         id_arg = caller_arg(id),
-                         arg = caller_arg(data),
-                         call = caller_env()) {
+check_acs_id <- function(
+  data,
+  id = NULL,
+  id_col = "table_id",
+  allow_any = FALSE,
+  allow_null = FALSE,
+  id_arg = caller_arg(id),
+  arg = caller_arg(data),
+  call = caller_env()
+) {
   check_character(id, allow_null = allow_null, call = call)
 
   if (allow_null && is.null(id)) {

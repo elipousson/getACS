@@ -15,18 +15,20 @@
 #' @export
 #' @importFrom dplyr filter select left_join mutate join_by
 #' @importFrom tidycensus moe_prop
-join_acs_percent <- function(data,
-                             geoid_col = "GEOID",
-                             column_id_col = "column_id",
-                             denominator_col = NULL,
-                             denominator_prefix = "denominator_",
-                             value_col = "estimate",
-                             moe_col = "moe",
-                             perc = TRUE,
-                             perc_prefix = "perc",
-                             perc_sep = "_",
-                             na_matches = "never",
-                             digits = 2) {
+join_acs_percent <- function(
+  data,
+  geoid_col = "GEOID",
+  column_id_col = "column_id",
+  denominator_col = NULL,
+  denominator_prefix = "denominator_",
+  value_col = "estimate",
+  moe_col = "moe",
+  perc = TRUE,
+  perc_prefix = "perc",
+  perc_sep = "_",
+  na_matches = "never",
+  digits = 2
+) {
   data <- join_acs_denominator(
     data = data,
     value_col = value_col,
@@ -61,8 +63,10 @@ join_acs_percent <- function(data,
     ),
     "{perc_cols[[2]]}" := round(
       tidycensus::moe_prop(
-        .data[[value_col]], .data[[denominator_value_col]],
-        .data[[moe_col]], .data[[denominator_moe_col]]
+        .data[[value_col]],
+        .data[[denominator_value_col]],
+        .data[[moe_col]],
+        .data[[denominator_moe_col]]
       ),
       digits = digits
     ),
@@ -73,17 +77,19 @@ join_acs_percent <- function(data,
 #' @rdname join_acs_percent
 #' @name join_acs_percent_parent
 #' @export
-join_acs_percent_parent <- function(data,
-                                    geoid_col = "GEOID",
-                                    column_id_col = "column_id",
-                                    denominator_col = NULL,
-                                    denominator_prefix = "parent_",
-                                    value_col = "estimate",
-                                    moe_col = "moe",
-                                    perc_prefix = "perc_parent",
-                                    perc_sep = "_",
-                                    na_matches = "never",
-                                    digits = 2) {
+join_acs_percent_parent <- function(
+  data,
+  geoid_col = "GEOID",
+  column_id_col = "column_id",
+  denominator_col = NULL,
+  denominator_prefix = "parent_",
+  value_col = "estimate",
+  moe_col = "moe",
+  perc_prefix = "perc_parent",
+  perc_sep = "_",
+  na_matches = "never",
+  digits = 2
+) {
   join_acs_percent(
     data,
     geoid_col = geoid_col,
@@ -120,23 +126,28 @@ join_acs_percent_parent <- function(data,
 #' @inheritParams dplyr::left_join
 #' @inheritParams rlang::args_error_context
 #' @export
-join_acs_denominator <- function(data,
-                                 geoid_col = "GEOID",
-                                 value_col = "estimate",
-                                 moe_col = "moe",
-                                 column_id_col = "column_id",
-                                 column_title_col = "column_title",
-                                 denominator_col = NULL,
-                                 denominator_prefix = "denominator_",
-                                 na_matches = "never",
-                                 digits = 2,
-                                 call = caller_env()) {
+join_acs_denominator <- function(
+  data,
+  geoid_col = "GEOID",
+  value_col = "estimate",
+  moe_col = "moe",
+  column_id_col = "column_id",
+  column_title_col = "column_title",
+  denominator_col = NULL,
+  denominator_prefix = "denominator_",
+  na_matches = "never",
+  digits = 2,
+  call = caller_env()
+) {
   denominator_id_col <- denominator_col %||%
     paste0(denominator_prefix, column_id_col)
 
   nm <- c(
-    geoid_col, column_id_col, column_title_col,
-    denominator_id_col, value_col
+    geoid_col,
+    column_id_col,
+    column_title_col,
+    denominator_id_col,
+    value_col
   )
 
   check_has_name(data, nm = nm, call = call)
@@ -145,12 +156,15 @@ join_acs_denominator <- function(data,
     data[[moe_col]] <- NA_integer_
   }
 
-  if (nrow(dplyr::filter(
-    data,
-    !is.na(.data[[denominator_id_col]]),
-    .data[[denominator_id_col]] %in% data[[column_id_col]],
-    .data[["indent"]] > 0
-  )) > 1) {
+  if (
+    nrow(dplyr::filter(
+      data,
+      !is.na(.data[[denominator_id_col]]),
+      .data[[denominator_id_col]] %in% data[[column_id_col]],
+      .data[["indent"]] > 0
+    )) >
+      1
+  ) {
     cli_alert_warning(
       "{.arg data} may not contain all of the denominator values needed
       to calculate the percent estimates for each variables.",
@@ -206,13 +220,15 @@ join_acs_denominator <- function(data,
 #' @export
 #' @importFrom dplyr filter select left_join join_by mutate across all_of
 #' @importFrom tidycensus moe_ratio
-join_acs_geography_ratio <- function(data,
-                                     variable_col = "variable",
-                                     value_col = "estimate",
-                                     moe_col = "moe",
-                                     geography = "county",
-                                     na_matches = "never",
-                                     digits = 2) {
+join_acs_geography_ratio <- function(
+  data,
+  variable_col = "variable",
+  value_col = "estimate",
+  moe_col = "moe",
+  geography = "county",
+  na_matches = "never",
+  digits = 2
+) {
   check_has_name(
     data,
     nm = c(variable_col, value_col, moe_col, "geography")
@@ -262,8 +278,10 @@ join_acs_geography_ratio <- function(data,
     data,
     "{ratio_value_col}" := .data[[value_col]] / .data[[geography_value_col]],
     "{ratio_moe_col}" := tidycensus::moe_ratio(
-      .data[[value_col]], .data[[geography_value_col]],
-      .data[[moe_col]], .data[[geography_moe_col]]
+      .data[[value_col]],
+      .data[[geography_value_col]],
+      .data[[moe_col]],
+      .data[[geography_moe_col]]
     ),
     .after = all_of(moe_col)
   )
@@ -295,13 +313,15 @@ join_acs_geography_ratio <- function(data,
 #' @rdname join_acs_parent_column
 #' @export
 #' @importFrom dplyr distinct left_join
-join_acs_parent_column <- function(data,
-                                   column_id_col = "column_id",
-                                   column_title_col = "column_title",
-                                   parent_id_col = "parent_column_id",
-                                   suffix = c("", "_parent"),
-                                   na_matches = "never",
-                                   relationship = "many-to-one") {
+join_acs_parent_column <- function(
+  data,
+  column_id_col = "column_id",
+  column_title_col = "column_title",
+  parent_id_col = "parent_column_id",
+  suffix = c("", "_parent"),
+  na_matches = "never",
+  relationship = "many-to-one"
+) {
   parent_data <- data[data[[column_id_col]] %in% data[[parent_id_col]], ]
 
   if (nrow(parent_data) == 0) {
@@ -312,7 +332,8 @@ join_acs_parent_column <- function(data,
 
   parent_data <- dplyr::distinct(
     parent_data,
-    .data[[column_id_col]], .data[[column_title_col]]
+    .data[[column_id_col]],
+    .data[[column_title_col]]
   )
 
   by <- set_names(column_id_col, parent_id_col)

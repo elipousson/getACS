@@ -28,7 +28,7 @@ be state name or state abbreviation.}
 subset for, or a vector of FIPS codes if you desire multiple counties.
 Can also be a county name or vector of names.}
 
-\item{year}{the data year; defaults to 2022}
+\item{year}{the data year; defaults to 2024}
 
 \item{area}{A sf object. Required if \code{type} is  "block-to-area-join or
 "block-to-area-intersection".}

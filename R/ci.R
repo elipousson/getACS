@@ -67,14 +67,16 @@ reliability_when <- function(cv, type = c("census", "esri")) {
 #' @return A data frame with an added columns using the names assigned to
 #'   `cv_col` and `reliability_col`
 #' @export
-assign_acs_reliability <- function(data,
-                                   value_col = "estimate",
-                                   moe_col = "moe",
-                                   moe_level = 90,
-                                   type = c("census", "esri"),
-                                   digits = 2,
-                                   cv_col = "cv",
-                                   reliability_col = "reliability") {
+assign_acs_reliability <- function(
+  data,
+  value_col = "estimate",
+  moe_col = "moe",
+  moe_level = 90,
+  type = c("census", "esri"),
+  digits = 2,
+  cv_col = "cv",
+  reliability_col = "reliability"
+) {
   data |>
     dplyr::mutate(
       "{cv_col}" := acs_cv(

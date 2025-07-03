@@ -21,16 +21,18 @@
 #' @export
 #' @importFrom rlang try_fetch
 #' @importFrom tidycensus get_acs
-get_acs_ts <- function(geography,
-                       variables = NULL,
-                       table = NULL,
-                       cache_table = TRUE,
-                       year = 2022,
-                       state = NULL,
-                       county = NULL,
-                       survey = "acs5",
-                       ...,
-                       quiet = FALSE) {
+get_acs_ts <- function(
+  geography,
+  variables = NULL,
+  table = NULL,
+  cache_table = TRUE,
+  year = 2022,
+  state = NULL,
+  county = NULL,
+  survey = "acs5",
+  ...,
+  quiet = FALSE
+) {
   cli_quiet(quiet)
 
   years <- year

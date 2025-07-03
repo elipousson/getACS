@@ -11,14 +11,16 @@
 #' @inheritDotParams ggplot2::labs
 #' @keywords ggplot2
 #' @export
-labs_acs_survey <- function(...,
-                            caption = NULL,
-                            survey = "acs5",
-                            year = 2022,
-                            prefix = "Source: ",
-                            table = NULL,
-                            .data = NULL,
-                            collapse = "\n") {
+labs_acs_survey <- function(
+  ...,
+  caption = NULL,
+  survey = "acs5",
+  year = 2022,
+  prefix = "Source: ",
+  table = NULL,
+  .data = NULL,
+  collapse = "\n"
+) {
   if (!is.null(.data)) {
     table <- table %||% .data[["table_id"]]
   }
@@ -53,8 +55,9 @@ NULL
 #' @name scale_x_acs
 #' @export
 scale_x_acs <- function(
-    ...,
-    perc = FALSE) {
+  ...,
+  perc = FALSE
+) {
   if (perc) {
     return(scale_x_acs_percent(...))
   }
@@ -66,8 +69,9 @@ scale_x_acs <- function(
 #' @name scale_y_acs
 #' @export
 scale_y_acs <- function(
-    ...,
-    perc = FALSE) {
+  ...,
+  perc = FALSE
+) {
   if (perc) {
     return(scale_y_acs_percent(...))
   }
@@ -78,9 +82,11 @@ scale_y_acs <- function(
 #' @rdname scale_acs
 #' @name scale_x_acs_estimate
 #' @export
-scale_x_acs_estimate <- function(name = "Estimate",
-                                 ...,
-                                 labels = scales::label_comma()) {
+scale_x_acs_estimate <- function(
+  name = "Estimate",
+  ...,
+  labels = scales::label_comma()
+) {
   ggplot2::scale_x_continuous(
     name = name,
     labels = labels,
@@ -93,9 +99,11 @@ scale_x_acs_estimate <- function(name = "Estimate",
 #' @export
 #' @importFrom ggplot2 scale_y_continuous
 #' @importFrom scales label_percent
-scale_y_acs_percent <- function(name = "Est. % of total",
-                                ...,
-                                labels = scales::label_percent()) {
+scale_y_acs_percent <- function(
+  name = "Est. % of total",
+  ...,
+  labels = scales::label_percent()
+) {
   ggplot2::scale_y_continuous(
     name = name,
     labels = labels,
@@ -107,9 +115,11 @@ scale_y_acs_percent <- function(name = "Est. % of total",
 #' @name scale_x_acs_percent
 #' @export
 #' @importFrom ggplot2 scale_x_continuous
-scale_x_acs_percent <- function(name = "Est. % of total",
-                                ...,
-                                labels = scales::label_percent()) {
+scale_x_acs_percent <- function(
+  name = "Est. % of total",
+  ...,
+  labels = scales::label_percent()
+) {
   ggplot2::scale_x_continuous(
     name = name,
     labels = labels,
@@ -121,9 +131,11 @@ scale_x_acs_percent <- function(name = "Est. % of total",
 #' @name scale_y_acs_estimate
 #' @export
 #' @importFrom scales label_comma
-scale_y_acs_estimate <- function(name = "Estimate",
-                                 ...,
-                                 labels = scales::label_comma()) {
+scale_y_acs_estimate <- function(
+  name = "Estimate",
+  ...,
+  labels = scales::label_comma()
+) {
   ggplot2::scale_y_continuous(
     name = name,
     labels = labels,
@@ -136,11 +148,13 @@ scale_y_acs_estimate <- function(name = "Estimate",
 #' @name scale_x_acs_ts
 #' @inheritParams acs_survey_ts
 #' @export
-scale_x_acs_ts <- function(name = "Year",
-                           ...,
-                           breaks = NULL,
-                           survey = "acs5",
-                           year = 2022) {
+scale_x_acs_ts <- function(
+  name = "Year",
+  ...,
+  breaks = NULL,
+  survey = "acs5",
+  year = 2022
+) {
   ggplot2::scale_x_continuous(
     name = name,
     breaks = breaks %||% suppressMessages(acs_survey_ts(survey, year)),
@@ -151,11 +165,13 @@ scale_x_acs_ts <- function(name = "Year",
 #' @rdname scale_acs
 #' @name scale_y_acs_ts
 #' @export
-scale_y_acs_ts <- function(name = "Year",
-                           ...,
-                           breaks = NULL,
-                           survey = "acs5",
-                           year = 2022) {
+scale_y_acs_ts <- function(
+  name = "Year",
+  ...,
+  breaks = NULL,
+  survey = "acs5",
+  year = 2022
+) {
   ggplot2::scale_y_continuous(
     name = name,
     breaks = breaks %||% suppressMessages(acs_survey_ts(survey, year)),
@@ -181,14 +197,16 @@ NULL
 #' @inheritParams acs_perc_cols
 #' @export
 #' @importFrom ggplot2 aes
-aes_errorbarh <- function(xmin = NULL,
-                          xmax = NULL,
-                          ...,
-                          value_col = "estimate",
-                          moe_col = "moe",
-                          perc_prefix = "perc",
-                          perc_sep = "_",
-                          perc = FALSE) {
+aes_errorbarh <- function(
+  xmin = NULL,
+  xmax = NULL,
+  ...,
+  value_col = "estimate",
+  moe_col = "moe",
+  perc_prefix = "perc",
+  perc_sep = "_",
+  perc = FALSE
+) {
   if (perc) {
     perc_cols <- acs_perc_cols(value_col, moe_col, perc_prefix, perc_sep, perc)
     value_col <- perc_cols[["value_col"]]
@@ -207,14 +225,16 @@ aes_errorbarh <- function(xmin = NULL,
 #' @inheritParams ggplot2::aes
 #' @export
 #' @importFrom ggplot2 aes
-aes_errorbarv <- function(ymin = NULL,
-                          ymax = NULL,
-                          ...,
-                          value_col = "estimate",
-                          moe_col = "moe",
-                          perc_prefix = "perc",
-                          perc_sep = "_",
-                          perc = FALSE) {
+aes_errorbarv <- function(
+  ymin = NULL,
+  ymax = NULL,
+  ...,
+  value_col = "estimate",
+  moe_col = "moe",
+  perc_prefix = "perc",
+  perc_sep = "_",
+  perc = FALSE
+) {
   if (perc) {
     perc_cols <- acs_perc_cols(value_col, moe_col, perc_prefix, perc_sep, perc)
     value_col <- perc_cols[["value_col"]]
@@ -230,16 +250,18 @@ aes_errorbarv <- function(ymin = NULL,
 
 #' @rdname geom_acs
 #' @export
-geom_acs_errorbar <- function(mapping = NULL,
-                              data = NULL,
-                              ...,
-                              na.rm = TRUE,
-                              orientation = NA,
-                              value_col = "estimate",
-                              moe_col = "moe",
-                              perc_prefix = "perc",
-                              perc_sep = "_",
-                              perc = FALSE) {
+geom_acs_errorbar <- function(
+  mapping = NULL,
+  data = NULL,
+  ...,
+  na.rm = TRUE,
+  orientation = NA,
+  value_col = "estimate",
+  moe_col = "moe",
+  perc_prefix = "perc",
+  perc_sep = "_",
+  perc = FALSE
+) {
   if (identical(orientation, "y")) {
     geom_acs_errorbarv(
       mapping = mapping,
@@ -272,15 +294,17 @@ geom_acs_errorbar <- function(mapping = NULL,
 #' @inheritParams ggplot2::geom_errorbarh
 #' @export
 #' @importFrom ggplot2 geom_errorbarh aes
-geom_acs_errorbarh <- function(mapping = NULL,
-                               data = NULL,
-                               ...,
-                               na.rm = TRUE,
-                               value_col = "estimate",
-                               moe_col = "moe",
-                               perc_prefix = "perc",
-                               perc_sep = "_",
-                               perc = FALSE) {
+geom_acs_errorbarh <- function(
+  mapping = NULL,
+  data = NULL,
+  ...,
+  na.rm = TRUE,
+  value_col = "estimate",
+  moe_col = "moe",
+  perc_prefix = "perc",
+  perc_sep = "_",
+  perc = FALSE
+) {
   ggplot2::geom_errorbarh(
     mapping = utils::modifyList(
       mapping %||% aes(),
@@ -303,15 +327,17 @@ geom_acs_errorbarh <- function(mapping = NULL,
 #' @inheritParams ggplot2::geom_errorbarh
 #' @export
 #' @importFrom ggplot2 geom_errorbarh aes
-geom_acs_errorbarv <- function(mapping = NULL,
-                               data = NULL,
-                               ...,
-                               na.rm = TRUE,
-                               value_col = "estimate",
-                               moe_col = "moe",
-                               perc_prefix = "perc",
-                               perc_sep = "_",
-                               perc = FALSE) {
+geom_acs_errorbarv <- function(
+  mapping = NULL,
+  data = NULL,
+  ...,
+  na.rm = TRUE,
+  value_col = "estimate",
+  moe_col = "moe",
+  perc_prefix = "perc",
+  perc_sep = "_",
+  perc = FALSE
+) {
   ggplot2::geom_errorbar(
     mapping = utils::modifyList(
       mapping %||% aes(),
@@ -334,9 +360,10 @@ geom_acs_errorbarv <- function(mapping = NULL,
 #' @export
 #' @keywords internal
 aes_acs_col <- function(
-    x = "estimate",
-    y = "column_title",
-    fill = y) {
+  x = "estimate",
+  y = "column_title",
+  fill = y
+) {
   mapping <- aes()
 
   if (is_string(x)) {
@@ -385,23 +412,24 @@ aes_acs_col <- function(
 #' @export
 #' @keywords ggplot2
 geom_acs_col <- function(
-    mapping = NULL,
-    data = NULL,
-    position = "stack",
-    ...,
-    x = "estimate",
-    y = "column_title",
-    fill = y,
-    value_col = "estimate",
-    moe_col = "moe",
-    perc_prefix = "perc",
-    perc_sep = "_",
-    perc = TRUE,
-    orientation = NA,
-    errorbar_value = TRUE,
-    errorbar_params = list(linewidth = 0.5, height = 0.35, position = "identity"),
-    scale_value = TRUE,
-    scale_params = list()) {
+  mapping = NULL,
+  data = NULL,
+  position = "stack",
+  ...,
+  x = "estimate",
+  y = "column_title",
+  fill = y,
+  value_col = "estimate",
+  moe_col = "moe",
+  perc_prefix = "perc",
+  perc_sep = "_",
+  perc = TRUE,
+  orientation = NA,
+  errorbar_value = TRUE,
+  errorbar_params = list(linewidth = 0.5, height = 0.35, position = "identity"),
+  scale_value = TRUE,
+  scale_params = list()
+) {
   y_orientation <- identical(orientation, "y")
 
   if (is_true(errorbar_value)) {

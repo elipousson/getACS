@@ -35,18 +35,23 @@
 #' }
 #' }
 #' @importFrom dplyr select
-select_acs <- function(.data,
-                       ...,
-                       .name_col = "NAME",
-                       .column_title_col = "column_title",
-                       .value_col = "estimate",
-                       .moe_col = "moe",
-                       .perc_prefix = "perc",
-                       .perc_sep = "_",
-                       .perc = TRUE,
-                       .fn = any_of) {
+select_acs <- function(
+  .data,
+  ...,
+  .name_col = "NAME",
+  .column_title_col = "column_title",
+  .value_col = "estimate",
+  .moe_col = "moe",
+  .perc_prefix = "perc",
+  .perc_sep = "_",
+  .perc = TRUE,
+  .fn = any_of
+) {
   nm <- c(
-    .name_col, .column_title_col, .value_col, .moe_col
+    .name_col,
+    .column_title_col,
+    .value_col,
+    .moe_col
   )
 
   if (!is.null(.perc_sep) && .perc) {

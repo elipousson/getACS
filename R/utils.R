@@ -8,10 +8,21 @@
 
 utils::globalVariables(
   c(
-    "cols", "column_id", "column_title",
-    "estimate", "moe", "table_id", "variable",
+    "cols",
+    "column_id",
+    "column_title",
+    "estimate",
+    "moe",
+    "table_id",
+    "variable",
     # Added 2023-11-04
-    "name", "label", "indent", "GEOID", "what", "perc_cols", "acs_label"
+    "name",
+    "label",
+    "indent",
+    "GEOID",
+    "what",
+    "perc_cols",
+    "acs_label"
   )
 )
 
@@ -21,9 +32,11 @@ utils::globalVariables(
 #'   unchanged. If `TRUE`, set `cli.default_handler` to [suppressMessages]
 #'   temporarily with [rlang::local_options()]
 #' @keywords internal
-cli_quiet <- function(quiet = FALSE,
-                      push = FALSE,
-                      .frame = rlang::caller_env()) {
+cli_quiet <- function(
+  quiet = FALSE,
+  push = FALSE,
+  .frame = rlang::caller_env()
+) {
   if (rlang::is_false(quiet)) {
     return(invisible(NULL))
   }
@@ -40,10 +53,12 @@ cli_quiet <- function(quiet = FALSE,
 
 #' Check if object is a sf object
 #' @noRd
-check_sf <- function(x,
-                     allow_null = FALSE,
-                     arg = caller_arg(x),
-                     call = caller_env()) {
+check_sf <- function(
+  x,
+  allow_null = FALSE,
+  arg = caller_arg(x),
+  call = caller_env()
+) {
   if (inherits(x, "sf")) {
     return(invisible(NULL))
   }
@@ -58,12 +73,14 @@ check_sf <- function(x,
 
 #' Check if object has specified names
 #' @noRd
-check_has_name <- function(x,
-                           nm,
-                           allow_null = FALSE,
-                           allow_any = FALSE,
-                           arg = caller_arg(x),
-                           call = caller_env()) {
+check_has_name <- function(
+  x,
+  nm,
+  allow_null = FALSE,
+  allow_any = FALSE,
+  arg = caller_arg(x),
+  call = caller_env()
+) {
   if (allow_null && is_null(x)) {
     return(invisible(NULL))
   }
@@ -71,7 +88,8 @@ check_has_name <- function(x,
   nm_check <- has_name(x, nm)
   has_nm <- all(nm_check)
 
-  msg <- c("{.arg {arg}} must have names {.val {nm}}",
+  msg <- c(
+    "{.arg {arg}} must have names {.val {nm}}",
     "i" = "{.arg {arg}} is missing {length(nm[!nm_check])} name{?s}:
     {.val {nm[!nm_check]}}"
   )
@@ -90,11 +108,13 @@ check_has_name <- function(x,
 
 #' Check if object has a specified geometry type
 #' @noRd
-check_geometry_is_type <- function(x,
-                                   type,
-                                   allow_null = FALSE,
-                                   arg = caller_arg(x),
-                                   call = caller_env()) {
+check_geometry_is_type <- function(
+  x,
+  type,
+  allow_null = FALSE,
+  arg = caller_arg(x),
+  call = caller_env()
+) {
   if (!inherits_any(x, c("sfg", "sfc", "sf"))) {
     stop_input_type(
       x,
@@ -118,10 +138,12 @@ check_geometry_is_type <- function(x,
 #'
 #' @keywords internal
 #' @export
-fct_recode_with_list <- function(x,
-                                 list = NULL,
-                                 in_order = TRUE,
-                                 ordered = NA) {
+fct_recode_with_list <- function(
+  x,
+  list = NULL,
+  in_order = TRUE,
+  ordered = NA
+) {
   check_installed("forcats")
 
   x <- forcats::fct_recode(x, !!!list)
@@ -134,11 +156,13 @@ fct_recode_with_list <- function(x,
 }
 
 #' @noRd
-st_is_predicate <- function(x,
-                            y,
-                            .f_x = sf::st_point_on_surface,
-                            .f_y = sf::st_union,
-                            .predicate = sf::st_intersects) {
+st_is_predicate <- function(
+  x,
+  y,
+  .f_x = sf::st_point_on_surface,
+  .f_y = sf::st_union,
+  .predicate = sf::st_intersects
+) {
   if (is_function(.f_x)) {
     x <- suppressWarnings(.f_x(x))
   }
@@ -151,11 +175,13 @@ st_is_predicate <- function(x,
 }
 
 #' @noRd
-st_is_all_predicate <- function(x,
-                                y,
-                                .f_x = sf::st_point_on_surface,
-                                .f_y = sf::st_union,
-                                .predicate = sf::st_intersects) {
+st_is_all_predicate <- function(
+  x,
+  y,
+  .f_x = sf::st_point_on_surface,
+  .f_y = sf::st_union,
+  .predicate = sf::st_intersects
+) {
   all(st_is_predicate(x, y, .f_x, .f_y, .predicate = .predicate))
 }
 

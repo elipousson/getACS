@@ -22,13 +22,15 @@
 #' @importFrom dplyr all_of
 #' @importFrom gt fmt
 #' @importFrom stringr str_remove
-fmt_acs_county <- function(data,
-                           state = NULL,
-                           pattern = ", {state}",
-                           replacement = "",
-                           name_col = "NAME",
-                           columns = all_of(name_col),
-                           ...) {
+fmt_acs_county <- function(
+  data,
+  state = NULL,
+  pattern = ", {state}",
+  replacement = "",
+  name_col = "NAME",
+  columns = all_of(name_col),
+  ...
+) {
   if (is.null(state) && any(data[["geography"]] == "state")) {
     state <- unique(
       data[data[["geography"]] == "state", name_col]
@@ -51,12 +53,14 @@ fmt_acs_county <- function(data,
 #' @name fmt_acs_minutes
 #' @param column_title_col Column title column.
 #' @export
-fmt_acs_minutes <- function(data,
-                            pattern = "[:space:]minutes$",
-                            replacement = "",
-                            column_title_col = "column_title",
-                            columns = all_of(column_title_col),
-                            ...) {
+fmt_acs_minutes <- function(
+  data,
+  pattern = "[:space:]minutes$",
+  replacement = "",
+  column_title_col = "column_title",
+  columns = all_of(column_title_col),
+  ...
+) {
   fmt_str_replace(
     data = data,
     pattern = pattern,
@@ -68,12 +72,14 @@ fmt_acs_minutes <- function(data,
 }
 
 #' @noRd
-fmt_str_replace <- function(data,
-                            pattern,
-                            replacement,
-                            col = "NAME",
-                            columns = all_of(col),
-                            ...) {
+fmt_str_replace <- function(
+  data,
+  pattern,
+  replacement,
+  col = "NAME",
+  columns = all_of(col),
+  ...
+) {
   if (inherits(data, "gt_tbl")) {
     gt::fmt(
       data,
@@ -88,7 +94,8 @@ fmt_str_replace <- function(data,
       data,
       "{col}" := stringr::str_replace(
         .data[[col]],
-        pattern, replacement
+        pattern,
+        replacement
       )
     )
   }
@@ -113,12 +120,16 @@ fmt_acs_jam_values <- function(data) {
     all(has_name(data, c("estimate", "variable")))
   )
 
-  if (nrow(
-    dplyr::filter(
-      data,
-      (variable == "B25035_001"), (estimate == 0)
-    )
-  ) > 0) {
+  if (
+    nrow(
+      dplyr::filter(
+        data,
+        (variable == "B25035_001"),
+        (estimate == 0)
+      )
+    ) >
+      0
+  ) {
     cli::cli_bullets(
       c(
         "i" = "For the {.val Median Year Structure Built} table,

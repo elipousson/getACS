@@ -1,10 +1,12 @@
 #' Legacy version of acs_perc_cols
 #' @noRd
-.acs_perc_cols <- function(value_col = "estimate",
-                           moe_col = "moe",
-                           perc_prefix = "perc",
-                           perc_sep = "_",
-                           ...) {
+.acs_perc_cols <- function(
+  value_col = "estimate",
+  moe_col = "moe",
+  perc_prefix = "perc",
+  perc_sep = "_",
+  ...
+) {
   # FIXME: I'm not so sure about this as a design pattern
   if (is.null(perc_prefix)) {
     return(NULL)
@@ -24,11 +26,13 @@
 #'   and `moe_col` strings.
 #' @param perc If `TRUE`, return percent value and margin of error columns.
 #' @keywords internal
-acs_perc_cols <- function(value_col = "estimate",
-                          moe_col = "moe",
-                          perc_prefix = "perc",
-                          perc_sep = "_",
-                          perc = TRUE) {
+acs_perc_cols <- function(
+  value_col = "estimate",
+  moe_col = "moe",
+  perc_prefix = "perc",
+  perc_sep = "_",
+  perc = TRUE
+) {
   # FIXME: I'm not so sure about this as a design pattern
   if (is.null(perc_prefix)) {
     return(NULL)
@@ -68,25 +72,28 @@ acs_perc_cols <- function(value_col = "estimate",
 #' @inheritDotParams tidyr::pivot_wider
 #' @export
 #' @importFrom tidyr pivot_wider
-pivot_acs_wider <- function(data,
-                            name_col = "NAME",
-                            value_col = "estimate",
-                            moe_col = "moe",
-                            perc_prefix = "perc",
-                            perc_sep = "_",
-                            perc = TRUE,
-                            .col_fn = any_of,
-                            ...,
-                            id_cols = NULL,
-                            id_expand = FALSE,
-                            names_from = name_col,
-                            names_sep = "_",
-                            names_glue = NULL,
-                            names_vary = "slowest",
-                            names_repair = "check_unique",
-                            values_from = NULL) {
+pivot_acs_wider <- function(
+  data,
+  name_col = "NAME",
+  value_col = "estimate",
+  moe_col = "moe",
+  perc_prefix = "perc",
+  perc_sep = "_",
+  perc = TRUE,
+  .col_fn = any_of,
+  ...,
+  id_cols = NULL,
+  id_expand = FALSE,
+  names_from = name_col,
+  names_sep = "_",
+  names_glue = NULL,
+  names_vary = "slowest",
+  names_repair = "check_unique",
+  values_from = NULL
+) {
   select_cols <- c(
-    value_col, moe_col,
+    value_col,
+    moe_col,
     acs_perc_cols(value_col, moe_col, perc_prefix, perc_sep, perc)
   )
 

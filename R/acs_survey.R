@@ -1,26 +1,22 @@
 #' Get minimum year for a given survey sample
 #'
 #' @noRd
-acs_sample_min_year <- function(sample = "5",
-                                min_year = NULL,
-                                ...) {
+acs_sample_min_year <- function(sample = "5", min_year = NULL, ...) {
   min_year %||%
-    switch(sample,
-      "1" = 2005,
-      "3" = 2007,
-      "5" = 2009
-    )
+    switch(sample, "1" = 2005, "3" = 2007, "5" = 2009)
 }
 
 #' Check if survey and year parameter are valid in combination
 #'
 #' @noRd
-check_acs_survey <- function(survey = "acs5",
-                             year = 2022,
-                             sample = NULL,
-                             min_year = NULL,
-                             ...,
-                             call = caller_env()) {
+check_acs_survey <- function(
+  survey = "acs5",
+  year = 2022,
+  sample = NULL,
+  min_year = NULL,
+  ...,
+  call = caller_env()
+) {
   check_number_whole(year, call = call)
 
   survey <- acs_survey_match(survey, error_call = call)
@@ -62,8 +58,7 @@ NULL
 #' @inheritParams rlang::args_error_context
 #' @export
 #' @importFrom rlang arg_match0
-acs_survey_match <- function(survey = "acs5",
-                             error_call = caller_env()) {
+acs_survey_match <- function(survey = "acs5", error_call = caller_env()) {
   # See acs_surveys
   arg_match0(
     survey,
@@ -85,9 +80,7 @@ acs_survey_sample <- function(survey = "acs5") {
 #'   of years for non-overlapping ACS samples to allow comparison.
 #' @export
 #' @importFrom glue glue
-acs_survey_ts <- function(survey = "acs5",
-                          year = 2022,
-                          call = caller_env()) {
+acs_survey_ts <- function(survey = "acs5", year = 2022, call = caller_env()) {
   check_acs_survey(survey, year, call = call)
 
   if (identical(year, 2005)) {
@@ -96,12 +89,15 @@ acs_survey_ts <- function(survey = "acs5",
 
   comparison_url <- paste0(
     "https://www.census.gov/programs-surveys/acs/guidance/comparing-acs-data/",
-    year, ".html"
+    year,
+    ".html"
   )
 
   cli_bullets(
-    c("i" = "Learn more about comparing {year} American Community Survey Data:
-    {.url {comparison_url}}")
+    c(
+      "i" = "Learn more about comparing {year} American Community Survey Data:
+    {.url {comparison_url}}"
+    )
   )
 
   sample <- acs_survey_sample(survey)
@@ -124,10 +120,11 @@ acs_survey_ts <- function(survey = "acs5",
 #'   specified by the survey parameter.
 #' @export
 acs_survey_label <- function(
-    survey = "acs5",
-    year = 2022,
-    pattern = "{year_start}-{year} ACS {sample}-year Estimates",
-    prefix = "") {
+  survey = "acs5",
+  year = 2022,
+  pattern = "{year_start}-{year} ACS {sample}-year Estimates",
+  prefix = ""
+) {
   sample <- acs_survey_sample(survey)
 
   year_start <- year - (as.integer(sample) - 1)
@@ -143,20 +140,22 @@ acs_survey_label <- function(
 #' @param before,after A character string to be added before/after each word.
 #' @param end A character string appended to the end of the full label. Defaults
 #'   to ".".
-#' @inheritParams knitr::combine_words
+#' @inheritParams xfun::join_words
 #' @export
 #' @importFrom knitr combine_words
-acs_survey_label_table <- function(survey = "acs5",
-                                   year = 2022,
-                                   prefix = "",
-                                   table = NULL,
-                                   table_label = "Table",
-                                   sep = ", ",
-                                   and = " and ",
-                                   before = "",
-                                   after = before,
-                                   end = ".",
-                                   oxford_comma = TRUE) {
+acs_survey_label_table <- function(
+  survey = "acs5",
+  year = 2022,
+  prefix = "",
+  table = NULL,
+  table_label = "Table",
+  sep = ", ",
+  and = " and ",
+  before = "",
+  after = before,
+  end = ".",
+  oxford_comma = TRUE
+) {
   label <- acs_survey_label(survey, year, prefix = prefix)
   table <- unique(table)
 
