@@ -257,8 +257,8 @@ join_acs_race_iteration <- function(
   data[["race_iteration_group"]] <- stringr::str_replace_all(
     data[["race_iteration_code"]],
     pattern = set_names(
-      race_iteration[["group"]],
-      race_iteration[["code"]]
+      getACS::race_iteration[["group"]],
+      getACS::race_iteration[["code"]]
     )
   )
 

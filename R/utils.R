@@ -1,11 +1,3 @@
-.onLoad <- function(lib, pkg) {
-  utils::data(
-    list = c("race_iteration"),
-    package = pkg,
-    envir = parent.env(environment())
-  )
-}
-
 utils::globalVariables(
   c(
     "cols",
@@ -199,5 +191,24 @@ st_make_valid_coverage <- function(x, y, is_coverage = TRUE) {
 #' @noRd
 #' @importFrom sf st_make_valid st_union
 st_make_valid_union <- function(x, is_coverage = TRUE) {
-  sf::st_make_valid(sf::st_union(x, is_coverage = is_coverage))
+  x_union <- try_fetch(
+    sf::st_union(x, is_coverage = is_coverage),
+    error = \(cnd) {
+      cli::cli_warn(
+        c(
+          "Can't union geometry as coverage due to error.",
+          "Using {.code is_coverage = FALSE}"
+        )
+      )
+
+      NULL
+    }
+  )
+
+  # Handle cases that error TopologyException: CoverageUnion cannot process overlapping inputs
+  if (is.null(x_union)) {
+    x_union <- sf::st_union(x, is_coverage = FALSE)
+  }
+
+  sf::st_make_valid(x_union)
 }
