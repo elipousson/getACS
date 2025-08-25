@@ -67,11 +67,11 @@ Can also be a county name or vector of names.}
 
 \item{name_col}{Name column in area.}
 
-\item{weight_col}{Column name in input block_xwalk to use for weighting.
-Generated weight_col used by \code{\link[=use_area_xwalk]{use_area_xwalk()}} should be the same as the
-weight_col for \code{\link[=make_area_xwalk]{make_area_xwalk()}} but include the "perc_" prefix. Defaults
-to "HOUSING20" for \code{\link[=make_block_xwalk]{make_block_xwalk()}} and "perc_HOUSING20" for
-\code{\link[=use_area_xwalk]{use_area_xwalk()}}.}
+\item{weight_col}{Column name or names in input block_xwalk to use for
+weighting. Generated weight_col used by \code{\link[=use_area_xwalk]{use_area_xwalk()}} should be the
+same as the weight_col for \code{\link[=make_area_xwalk]{make_area_xwalk()}} but include the "perc_"
+prefix. Defaults to "HOUSING20" for \code{\link[=make_block_xwalk]{make_block_xwalk()}} and
+"perc_HOUSING20" for \code{\link[=use_area_xwalk]{use_area_xwalk()}}.}
 
 \item{geoid_col, tract_col}{GeoID for Census tract and Census tract ID column
 in block_xwalk}

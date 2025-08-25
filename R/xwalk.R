@@ -143,11 +143,11 @@ make_block_xwalk <- function(
 #'   coverage should be set to `TRUE` (default).
 #' @param block_xwalk Block-tract crosswalk sf object. If `NULL`, state is
 #'   required to create a crosswalk using [make_block_xwalk()]
-#' @param weight_col Column name in input block_xwalk to use for weighting.
-#'   Generated weight_col used by [use_area_xwalk()] should be the same as the
-#'   weight_col for [make_area_xwalk()] but include the "perc_" prefix. Defaults
-#'   to "HOUSING20" for [make_block_xwalk()] and "perc_HOUSING20" for
-#'   [use_area_xwalk()].
+#' @param weight_col Column name or names in input block_xwalk to use for
+#'   weighting. Generated weight_col used by [use_area_xwalk()] should be the
+#'   same as the weight_col for [make_area_xwalk()] but include the "perc_"
+#'   prefix. Defaults to "HOUSING20" for [make_block_xwalk()] and
+#'   "perc_HOUSING20" for [use_area_xwalk()].
 #' @param name_col Name column in area.
 #' @param geoid_col,tract_col GeoID for Census tract and Census tract ID column
 #'   in block_xwalk
@@ -217,7 +217,7 @@ make_area_xwalk <- function(
 ) {
   check_name(name_col)
   check_name(tract_col)
-  check_name(weight_col)
+  check_character(weight_col)
   check_character(by)
   check_sf(area)
 
@@ -249,6 +249,13 @@ make_area_xwalk <- function(
 
   block_xwalk <- sf::st_transform(block_xwalk, crs = sf::st_crs(area))
 
+  # Check if the geometry of area and block_xwalk intersects
+  if (is_empty(unlist(sf::st_intersects(area, block_xwalk)))) {
+    cli::cli_abort(
+      "{.arg area} and {.arg block_xwalk} must intersect."
+    )
+  }
+
   if (keep_geometry) {
     area_geometry <- dplyr::select(area, all_of(name_col))
   }
@@ -257,6 +264,7 @@ make_area_xwalk <- function(
 
   area_coverage <- NULL
 
+  # Use coverage as area_coverage if it is a sf or sfc object
   if (!is.logical(coverage) && inherits_any(coverage, c("sf", "sfc"))) {
     area_coverage <- coverage
     coverage <- TRUE
@@ -275,6 +283,7 @@ make_area_xwalk <- function(
     coverage <- FALSE
   }
 
+  # Optionally erase water area or provided sf/sfc geometry from area and block_xwalk
   if (is_true(erase) || inherits_any(erase, c("sfc", "sf"))) {
     what <- "geometry"
     if (is_true(erase)) {
@@ -301,6 +310,7 @@ make_area_xwalk <- function(
     )
   }
 
+  # Bind coverage geometry to area
   if (rlang::is_true(coverage)) {
     cli::cli_progress_step("Adding coverage for {.arg block_xwalk}")
 
@@ -322,23 +332,48 @@ make_area_xwalk <- function(
 
   area_xwalk <- sf::st_drop_geometry(area_xwalk)
 
-  cli::cli_progress_step(
-    "Summarizing {weight_col} by {tract_col} and {name_col}"
+  # Loop over weight_col values
+  area_xwalk_list <- purrr::map(
+    weight_col,
+    \(wcol) {
+      cli::cli_progress_step(
+        "Summarizing {wcol} by {tract_col} and {name_col}"
+      )
+
+      summarise_area_weight(
+        area_xwalk = area_xwalk,
+        name_col = name_col,
+        weight_col = wcol,
+        geoid_col = geoid_col,
+        tract_col = tract_col,
+        digits = digits
+      )
+    }
   )
 
-  area_xwalk <- summarise_area_weight(
-    area_xwalk = area_xwalk,
-    name_col = name_col,
-    weight_col = weight_col,
-    geoid_col = geoid_col,
-    tract_col = tract_col,
-    digits = digits
-  )
+  if (length(area_xwalk_list) > 1) {
+    # Join by id columns to flatten list back into a data frame
+    area_xwalk <- purrr::reduce(
+      area_xwalk_list,
+      \(x, y) {
+        dplyr::full_join(
+          x,
+          y,
+          by = c(geoid_col, tract_col, name_col)
+        )
+      }
+    )
+  } else {
+    # Extract area_xwalk if area_xwalk_list is a single element list
+    area_xwalk <- area_xwalk_list[[1]]
+  }
 
+  # Remove coverage geometry from area_xwalk
   if (is_true(coverage)) {
     area_xwalk <- dplyr::filter(area_xwalk, .data[[name_col]] != coverage_name)
   }
 
+  # Join area_geometry geometry to area
   if (keep_geometry) {
     area_xwalk <- dplyr::left_join(area_xwalk, area_geometry, by = name_col)
     area_xwalk <- sf::st_as_sf(area_xwalk)
@@ -480,11 +515,16 @@ rbind_area_coverage <- function(
   block_xwalk,
   area_coverage = NULL,
   make_valid = FALSE,
+  is_coverage = TRUE,
   error_call = caller_env()
 ) {
   if (is.null(area_coverage)) {
     area_coverage <- try_fetch(
-      st_make_valid_coverage(block_xwalk, area),
+      st_make_valid_coverage(
+        block_xwalk,
+        area,
+        is_coverage = is_coverage
+      ),
       error = function(cnd) {
         cli_abort(
           c(
@@ -700,6 +740,7 @@ summarise_weighted_sum <- function(
       digits = digits
     ),
     "{moe_col}" := if_else(
+      # Preseve NA values only if moe_col is all NA (e.g. county or state data)
       all(is.na(.data[[moe_col]])),
       NA_real_,
       round(
