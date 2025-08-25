@@ -270,7 +270,7 @@ make_area_xwalk <- function(
     coverage <- TRUE
   }
 
-  if (is_true(coverage) && st_is_all_predicate(block_xwalk, area)) {
+  if (is_true(coverage) && all(st_is_predicate(block_xwalk, area))) {
     cli::cli_bullets(
       c(
         "!" = "All features in {.arg block_xwalk} already

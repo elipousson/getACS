@@ -167,17 +167,6 @@ st_is_predicate <- function(
 }
 
 #' @noRd
-st_is_all_predicate <- function(
-  x,
-  y,
-  .f_x = sf::st_point_on_surface,
-  .f_y = sf::st_union,
-  .predicate = sf::st_intersects
-) {
-  all(st_is_predicate(x, y, .f_x, .f_y, .predicate = .predicate))
-}
-
-#' @noRd
 #' @importFrom sf st_make_valid st_difference
 st_make_valid_coverage <- function(x, y, is_coverage = TRUE) {
   sf::st_make_valid(
