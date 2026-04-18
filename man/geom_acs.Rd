@@ -132,6 +132,11 @@ from a \code{formula} (e.g. \code{~ head(.x, 10)}).}
 
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with
 a warning. If \code{TRUE}, missing values are silently removed.}
+
+\item{orientation}{The orientation of the layer. The default (\code{NA})
+automatically determines the orientation from the aesthetic mapping. In the
+rare event that this fails it can be given explicitly by setting \code{orientation}
+to either \code{"x"} or \code{"y"}. See the \emph{Orientation} section for more detail.}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}

@@ -27,21 +27,18 @@ get_acs_metadata(
 \item{...}{
   Arguments passed on to \code{\link[readr:read_delim]{readr::read_csv}}
   \describe{
-    \item{\code{file}}{Either a path to a file, a connection, or literal data
-(either a single string or a raw vector).
+    \item{\code{file}}{Either a path to a file, a connection, or literal data (either a
+single string or a raw vector). \code{file} can also be a character vector
+containing multiple filepaths or a list containing multiple connections.
 
-Files ending in \code{.gz}, \code{.bz2}, \code{.xz}, or \code{.zip} will
-be automatically uncompressed. Files starting with \verb{http://},
-\verb{https://}, \verb{ftp://}, or \verb{ftps://} will be automatically
-downloaded. Remote gz files can also be automatically downloaded and
+Files ending in \code{.gz}, \code{.bz2}, \code{.xz}, or \code{.zip} will be automatically
+decompressed. Files starting with \verb{http://}, \verb{https://}, \verb{ftp://}, or
+\verb{ftps://} will be automatically downloaded. Remote compressed files
+(\code{.gz}, \code{.bz2}, \code{.xz}, \code{.zip}) will be automatically downloaded and
 decompressed.
 
 Literal data is most useful for examples and tests. To be recognised as
-literal data, the input must be either wrapped with \code{I()}, be a string
-containing at least one new line, or be a vector containing at least one
-string with a new line.
-
-Using a value of \code{\link[readr:clipboard]{clipboard()}} will read from the system clipboard.}
+literal data, wrap the input with \code{I()}.}
     \item{\code{quote}}{Single character used to quote strings.}
     \item{\code{col_names}}{Either \code{TRUE}, \code{FALSE} or a character vector
 of column names.
@@ -108,7 +105,8 @@ names.}
 option to \code{character()} to indicate no missing values.}
     \item{\code{quoted_na}}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Should missing values
 inside quotes be treated as missing values (the default) or strings. This
-parameter is soft deprecated as of readr 2.0.0.}
+argument is deprecated and only works when using the legacy first edition
+parser. See \code{\link[readr:with_edition]{with_edition()}} for more.}
     \item{\code{comment}}{A string used to identify comments. Any text after the
 comment characters will be silently ignored.}
     \item{\code{trim_ws}}{Should leading and trailing whitespace (ASCII spaces and tabs) be trimmed from

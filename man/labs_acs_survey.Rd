@@ -24,8 +24,14 @@ labs_acs_survey(
 displayed below the title.}
     \item{\code{tag}}{The text for the tag label which will be displayed at the
 top-left of the plot by default.}
+    \item{\code{dictionary}}{A named character vector to serve as dictionary.
+Automatically derived labels, such as those based on variables will
+be matched with \code{names(dictionary)} and replaced by the matching
+entry in \code{dictionary}.}
     \item{\code{alt,alt_insight}}{Text used for the generation of alt-text for the plot.
-See \link[ggplot2]{get_alt_text} for examples.}
+See \link[ggplot2]{get_alt_text} for examples. \code{alt} can also be a function that
+takes the plot as input and returns text as output. \code{alt} also accepts
+rlang \link[rlang:as_function]{lambda} function notation.}
   }}
 
 \item{caption}{The text for the caption which will be displayed in the

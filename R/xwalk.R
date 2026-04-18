@@ -624,7 +624,8 @@ use_area_xwalk <- function(
   perc = TRUE,
   extensive = TRUE,
   reliability = FALSE,
-  moe_level = 90
+  moe_level = 90,
+  call = caller_env()
 ) {
   check_data_frame(area_xwalk, call = call)
   check_data_frame(data, call = call)

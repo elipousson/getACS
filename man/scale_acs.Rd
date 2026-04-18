@@ -47,7 +47,9 @@ scale_y_acs_ts(name = "Year", ..., breaks = NULL, survey = "acs5", year = 2022)
 mapping used for that aesthetic. If \code{NULL}, the legend title will be
 omitted.}
 
-\item{labels}{One of:
+\item{labels}{One of the options below. Please note that when \code{labels} is a
+vector, it is highly recommended to also set the \code{breaks} argument as a
+vector to protect against unintended mismatches.
 \itemize{
 \item \code{NULL} for no labels
 \item \code{waiver()} for the default labels computed by the

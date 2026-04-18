@@ -45,7 +45,8 @@ use_area_xwalk(
   perc = TRUE,
   extensive = TRUE,
   reliability = FALSE,
-  moe_level = 90
+  moe_level = 90,
+  call = caller_env()
 )
 }
 \arguments{
