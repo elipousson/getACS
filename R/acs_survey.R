@@ -112,6 +112,15 @@ acs_survey_ts <- function(survey = "acs5", year = 2022, call = caller_env()) {
   years
 }
 
+#' @noRd
+get_nearest_dec <- function(x) {
+  dec <- seq(1790, 2020, by = 10)
+  # https://adomingues.github.io/2015/09/24/finding-closest-element-to-a-number-in-a-list/
+  dec[purrr::map_int(x, \(i) {
+    which.min(abs(dec - i))
+  })]
+}
+
 #' @rdname acs_survey
 #' @name acs_survey_label
 #' @param prefix Text to insert before ACS survey label.
