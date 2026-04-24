@@ -636,6 +636,29 @@ use_area_xwalk <- function(
     call = call
   )
 
+  input_metadata <- dplyr::distinct(
+    data,
+    dplyr::pick(
+      tidyselect::any_of(
+        c(
+          variable_col,
+          "table_id",
+          "table_title",
+          "simple_table_title",
+          "subject_area",
+          "universe",
+          "denominator_column_id",
+          "topics",
+          "line_number",
+          "column_id",
+          "column_title",
+          "indent",
+          "parent_column_id"
+        )
+      )
+    )
+  )
+
   cli::cli_progress_step("Joining {.arg data} to {.arg area_xwalk}")
 
   area_data <- join_area_xwalk(
@@ -684,15 +707,30 @@ use_area_xwalk <- function(
 
   area_data[["geography"]] <- geography
 
-  suppressMessages(
-    label_acs_metadata(
-      area_data,
-      perc = perc,
-      reliability = reliability,
-      moe_level = moe_level,
-      geoid_col = name_col
-    )
+  area_data <- dplyr::left_join(
+    area_data,
+    input_metadata,
+    by = variable_col
   )
+
+  if (perc && all(has_name(area_data, c(name_col, "denominator_column_id")))) {
+    area_data <- join_acs_percent(area_data, geoid_col = name_col)
+  }
+
+  if (reliability) {
+    area_data <- assign_acs_reliability(area_data, moe_level = moe_level)
+  }
+
+  area_data
+  # suppressMessages(
+  #   label_acs_metadata(
+  #     area_data,
+  #     perc = perc,
+  #     reliability = reliability,
+  #     moe_level = moe_level,
+  #     geoid_col = name_col
+  #   )
+  # )
 }
 
 #' Join ACS data to an area crosswalk data frame
