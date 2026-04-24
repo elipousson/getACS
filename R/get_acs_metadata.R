@@ -222,7 +222,7 @@ label_acs_table_metadata <- function(
       stringr::str_detect(data[[table_id_col]], "[:alpha:]$")
     )
 
-    if (has_race_iteration) {
+    if (is_true(has_race_iteration)) {
       data <- join_acs_race_iteration(
         data,
         table_id_col = table_id_col,
