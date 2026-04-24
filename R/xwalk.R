@@ -215,8 +215,8 @@ make_area_xwalk <- function(
   make_valid = TRUE,
   ...
 ) {
-  check_name(name_col)
-  check_name(tract_col)
+  check_string(name_col, allow_empty = FALSE)
+  check_string(tract_col, allow_empty = FALSE)
   check_character(weight_col)
   check_character(by)
   check_sf(area)
