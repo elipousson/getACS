@@ -138,7 +138,7 @@ moe_sum_safe <- function(
     all(is.na(moe)) | (na_zero & sum(moe) == 0),
     NA_real_,
     round(
-      tidycensus::moe_sum(
+      moe_sum_ext(
         moe,
         estimate = estimate,
         na.rm = na.rm

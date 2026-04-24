@@ -201,3 +201,33 @@ st_make_valid_union <- function(x, is_coverage = TRUE) {
 
   sf::st_make_valid(x_union)
 }
+
+#' @noRd
+moe_sum_ext <- function(moe, estimate = NULL, na.rm = FALSE) {
+  if (is.null(estimate)) {
+    cli::cli_warn(
+      c(
+        "Estimates associated with the margins of error are not specified.",
+        "i" = "If this calculation involves multiple zero estimates, the derived margin of error will be unnaturally inflated."
+      )
+    )
+  }
+
+  forcalc <- moe
+
+  # ID those MOE values with 0 estimates
+  zeros <- estimate == 0
+  moe_zeros <- moe[zeros & !is.na(moe)]
+
+  if (any(zeros)) {
+    # Use the largest MOE among zero estimates (per Census guidance) and combine with the non-zeros
+    forcalc <- c(
+      max(moe_zeros, na.rm = TRUE),
+      moe[!(zeros & !is.na(moe))]
+    )
+  }
+
+  squared <- purrr::map_dbl(forcalc, function(x) x^2)
+
+  sqrt(sum(squared, na.rm = na.rm))
+}

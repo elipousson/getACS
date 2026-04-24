@@ -712,6 +712,11 @@ join_area_xwalk <- function(
     all_of(c(geoid_col, variable_col, value_col, moe_col))
   )
 
+  # Check to make sure GEOID columns match (e.g. both are for tracts)
+  stopifnot(
+    nchar(data[[geoid_col]][[1]]) == nchar(area_xwalk[[geoid_col]][[1]])
+  )
+
   dplyr::left_join(
     x = area_xwalk,
     y = data,
@@ -736,16 +741,21 @@ summarise_weighted_sum <- function(
 ) {
   dplyr::summarise(
     data,
-    "{value_col}" := round(
-      sum(.data[[value_col]] * .data[[weight_col]], na.rm = na.rm),
-      digits = digits
+    # Preserve NA values if value_col is all NA
+    "{value_col}" := if_else(
+      all(is.na(.data[[value_col]])),
+      NA_real_,
+      round(
+        sum(.data[[value_col]] * .data[[weight_col]], na.rm = na.rm),
+        digits = digits
+      )
     ),
     "{moe_col}" := if_else(
       # Preseve NA values only if moe_col is all NA (e.g. county or state data)
       all(is.na(.data[[moe_col]])),
       NA_real_,
       round(
-        tidycensus::moe_sum(
+        moe_sum_ext(
           moe = .data[[moe_col]],
           estimate = .data[[value_col]] * .data[[weight_col]],
           na.rm = na.rm
@@ -772,13 +782,17 @@ summarise_weighted_mean <- function(
 ) {
   dplyr::summarise(
     data,
-    "{value_col}" := round(
-      stats::weighted.mean(
-        x = .data[[value_col]],
-        w = .data[[weight_col]],
-        na.rm = na.rm
-      ),
-      digits = digits
+    "{value_col}" := if_else(
+      all(is.na(.data[[value_col]])),
+      NA_real_,
+      round(
+        stats::weighted.mean(
+          x = .data[[value_col]],
+          w = .data[[weight_col]],
+          na.rm = na.rm
+        ),
+        digits = digits
+      )
     ),
     # FIXME: Explore options to calculate an interpolated MOE per this method:
     # https://github.com/datadesk/census-data-aggregator#approximating-medians
