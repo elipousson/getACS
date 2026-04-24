@@ -216,7 +216,7 @@ moe_sum_ext <- function(moe, estimate = NULL, na.rm = FALSE) {
   forcalc <- moe
 
   # ID those MOE values with 0 estimates
-  zeros <- estimate == 0
+  zeros <- estimate == 0 & !is.na(estimate)
   moe_zeros <- moe[zeros & !is.na(moe)]
 
   if (any(zeros)) {
