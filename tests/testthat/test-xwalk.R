@@ -8,9 +8,16 @@ test_that("xwalk functions work", {
 
   expect_s3_class(block_xwalk, "sf")
 
+  area <- sf::st_buffer(block_xwalk[1, ], dist = 10000) |>
+    dplyr::mutate(
+      NAME = "Area name"
+    ) |>
+    dplyr::select(NAME)
+
   area_xwalk <- make_area_xwalk(
-    area = sf::st_buffer(block_xwalk[1, ], dist = 5000),
-    block_xwalk = block_xwalk
+    area = area,
+    block_xwalk = block_xwalk,
+    coverage = TRUE
   )
 
   expect_s3_class(area_xwalk, "tbl_df")
@@ -19,7 +26,7 @@ test_that("xwalk functions work", {
     geography = "tract",
     state = "MD",
     county = "Kent County",
-    table = "B01003",
+    table = "B02001",
     year = 2022
   )
 
