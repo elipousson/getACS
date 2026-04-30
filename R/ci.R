@@ -39,7 +39,8 @@ reliability_when <- function(cv, type = c("census", "esri")) {
     cv < 0 ~ NA_character_,
     cv < 0.15 ~ "high",
     cv <= 0.30 ~ "medium",
-    cv > 0.30 ~ "low"
+    cv <= 0.5 ~ "low",
+    cv > 0.5 ~ "very low"
   )
 }
 
