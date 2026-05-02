@@ -43,26 +43,6 @@ cli_quiet <- function(
   )
 }
 
-#' Check if object is a sf object
-#' @noRd
-check_sf <- function(
-  x,
-  allow_null = FALSE,
-  arg = caller_arg(x),
-  call = caller_env()
-) {
-  if (inherits(x, "sf")) {
-    return(invisible(NULL))
-  }
-
-  stop_input_type(
-    x,
-    what = "sf",
-    allow_null = allow_null,
-    call = call
-  )
-}
-
 #' Check if object has specified names
 #' @noRd
 check_has_name <- function(
@@ -145,89 +125,4 @@ fct_recode_with_list <- function(
   }
 
   forcats::fct_inorder(x, ordered = ordered)
-}
-
-#' @noRd
-st_is_predicate <- function(
-  x,
-  y,
-  .f_x = sf::st_point_on_surface,
-  .f_y = sf::st_union,
-  .predicate = sf::st_intersects
-) {
-  if (is_function(.f_x)) {
-    x <- suppressWarnings(.f_x(x))
-  }
-
-  if (is_function(.f_y)) {
-    y <- suppressWarnings(.f_y(y))
-  }
-
-  as.logical(.predicate(x, y, sparse = FALSE))
-}
-
-#' @noRd
-#' @importFrom sf st_make_valid st_difference
-st_make_valid_coverage <- function(x, y, is_coverage = TRUE) {
-  sf::st_make_valid(
-    sf::st_difference(
-      st_make_valid_union(x, is_coverage),
-      st_make_valid_union(y, is_coverage)
-    )
-  )
-}
-
-#' @noRd
-#' @importFrom sf st_make_valid st_union
-st_make_valid_union <- function(x, is_coverage = TRUE) {
-  x_union <- try_fetch(
-    sf::st_union(x, is_coverage = is_coverage),
-    error = \(cnd) {
-      cli::cli_warn(
-        c(
-          "Can't union geometry as coverage due to error.",
-          "Using {.code is_coverage = FALSE}"
-        )
-      )
-
-      NULL
-    }
-  )
-
-  # Handle cases that error TopologyException: CoverageUnion cannot process overlapping inputs
-  if (is.null(x_union)) {
-    x_union <- sf::st_union(x, is_coverage = FALSE)
-  }
-
-  sf::st_make_valid(x_union)
-}
-
-#' @noRd
-moe_sum_ext <- function(moe, estimate = NULL, na.rm = FALSE) {
-  if (is.null(estimate)) {
-    cli::cli_warn(
-      c(
-        "Estimates associated with the margins of error are not specified.",
-        "i" = "If this calculation involves multiple zero estimates, the derived margin of error will be unnaturally inflated."
-      )
-    )
-  }
-
-  forcalc <- moe
-
-  # ID those MOE values with 0 estimates
-  zeros <- estimate == 0 & !is.na(estimate)
-  moe_zeros <- moe[zeros & !is.na(moe)]
-
-  if (any(zeros)) {
-    # Use the largest MOE among zero estimates (per Census guidance) and combine with the non-zeros
-    forcalc <- c(
-      max(moe_zeros, na.rm = TRUE),
-      moe[!(zeros & !is.na(moe))]
-    )
-  }
-
-  squared <- purrr::map_dbl(forcalc, function(x) x^2)
-
-  sqrt(sum(squared, na.rm = na.rm))
 }
