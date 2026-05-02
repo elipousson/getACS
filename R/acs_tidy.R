@@ -15,44 +15,6 @@
   paste0(perc_prefix, perc_sep, c(value_col, moe_col))
 }
 
-#' Create `perc` value and moe column names with prefix and separator
-#'
-#' @param value_col Column name for estimate value column. Defaults to
-#'   "estimate".
-#' @param moe_col Column name for margin of error column. Defaults to
-#'   "moe".
-#' @param perc_prefix Prefix string for percent value columns.
-#' @param perc_sep Separator string between `perc_prefix` and the `value_col`
-#'   and `moe_col` strings.
-#' @param perc If `TRUE`, return percent value and margin of error columns.
-#' @keywords internal
-acs_perc_cols <- function(
-  value_col = "estimate",
-  moe_col = "moe",
-  perc_prefix = "perc",
-  perc_sep = "_",
-  perc = TRUE
-) {
-  # FIXME: I'm not so sure about this as a design pattern
-  if (is.null(perc_prefix)) {
-    return(NULL)
-  }
-
-  if (!perc) {
-    cols <- set_names(
-      c(value_col, moe_col),
-      c("value_col", "moe_col")
-    )
-
-    return(cols)
-  }
-
-  set_names(
-    paste0(perc_prefix, perc_sep, c(value_col, moe_col)),
-    c("value_col", "moe_col")
-  )
-}
-
 #' Pivot a ACS data frame into a wider format by name or other columns
 #'
 #' [pivot_acs_wider()] wraps [tidyr::pivot_wider()] and makes it easy to convert
