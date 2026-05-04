@@ -254,11 +254,24 @@ join_acs_race_iteration <- function(
     "[:alpha:]$"
   )
 
+  # TODO: Refactor to use dplyr::recode_values
   data[["race_iteration_group"]] <- stringr::str_replace_all(
     data[["race_iteration_code"]],
     pattern = set_names(
-      getACS::race_iteration[["group"]],
-      getACS::race_iteration[["code"]]
+      c(
+        "White Alone",
+        "Black or African American Alone",
+        "American Indian and Alaska Native Alone",
+        "Asian Alone",
+        "Native Hawaiian and Other Pacific Islander Alone",
+        "Some Other Race Alone",
+        "Two or More Races",
+        "White Alone, Not Hispanic or Latino",
+        "Hispanic or Latino"
+      ),
+      # getACS::race_iteration[["group"]],
+      c("A", "B", "C", "D", "E", "F", "G", "H", "I")
+      # getACS::race_iteration[["code"]]
     )
   )
 
