@@ -182,6 +182,7 @@ make_block_xwalk <- function(
 #'   parameter. If this has any unexpected results, set `make_valid = FALSE` and
 #'   prepare any invalid geometry before passing to this function.
 #' @param ... Passed to [make_block_xwalk()].
+#' @inheritParams rlang::args_error_context
 #' @returns A tibble or a sf object.
 #' @seealso [tidycensus::interpolate_pw()], [areal::aw_interpolate()]
 #' @export
