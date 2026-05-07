@@ -153,6 +153,11 @@ reliability value to estimate values based on the specified \code{moe_level}.}
 
 \item{moe_level}{The confidence level of the margin of error. Defaults to 90
 (which is the same default as \code{\link[tidycensus:get_acs]{tidycensus::get_acs()}}).}
+
+\item{call}{The execution environment of a currently
+running function, e.g. \code{caller_env()}. The function will be
+mentioned in error messages as the source of the error. See the
+\code{call} argument of \code{\link[rlang:abort]{abort()}} for more information.}
 }
 \value{
 A tibble or a sf object.
